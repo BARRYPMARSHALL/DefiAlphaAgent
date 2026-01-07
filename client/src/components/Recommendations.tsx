@@ -73,7 +73,7 @@ function getInsightIcon(pool: PoolWithScore): typeof Zap {
 }
 
 export function Recommendations({ pools, isLoading }: RecommendationsProps) {
-  const topPools = pools.slice(0, 5);
+  const topPools = pools.slice(0, 10);
 
   if (isLoading) {
     return (
@@ -85,7 +85,7 @@ export function Recommendations({ pools, isLoading }: RecommendationsProps) {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          {[1, 2, 3, 4, 5].map((i) => (
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
             <div key={i} className="space-y-2">
               <div className="flex items-center justify-between gap-2">
                 <Skeleton className="h-6 w-6 rounded-full" />
@@ -93,7 +93,7 @@ export function Recommendations({ pools, isLoading }: RecommendationsProps) {
                 <Skeleton className="h-5 w-16" />
               </div>
               <Skeleton className="h-3 w-full" />
-              {i < 5 && <Separator className="mt-3" />}
+              {i < 10 && <Separator className="mt-3" />}
             </div>
           ))}
         </CardContent>
@@ -151,38 +151,50 @@ export function Recommendations({ pools, isLoading }: RecommendationsProps) {
                 <p className="text-sm text-muted-foreground mt-1 truncate font-mono" data-testid={`rec-symbol-${index}`}>
                   {pool.symbol}
                 </p>
-                <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground flex-wrap">
-                  <span>TVL: {formatNumber(pool.tvlUsd)}</span>
-                  <span className="flex items-center gap-1">
-                    IL Risk: {pool.ilRisk}
+                <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground flex-wrap">
+                  <span className="font-medium">TVL: {formatNumber(pool.tvlUsd)}</span>
+                  <span className="text-muted-foreground">|</span>
+                  <span>IL: {pool.ilRisk === "none" ? "None" : pool.ilRisk.charAt(0).toUpperCase() + pool.ilRisk.slice(1)}
                     {pool.ilPctActual !== null && pool.ilPctActual !== undefined && (
-                      <span className="text-muted-foreground">({pool.ilPctActual.toFixed(2)}%)</span>
+                      <span> ({pool.ilPctActual.toFixed(2)}%)</span>
                     )}
                   </span>
+                  <MomentumBadge apyPct7D={pool.apyPct7D} />
+                </div>
+                <div className="flex items-center gap-2 mt-1.5 flex-wrap">
                   {pool.stablecoin && (
                     <Badge variant="secondary" className="text-xs">
                       Stable
                     </Badge>
                   )}
-                  {pool.apyDeclining && (
-                    <span className="flex items-center gap-1 text-destructive">
-                      <ArrowDown className="h-3 w-3" />
-                      APY Declining
-                    </span>
-                  )}
-                  {pool.lowLiquidityRewards && (
-                    <span className="flex items-center gap-1 text-yellow-600 dark:text-yellow-500">
-                      <AlertTriangle className="h-3 w-3" />
-                      Low Liquidity Rewards
-                    </span>
-                  )}
-                  {pool.autoCompound && (
+                  {pool.autoCompound ? (
                     <Badge variant="outline" className="bg-chart-2/10 text-chart-2 border-chart-2/30 text-xs">
                       <Check className="h-2.5 w-2.5 mr-0.5" />
-                      Auto-Compound
+                      Auto via {pool.autoCompoundProject}
+                    </Badge>
+                  ) : (
+                    <Badge variant="secondary" className="text-xs text-muted-foreground">
+                      Manual Compound
                     </Badge>
                   )}
-                  <MomentumBadge apyPct7D={pool.apyPct7D} />
+                  {pool.isHot && (
+                    <Badge variant="outline" className="bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/30 text-xs">
+                      <Flame className="h-2.5 w-2.5 mr-0.5" />
+                      Hot
+                    </Badge>
+                  )}
+                  {pool.apyDeclining && (
+                    <Badge variant="outline" className="bg-destructive/10 text-destructive border-destructive/30 text-xs">
+                      <ArrowDown className="h-2.5 w-2.5 mr-0.5" />
+                      APY Declining
+                    </Badge>
+                  )}
+                  {pool.lowLiquidityRewards && (
+                    <Badge variant="outline" className="bg-yellow-500/10 text-yellow-600 dark:text-yellow-500 border-yellow-500/30 text-xs">
+                      <AlertTriangle className="h-2.5 w-2.5 mr-0.5" />
+                      Low Liq. Rewards
+                    </Badge>
+                  )}
                 </div>
                 <div className="flex items-start gap-1.5 mt-2 p-2 rounded bg-muted/50">
                   {(() => {
