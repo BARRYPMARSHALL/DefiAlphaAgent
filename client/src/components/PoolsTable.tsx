@@ -85,6 +85,30 @@ function getZapperUrl(pool: PoolWithScore): string {
   return `https://zapper.xyz/explore?search=${encodeURIComponent(pool.symbol)}`;
 }
 
+function getBeefyUrl(pool: PoolWithScore): string | null {
+  const beefyChains: Record<string, string> = {
+    "Ethereum": "ethereum",
+    "Arbitrum": "arbitrum",
+    "Optimism": "optimism",
+    "Polygon": "polygon",
+    "Base": "base",
+    "BSC": "bsc",
+    "Avalanche": "avax",
+    "Fantom": "fantom",
+  };
+  
+  const autoCompounders = ["yearn-finance", "beefy", "convex-finance", "pendle", "aura-finance"];
+  if (autoCompounders.includes(pool.project) && beefyChains[pool.chain]) {
+    return `https://app.beefy.com/${beefyChains[pool.chain]}`;
+  }
+  return null;
+}
+
+function isAutoCompounder(pool: PoolWithScore): boolean {
+  const autoCompounders = ["yearn-finance", "beefy", "convex-finance", "pendle", "aura-finance", "concentrator"];
+  return autoCompounders.includes(pool.project);
+}
+
 function getProtocolUrl(pool: PoolWithScore): string {
   const protocolUrls: Record<string, string> = {
     "uniswap-v3": "https://app.uniswap.org/pools",
@@ -101,13 +125,23 @@ function getProtocolUrl(pool: PoolWithScore): string {
     "pancakeswap-amm-v3": "https://pancakeswap.finance/liquidity",
     "pancakeswap-amm-v2": "https://pancakeswap.finance/liquidity",
     "raydium-amm": "https://raydium.io/liquidity",
+    "orca-dex": "https://www.orca.so/pools",
+    "kamino-liquidity": "https://app.kamino.finance/liquidity",
     "morpho-v1": "https://app.morpho.org",
+    "morpho-blue": "https://app.morpho.org",
     "pendle": "https://app.pendle.finance/trade/pools",
     "lido": "https://stake.lido.fi",
     "rocket-pool": "https://stake.rocketpool.net",
     "gmx": "https://app.gmx.io",
     "velodrome-v2": "https://velodrome.finance/liquidity",
     "aerodrome-v1": "https://aerodrome.finance/liquidity",
+    "trader-joe-dex": "https://traderjoexyz.com/avalanche/pool",
+    "camelot-v3": "https://app.camelot.exchange/liquidity",
+    "stargate": "https://stargate.finance/pool",
+    "spark": "https://app.spark.fi",
+    "fluid": "https://fluid.instadapp.io",
+    "eigenlayer": "https://app.eigenlayer.xyz",
+    "hyperliquid": "https://app.hyperliquid.xyz",
   };
   
   const baseUrl = protocolUrls[pool.project] || `https://defillama.com/yields/pool/${pool.pool}`;
@@ -293,7 +327,7 @@ export function PoolsTable({
                     <TooltipTrigger asChild>
                       <Button
                         variant="ghost"
-                        size="icon"
+                        size="sm"
                         asChild
                         data-testid={`button-view-${pool.pool.slice(0, 8)}`}
                       >
@@ -301,8 +335,10 @@ export function PoolsTable({
                           href={`https://defillama.com/yields/pool/${pool.pool}`}
                           target="_blank"
                           rel="noopener noreferrer"
+                          className="gap-1"
                         >
-                          <ExternalLink className="h-4 w-4" />
+                          <ExternalLink className="h-3 w-3" />
+                          <span className="hidden lg:inline">View</span>
                         </a>
                       </Button>
                     </TooltipTrigger>
@@ -314,21 +350,23 @@ export function PoolsTable({
                     <TooltipTrigger asChild>
                       <Button
                         variant="ghost"
-                        size="icon"
+                        size="sm"
                         asChild
                         data-testid={`button-zap-${pool.pool.slice(0, 8)}`}
                       >
                         <a
-                          href={getZapperUrl(pool)}
+                          href={isAutoCompounder(pool) && getBeefyUrl(pool) ? getBeefyUrl(pool)! : getZapperUrl(pool)}
                           target="_blank"
                           rel="noopener noreferrer"
+                          className="gap-1"
                         >
-                          <Zap className="h-4 w-4" />
+                          <Zap className="h-3 w-3" />
+                          <span className="hidden lg:inline">Zap</span>
                         </a>
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>
-                      <p>Zap In via Zapper</p>
+                      <p>{isAutoCompounder(pool) ? "Zap In via Beefy" : "Zap In via Zapper"}</p>
                     </TooltipContent>
                   </Tooltip>
                   <Tooltip>
@@ -338,6 +376,7 @@ export function PoolsTable({
                           href={getProtocolUrl(pool)}
                           target="_blank"
                           rel="noopener noreferrer"
+                          className="gap-1"
                         >
                           Add
                         </a>
