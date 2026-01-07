@@ -46,12 +46,6 @@ Preferred communication style: Simple, everyday language.
 
 **Sparkline Trends & Momentum**: Each pool shows a sparkline chart derived from apyPct1D, apyPct7D, and apyPct30D data. Momentum indicator shows Rising (green), Falling (red), or Stable based on 7-day APY change.
 
-**Alpha Brain AI Advisor**: Persistent right-sidebar AI chat panel powered by xAI Grok via Replit AI Integrations. Features:
-- Context-injected with top 20 pools data and summary stats on every request
-- Specialized DeFi yield advisor system prompt covering pool analysis, rebalancing, portfolio allocation, IL mitigation
-- Streaming responses with markdown rendering for tables and formatted advice
-- Conversation history persisted in-memory
-
 **Persistent user preferences**: Filter and sort preferences are saved to localStorage and restored on page load.
 
 **Auto-refresh pattern**: Data refreshes every 5 minutes using React Query's refetch interval.

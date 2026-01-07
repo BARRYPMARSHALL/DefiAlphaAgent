@@ -1,14 +1,11 @@
 import { useState, useEffect, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Brain, PanelRightClose, PanelRightOpen } from "lucide-react";
 import { Header } from "@/components/Header";
 import { SummaryCards } from "@/components/SummaryCards";
 import { FiltersBar } from "@/components/FiltersBar";
 import { PoolsTable } from "@/components/PoolsTable";
 import { Recommendations } from "@/components/Recommendations";
 import { ChainChart } from "@/components/ChainChart";
-import { AlphaBrain } from "@/components/AlphaBrain";
-import { Button } from "@/components/ui/button";
 import { queryClient } from "@/lib/queryClient";
 import type { FilterState, SortState, PoolsResponse } from "@shared/schema";
 
@@ -84,23 +81,6 @@ function formatRelativeTime(dateStr: string): string {
 export default function Dashboard() {
   const [filters, setFilters] = useState<FilterState>(loadFiltersFromStorage);
   const [sort, setSort] = useState<SortState>(loadSortFromStorage);
-  const [showAlphaBrain, setShowAlphaBrain] = useState(() => {
-    try {
-      return localStorage.getItem("showAlphaBrain") !== "false";
-    } catch {
-      return true;
-    }
-  });
-
-  const toggleAlphaBrain = useCallback(() => {
-    setShowAlphaBrain((prev) => {
-      const next = !prev;
-      try {
-        localStorage.setItem("showAlphaBrain", String(next));
-      } catch {}
-      return next;
-    });
-  }, []);
 
   const buildQueryUrl = useCallback(() => {
     const params = new URLSearchParams();
@@ -171,125 +151,74 @@ export default function Dashboard() {
   const lastUpdated = data?.lastUpdated ? formatRelativeTime(data.lastUpdated) : null;
 
   return (
-    <div className="min-h-screen bg-background flex">
-      <div className={`flex-1 flex flex-col min-w-0 ${showAlphaBrain ? "lg:mr-[360px]" : ""}`}>
-        <Header
-          onRefresh={handleRefresh}
-          isRefreshing={isFetching}
-          lastUpdated={lastUpdated}
+    <div className="min-h-screen bg-background">
+      <Header
+        onRefresh={handleRefresh}
+        isRefreshing={isFetching}
+        lastUpdated={lastUpdated}
+      />
+
+      <main className="max-w-7xl mx-auto px-4 py-6 space-y-6">
+        <SummaryCards
+          totalPools={stats.totalPools}
+          avgApy={stats.avgApy}
+          topChain={stats.topChain}
+          topChainTvl={stats.topChainTvl}
+          isLoading={isLoading}
         />
 
-        <main className="max-w-7xl mx-auto w-full px-4 py-6 space-y-6">
-          <SummaryCards
-            totalPools={stats.totalPools}
-            avgApy={stats.avgApy}
-            topChain={stats.topChain}
-            topChainTvl={stats.topChainTvl}
-            isLoading={isLoading}
-          />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 space-y-6">
+            <FiltersBar
+              filters={filters}
+              sort={sort}
+              availableChains={chains}
+              onFiltersChange={handleFiltersChange}
+              onSortChange={handleSortChange}
+              onReset={handleReset}
+              resultCount={pools.length}
+            />
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 space-y-6">
-              <FiltersBar
-                filters={filters}
-                sort={sort}
-                availableChains={chains}
-                onFiltersChange={handleFiltersChange}
-                onSortChange={handleSortChange}
-                onReset={handleReset}
-                resultCount={pools.length}
-              />
-
-              <PoolsTable
-                pools={pools}
-                sort={sort}
-                onSortChange={handleSortChange}
-                isLoading={isLoading}
-              />
-            </div>
-
-            <div className="space-y-6">
-              <Recommendations
-                pools={pools.filter(p => p.riskAdjustedScore > 0).slice(0, 10)}
-                isLoading={isLoading}
-              />
-
-              <ChainChart
-                data={chainDistribution}
-                isLoading={isLoading}
-              />
-            </div>
+            <PoolsTable
+              pools={pools}
+              sort={sort}
+              onSortChange={handleSortChange}
+              isLoading={isLoading}
+            />
           </div>
-        </main>
 
-        <footer className="border-t mt-12">
-          <div className="max-w-7xl mx-auto px-4 py-6">
-            <div className="flex items-center justify-between gap-4 flex-wrap text-sm text-muted-foreground">
-              <p>
-                Data from{" "}
-                <a
-                  href="https://defillama.com/yields"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline hover:text-foreground"
-                >
-                  DeFiLlama
-                </a>
-              </p>
-              <p>Auto-refreshes every 5 minutes</p>
-            </div>
-          </div>
-        </footer>
-      </div>
+          <div className="space-y-6">
+            <Recommendations
+              pools={pools.filter(p => p.riskAdjustedScore > 0).slice(0, 10)}
+              isLoading={isLoading}
+            />
 
-      <Button
-        size="icon"
-        variant="outline"
-        onClick={toggleAlphaBrain}
-        className="fixed bottom-4 right-4 z-50 lg:hidden shadow-lg"
-        data-testid="button-toggle-alpha-brain-mobile"
-      >
-        <Brain className="h-5 w-5" />
-      </Button>
-
-      <Button
-        size="icon"
-        variant="ghost"
-        onClick={toggleAlphaBrain}
-        className="fixed top-20 right-4 z-50 hidden lg:flex"
-        data-testid="button-toggle-alpha-brain"
-      >
-        {showAlphaBrain ? (
-          <PanelRightClose className="h-5 w-5" />
-        ) : (
-          <PanelRightOpen className="h-5 w-5" />
-        )}
-      </Button>
-
-      {showAlphaBrain && (
-        <aside className="fixed top-0 right-0 w-[360px] h-screen bg-background z-40 hidden lg:block">
-          <AlphaBrain />
-        </aside>
-      )}
-
-      {showAlphaBrain && (
-        <div className="lg:hidden fixed inset-0 z-50 bg-background">
-          <div className="h-full flex flex-col">
-            <div className="flex items-center justify-between p-3 border-b">
-              <div className="flex items-center gap-2">
-                <Brain className="h-5 w-5 text-chart-4" />
-                <span className="font-semibold">Alpha Brain</span>
-              </div>
-              <Button size="icon" variant="ghost" onClick={toggleAlphaBrain}>
-                <PanelRightClose className="h-5 w-5" />
-              </Button>
-            </div>
-            <div className="flex-1">
-              <AlphaBrain />
-            </div>
+            <ChainChart
+              data={chainDistribution}
+              isLoading={isLoading}
+            />
           </div>
         </div>
-      )}
+      </main>
+
+      <footer className="border-t mt-12">
+        <div className="max-w-7xl mx-auto px-4 py-6">
+          <div className="flex items-center justify-between gap-4 flex-wrap text-sm text-muted-foreground">
+            <p>
+              Data from{" "}
+              <a
+                href="https://defillama.com/yields"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-foreground"
+              >
+                DeFiLlama
+              </a>
+            </p>
+            <p>Auto-refreshes every 5 minutes</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
