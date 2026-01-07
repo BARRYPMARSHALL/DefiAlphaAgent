@@ -1,4 +1,4 @@
-import { createContext, useContext, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, type ReactNode } from 'react';
 import { WagmiProvider, useAccount, useConnect, useDisconnect, useBalance, useChainId } from 'wagmi';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { wagmiConfig, chains } from './wagmi-config';
@@ -30,7 +30,7 @@ const WalletContext = createContext<WalletContextValue | null>(null);
 function WalletContextProvider({ children }: { children: ReactNode }) {
   const { address, isConnected, isConnecting, chain } = useAccount();
   const chainId = useChainId();
-  const { connect, connectors } = useConnect();
+  const { connect, connectors, error: connectError } = useConnect();
   const { disconnect } = useDisconnect();
   const { data: balanceData } = useBalance({ address });
 
@@ -42,6 +42,12 @@ function WalletContextProvider({ children }: { children: ReactNode }) {
       connect({ connector });
     }
   };
+
+  useEffect(() => {
+    if (connectError) {
+      console.error('Wallet connect error:', connectError);
+    }
+  }, [connectError]);
 
   const value: WalletContextValue = {
     address,

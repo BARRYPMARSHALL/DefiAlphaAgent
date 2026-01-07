@@ -65,8 +65,12 @@ export function ConnectWallet() {
   };
 
   const handleConnectorClick = async (connectorId: string) => {
-    connect(connectorId);
-    setIsDialogOpen(false);
+    try {
+      connect(connectorId);
+      setIsDialogOpen(false);
+    } catch (err) {
+      console.error('Connection error:', err);
+    }
   };
 
   if (isConnected && address) {
