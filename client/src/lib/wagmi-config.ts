@@ -1,18 +1,11 @@
 import { http, createConfig } from 'wagmi';
 import { mainnet, arbitrum, optimism, polygon, base, bsc, avalanche } from 'wagmi/chains';
-import { injected, walletConnect, coinbaseWallet } from 'wagmi/connectors';
-
-const projectId = import.meta.env.VITE_WALLETCONNECT_PROJECT_ID || '';
+import { injected } from 'wagmi/connectors';
 
 export const wagmiConfig = createConfig({
   chains: [mainnet, arbitrum, optimism, polygon, base, bsc, avalanche],
-  connectors: projectId ? [
+  connectors: [
     injected(),
-    walletConnect({ projectId }),
-    coinbaseWallet({ appName: 'Alpha Yield Scout' }),
-  ] : [
-    injected(),
-    coinbaseWallet({ appName: 'Alpha Yield Scout' }),
   ],
   transports: {
     [mainnet.id]: http(),
