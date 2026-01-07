@@ -1,12 +1,19 @@
-import { http, createConfig } from 'wagmi';
+import { http, createConfig, createStorage } from 'wagmi';
 import { mainnet, arbitrum, optimism, polygon, base, bsc, avalanche } from 'wagmi/chains';
 import { injected } from 'wagmi/connectors';
+
+const noopStorage = {
+  getItem: () => null,
+  setItem: () => {},
+  removeItem: () => {},
+};
 
 export const wagmiConfig = createConfig({
   chains: [mainnet, arbitrum, optimism, polygon, base, bsc, avalanche],
   connectors: [
     injected(),
   ],
+  storage: createStorage({ storage: noopStorage }),
   transports: {
     [mainnet.id]: http(),
     [arbitrum.id]: http(),

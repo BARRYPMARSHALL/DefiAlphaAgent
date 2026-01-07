@@ -120,31 +120,38 @@ export function ConnectWallet() {
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-3 py-4">
-            {connectors.map((connector) => (
-              <Button
-                key={connector.uid}
-                variant="outline"
-                className="w-full justify-start gap-3 h-14"
-                onClick={() => {
-                  connect({ connector });
-                  setIsDialogOpen(false);
-                }}
-                disabled={isPending}
-                data-testid={`button-connector-${connector.id}`}
-              >
-                <div className="flex items-center gap-3">
-                  <div className="h-8 w-8 rounded-md bg-muted flex items-center justify-center">
-                    <Wallet className="h-5 w-5" />
+            {connectors.length > 0 ? (
+              connectors.map((connector) => (
+                <Button
+                  key={connector.uid}
+                  variant="outline"
+                  className="w-full justify-start gap-3 h-14"
+                  onClick={() => {
+                    connect({ connector });
+                    setIsDialogOpen(false);
+                  }}
+                  disabled={isPending}
+                  data-testid={`button-connector-${connector.id}`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="h-8 w-8 rounded-md bg-muted flex items-center justify-center">
+                      <Wallet className="h-5 w-5" />
+                    </div>
+                    <div className="text-left">
+                      <p className="font-medium">{connector.name}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {connector.id === 'injected' ? 'Browser Wallet' : 'Connect with ' + connector.name}
+                      </p>
+                    </div>
                   </div>
-                  <div className="text-left">
-                    <p className="font-medium">{connector.name}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {connector.id === 'injected' ? 'Browser Wallet' : 'Connect with ' + connector.name}
-                    </p>
-                  </div>
-                </div>
-              </Button>
-            ))}
+                </Button>
+              ))
+            ) : (
+              <div className="text-center py-4 text-muted-foreground">
+                <p className="text-sm">No wallet detected</p>
+                <p className="text-xs mt-1">Install MetaMask or another browser wallet extension</p>
+              </div>
+            )}
           </div>
         </DialogContent>
       </Dialog>
