@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { z } from "zod";
 import type { Pool, PoolWithScore, FilterState, SortState, PoolsResponse } from "@shared/schema";
+import { registerChatRoutes, updatePoolDataContext } from "./replit_integrations/chat/routes";
 
 const sortStateSchema = z.object({
   field: z.enum(["riskAdjustedScore", "tvlUsd", "apy", "apyPct7D"]),
@@ -272,6 +273,8 @@ async function fetchPoolsData(): Promise<void> {
       rawPools: pools,
     };
 
+    updatePoolDataContext(poolsWithScore, { totalPools: pools.length, avgApy, topChain });
+
     lastFetchTime = now;
     console.log(`Fetched ${pools.length} pools from DeFiLlama`);
   } catch (error) {
@@ -365,6 +368,7 @@ export async function registerRoutes(
   httpServer: Server,
   app: Express
 ): Promise<Server> {
+  registerChatRoutes(app);
   fetchPoolsData().catch(console.error);
 
   app.get("/api/pools", async (req, res) => {
