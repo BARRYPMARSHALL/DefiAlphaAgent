@@ -1,5 +1,4 @@
-import { useAccount, useConnect, useDisconnect, useBalance } from 'wagmi';
-import { formatUnits } from 'viem';
+import { useWallet, formatBalance } from '@/lib/wallet-context';
 import { Wallet, ChevronDown, LogOut, Copy, Check, ExternalLink } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -22,18 +21,20 @@ function formatAddress(address: string): string {
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
 }
 
-function formatBalance(balance: bigint | undefined, decimals: number = 18): string {
-  if (!balance) return '0';
-  const formatted = formatUnits(balance, decimals);
-  const num = parseFloat(formatted);
-  return num.toFixed(4);
-}
-
 export function ConnectWallet() {
-  const { address, isConnected, chain } = useAccount();
-  const { connect, connectors, isPending } = useConnect();
-  const { disconnect } = useDisconnect();
-  const { data: balance } = useBalance({ address });
+  const { 
+    address, 
+    isConnected, 
+    isConnecting, 
+    chain, 
+    balance, 
+    balanceSymbol, 
+    balanceDecimals,
+    connect, 
+    disconnect,
+    hasProvider 
+  } = useWallet();
+  
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -76,7 +77,7 @@ export function ConnectWallet() {
           <div className="px-2 py-1.5">
             <p className="text-sm font-medium">{chain?.name || 'Unknown Network'}</p>
             <p className="text-xs text-muted-foreground">
-              {balance ? `${formatBalance(balance.value, balance.decimals)} ${balance.symbol}` : 'Loading...'}
+              {balance !== null ? `${formatBalance(balance, balanceDecimals)} ${balanceSymbol}` : 'Loading...'}
             </p>
           </div>
           <DropdownMenuSeparator />
@@ -89,7 +90,7 @@ export function ConnectWallet() {
             View on Explorer
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={() => disconnect()} data-testid="button-disconnect">
+          <DropdownMenuItem onClick={disconnect} data-testid="button-disconnect">
             <LogOut className="h-4 w-4 mr-2" />
             Disconnect
           </DropdownMenuItem>
@@ -102,7 +103,7 @@ export function ConnectWallet() {
     <>
       <Button
         onClick={() => setIsDialogOpen(true)}
-        disabled={isPending}
+        disabled={isConnecting}
         className="gap-2"
         data-testid="button-connect-wallet"
       >
@@ -120,32 +121,29 @@ export function ConnectWallet() {
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-3 py-4">
-            {connectors.length > 0 ? (
-              connectors.map((connector) => (
-                <Button
-                  key={connector.uid}
-                  variant="outline"
-                  className="w-full justify-start gap-3 h-14"
-                  onClick={() => {
-                    connect({ connector });
-                    setIsDialogOpen(false);
-                  }}
-                  disabled={isPending}
-                  data-testid={`button-connector-${connector.id}`}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="h-8 w-8 rounded-md bg-muted flex items-center justify-center">
-                      <Wallet className="h-5 w-5" />
-                    </div>
-                    <div className="text-left">
-                      <p className="font-medium">{connector.name}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {connector.id === 'injected' ? 'Browser Wallet' : 'Connect with ' + connector.name}
-                      </p>
-                    </div>
+            {hasProvider ? (
+              <Button
+                variant="outline"
+                className="w-full justify-start gap-3 h-14"
+                onClick={async () => {
+                  await connect();
+                  setIsDialogOpen(false);
+                }}
+                disabled={isConnecting}
+                data-testid="button-connector-injected"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="h-8 w-8 rounded-md bg-muted flex items-center justify-center">
+                    <Wallet className="h-5 w-5" />
                   </div>
-                </Button>
-              ))
+                  <div className="text-left">
+                    <p className="font-medium">Browser Wallet</p>
+                    <p className="text-xs text-muted-foreground">
+                      MetaMask, Coinbase Wallet, etc.
+                    </p>
+                  </div>
+                </div>
+              </Button>
             ) : (
               <div className="text-center py-4 text-muted-foreground">
                 <p className="text-sm">No wallet detected</p>

@@ -1,4 +1,4 @@
-import { useAccount } from 'wagmi';
+import { useWallet } from '@/lib/wallet-context';
 import { ArrowRight, TrendingUp, Wallet } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -16,7 +16,7 @@ function formatApy(apy: number): string {
 }
 
 export function UserPositions({ topPools, isLoading }: UserPositionsProps) {
-  const { isConnected, address } = useAccount();
+  const { isConnected, address } = useWallet();
 
   if (!isConnected) {
     return (
