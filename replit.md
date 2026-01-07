@@ -58,9 +58,12 @@ The application includes a basic Drizzle ORM schema with PostgreSQL for user man
 - **PostgreSQL**: Configured via `DATABASE_URL` environment variable, managed with Drizzle ORM
 - **Drizzle Kit**: Used for schema migrations (`db:push` script)
 
-### Third-Party Services (Planned/Referenced)
-- **WalletConnect**: Referenced for future wallet integration
-- **Zapper API**: Referenced for fetching user positions (not yet implemented)
+### Third-Party Services
+- **WalletConnect v2**: Wallet connection via wagmi. Requires `VITE_WALLETCONNECT_PROJECT_ID` environment variable. Get a free project ID from https://cloud.walletconnect.com/
+- **Zapper API**: Portfolio tracking endpoint at `/api/portfolio/:address`. Note: The free Zapper public API may require authentication for production use. Without API access, the portfolio section shows placeholder content with top recommendations.
+
+### Environment Variables
+- `VITE_WALLETCONNECT_PROJECT_ID`: (Optional) WalletConnect Cloud project ID for mobile wallet QR scanning. If not set, only browser wallet (MetaMask, etc.) is available.
 
 ### Key NPM Packages
 - `drizzle-orm` / `drizzle-zod`: Database ORM and schema validation

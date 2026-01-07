@@ -38,6 +38,13 @@ function formatNumber(num: number): string {
   return `$${num.toFixed(2)}`;
 }
 
+function calculatePositionRiskScore(pos: UserPosition): number {
+  const apy = pos.apy || 0;
+  const tvlFactor = Math.min((pos.balanceUsd * 100) / 10000000, 1);
+  const ilFactor = pos.type.toLowerCase().includes('lend') ? 1 : 0.75;
+  return apy * tvlFactor * ilFactor;
+}
+
 function findUpgradeSuggestions(
   positions: UserPosition[], 
   topPools: PoolWithScore[]
@@ -45,7 +52,9 @@ function findUpgradeSuggestions(
   const suggestions: Array<{ position: UserPosition; suggestion: PoolWithScore; improvement: number }> = [];
   
   positions.forEach(pos => {
-    if (pos.apy === null) return;
+    if (pos.apy === null || pos.apy === 0) return;
+    
+    const posRiskScore = calculatePositionRiskScore(pos);
     
     const relevantPools = topPools.filter(pool => {
       const sameChain = pool.chain.toLowerCase() === pos.chain.toLowerCase();
@@ -54,7 +63,9 @@ function findUpgradeSuggestions(
     });
     
     for (const pool of relevantPools) {
-      const improvement = ((pool.riskAdjustedScore - (pos.apy * 0.5)) / (pos.apy * 0.5 || 1)) * 100;
+      const improvement = posRiskScore > 0 
+        ? ((pool.riskAdjustedScore - posRiskScore) / posRiskScore) * 100
+        : pool.riskAdjustedScore > 0 ? 100 : 0;
       
       if (improvement > 10) {
         suggestions.push({ position: pos, suggestion: pool, improvement });

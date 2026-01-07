@@ -1,4 +1,5 @@
 import { useWallet, formatBalance } from '@/lib/wallet-context';
+import { hasWalletConnectProjectId } from '@/lib/wagmi-config';
 import { Wallet, ChevronDown, LogOut, Copy, Check, ExternalLink } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -106,7 +107,7 @@ export function ConnectWallet() {
   }
 
   const injectedConnector = connectors.find(c => c.id === 'injected');
-  const wcConnector = connectors.find(c => c.id === 'walletConnect');
+  const wcConnector = hasWalletConnectProjectId ? connectors.find(c => c.id === 'walletConnect') : null;
 
   return (
     <>

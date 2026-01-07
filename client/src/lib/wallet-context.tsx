@@ -6,6 +6,11 @@ import { formatUnits, type Address } from 'viem';
 
 const queryClient = new QueryClient();
 
+interface ChainInfo {
+  id: number;
+  name: string;
+}
+
 interface WalletContextValue {
   address: Address | undefined;
   chainId: number | undefined;
@@ -14,7 +19,7 @@ interface WalletContextValue {
   balanceDecimals: number;
   isConnected: boolean;
   isConnecting: boolean;
-  chain: typeof chains[number] | undefined;
+  chain: ChainInfo | undefined;
   connect: (connectorId?: string) => void;
   disconnect: () => void;
   connectors: ReturnType<typeof useConnect>['connectors'];
@@ -46,7 +51,7 @@ function WalletContextProvider({ children }: { children: ReactNode }) {
     balanceDecimals: balanceData?.decimals || 18,
     isConnected,
     isConnecting,
-    chain,
+    chain: chain ? { id: chain.id, name: chain.name } : undefined,
     connect: handleConnect,
     disconnect,
     connectors,
