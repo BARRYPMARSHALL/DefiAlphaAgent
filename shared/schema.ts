@@ -44,6 +44,9 @@ export interface Pool {
 export interface PoolWithScore extends Pool {
   riskAdjustedScore: number;
   isHot: boolean;
+  apyDeclining: boolean;
+  lowLiquidityRewards: boolean;
+  ilPctActual: number | null;
 }
 
 export interface FilterState {

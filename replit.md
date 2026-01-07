@@ -38,6 +38,12 @@ Preferred communication style: Simple, everyday language.
 
 **Risk-adjusted scoring algorithm**: Pools are scored using the formula: `APY * (TVL / 1e7) * (1 - ilRiskFactor)` where impermanent loss risk factor varies by exposure type.
 
+**Enhanced IL Risk Detection**: Uses actual il7d/il14d data from DeFiLlama when available. Falls back to symbol-based classification (stable pairs = low risk, volatile pairs = high risk).
+
+**Sustainability Flags**:
+- `apyDeclining`: True if APY dropped more than 20% in the last 7 days (displayed as red down-arrow)
+- `lowLiquidityRewards`: Warning if reward tokens likely have low liquidity (high reward ratio + low TVL/volume)
+
 **Persistent user preferences**: Filter and sort preferences are saved to localStorage and restored on page load.
 
 **Auto-refresh pattern**: Data refreshes every 5 minutes using React Query's refetch interval.

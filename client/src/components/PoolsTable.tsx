@@ -1,4 +1,4 @@
-import { ExternalLink, Flame, TrendingDown, TrendingUp, Zap } from "lucide-react";
+import { ExternalLink, Flame, TrendingDown, TrendingUp, Zap, AlertTriangle, ArrowDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -276,6 +276,26 @@ export function PoolsTable({
                       </TooltipContent>
                     </Tooltip>
                   )}
+                  {pool.apyDeclining && (
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <ArrowDown className="h-4 w-4 text-destructive" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>APY dropped more than 20% in last 7 days</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  )}
+                  {pool.lowLiquidityRewards && (
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <AlertTriangle className="h-4 w-4 text-yellow-500" />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Reward tokens may have low liquidity</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  )}
                 </div>
               </TableCell>
               <TableCell>
@@ -317,9 +337,23 @@ export function PoolsTable({
                 {formatApy(pool.apyReward)}
               </TableCell>
               <TableCell>
-                <Badge variant={getIlBadgeVariant(pool.ilRisk)}>
-                  {pool.ilRisk === "none" ? "None" : pool.ilRisk.charAt(0).toUpperCase() + pool.ilRisk.slice(1)}
-                </Badge>
+                <div className="flex items-center gap-2">
+                  <Badge variant={getIlBadgeVariant(pool.ilRisk)}>
+                    {pool.ilRisk === "none" ? "None" : pool.ilRisk.charAt(0).toUpperCase() + pool.ilRisk.slice(1)}
+                  </Badge>
+                  {pool.ilPctActual !== null && pool.ilPctActual !== undefined && (
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <span className="text-xs text-muted-foreground">
+                          ({pool.ilPctActual.toFixed(2)}%)
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Actual IL measured over 7 days</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  )}
+                </div>
               </TableCell>
               <TableCell className="text-right">
                 <div className="flex items-center justify-end gap-1">

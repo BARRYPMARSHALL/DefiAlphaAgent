@@ -1,4 +1,4 @@
-import { Sparkles, TrendingUp, ArrowRight, ExternalLink, Zap, Shield, Flame } from "lucide-react";
+import { Sparkles, TrendingUp, ArrowRight, ExternalLink, Zap, Shield, Flame, AlertTriangle, ArrowDown } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -152,11 +152,28 @@ export function Recommendations({ pools, isLoading }: RecommendationsProps) {
                 </p>
                 <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground flex-wrap">
                   <span>TVL: {formatNumber(pool.tvlUsd)}</span>
-                  <span>IL Risk: {pool.ilRisk}</span>
+                  <span className="flex items-center gap-1">
+                    IL Risk: {pool.ilRisk}
+                    {pool.ilPctActual !== null && pool.ilPctActual !== undefined && (
+                      <span className="text-muted-foreground">({pool.ilPctActual.toFixed(2)}%)</span>
+                    )}
+                  </span>
                   {pool.stablecoin && (
                     <Badge variant="secondary" className="text-xs">
                       Stable
                     </Badge>
+                  )}
+                  {pool.apyDeclining && (
+                    <span className="flex items-center gap-1 text-destructive">
+                      <ArrowDown className="h-3 w-3" />
+                      APY Declining
+                    </span>
+                  )}
+                  {pool.lowLiquidityRewards && (
+                    <span className="flex items-center gap-1 text-yellow-600 dark:text-yellow-500">
+                      <AlertTriangle className="h-3 w-3" />
+                      Low Liquidity Rewards
+                    </span>
                   )}
                 </div>
                 <div className="flex items-start gap-1.5 mt-2 p-2 rounded bg-muted/50">

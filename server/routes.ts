@@ -46,17 +46,56 @@ let cachedData: {
 let lastFetchTime = 0;
 const CACHE_DURATION = 2 * 60 * 1000;
 
-function calculateIlRisk(pool: any): Pool["ilRisk"] {
+const LOW_LIQUIDITY_TOKENS = new Set([
+  "unknown", "undefined", "test", "mock"
+]);
+
+function calculateIlRisk(pool: any): { risk: Pool["ilRisk"]; ilPctActual: number | null } {
   if (pool.exposure === "single" || pool.ilRisk === "no") {
-    return "none";
+    return { risk: "none", ilPctActual: null };
   }
-  if (pool.il7d !== null && pool.il7d !== undefined) {
-    if (Math.abs(pool.il7d) < 0.1) return "low";
-    if (Math.abs(pool.il7d) < 1) return "medium";
-    return "high";
+
+  const il7d = pool.il7d;
+  const il14d = pool.il14d;
+  const hasRealIlData = (il7d !== null && il7d !== undefined) || (il14d !== null && il14d !== undefined);
+
+  if (hasRealIlData) {
+    const ilValue = il7d ?? il14d ?? 0;
+    const absIl = Math.abs(ilValue);
+    
+    let risk: Pool["ilRisk"];
+    if (absIl < 0.1) {
+      risk = "low";
+    } else if (absIl < 0.5) {
+      risk = "medium";
+    } else {
+      risk = "high";
+    }
+    
+    return { risk, ilPctActual: ilValue };
   }
-  if (pool.stablecoin) return "low";
-  return "medium";
+
+  if (pool.stablecoin) {
+    return { risk: "low", ilPctActual: null };
+  }
+
+  const symbol = (pool.symbol || "").toUpperCase();
+  const hasStablePair = symbol.includes("USDC") || symbol.includes("USDT") || 
+                        symbol.includes("DAI") || symbol.includes("FRAX") ||
+                        symbol.includes("BUSD") || symbol.includes("TUSD");
+  
+  const hasVolatilePair = symbol.includes("ETH") || symbol.includes("BTC") || 
+                          symbol.includes("SOL") || symbol.includes("AVAX");
+  
+  if (hasStablePair && !hasVolatilePair) {
+    return { risk: "low", ilPctActual: null };
+  }
+  
+  if (hasVolatilePair && !hasStablePair) {
+    return { risk: "high", ilPctActual: null };
+  }
+
+  return { risk: "medium", ilPctActual: null };
 }
 
 function calculateRiskAdjustedScore(pool: Pool): number {
@@ -84,8 +123,54 @@ function isHotPool(pool: any): boolean {
   return highVolume || risingApy;
 }
 
-function transformPool(raw: any): Pool {
-  return {
+function isApyDeclining(pool: any): boolean {
+  const apyPct7D = pool.apyPct7D;
+  if (apyPct7D === null || apyPct7D === undefined) {
+    return false;
+  }
+  return apyPct7D < -20;
+}
+
+function hasLowLiquidityRewards(pool: any): boolean {
+  const rewardTokens = pool.rewardTokens;
+  if (!rewardTokens || !Array.isArray(rewardTokens) || rewardTokens.length === 0) {
+    return false;
+  }
+  
+  const apyReward = pool.apyReward || 0;
+  const apyBase = pool.apyBase || 0;
+  const totalApy = pool.apy || 0;
+  
+  if (totalApy <= 0) return false;
+  
+  const rewardRatio = apyReward / totalApy;
+  
+  if (rewardRatio > 0.8) {
+    const tvl = pool.tvlUsd || 0;
+    if (tvl < 1000000) {
+      return true;
+    }
+    
+    const volume7d = pool.volumeUsd7d || 0;
+    if (volume7d < 100000 && rewardRatio > 0.9) {
+      return true;
+    }
+  }
+  
+  return false;
+}
+
+interface TransformedPoolData {
+  pool: Pool;
+  ilPctActual: number | null;
+  apyDeclining: boolean;
+  lowLiquidityRewards: boolean;
+}
+
+function transformPool(raw: any): TransformedPoolData {
+  const ilResult = calculateIlRisk(raw);
+  
+  const pool: Pool = {
     pool: raw.pool,
     chain: raw.chain,
     project: raw.project,
@@ -96,7 +181,7 @@ function transformPool(raw: any): Pool {
     apy: raw.apy || 0,
     rewardTokens: raw.rewardTokens,
     il7d: raw.il7d,
-    ilRisk: calculateIlRisk(raw),
+    ilRisk: ilResult.risk,
     exposure: raw.exposure === "single" ? "single" : "multi",
     stablecoin: raw.stablecoin || false,
     volumeUsd7d: raw.volumeUsd7d,
@@ -106,6 +191,13 @@ function transformPool(raw: any): Pool {
     poolMeta: raw.poolMeta,
     underlyingTokens: raw.underlyingTokens,
     url: raw.url,
+  };
+  
+  return {
+    pool,
+    ilPctActual: ilResult.ilPctActual,
+    apyDeclining: isApyDeclining(raw),
+    lowLiquidityRewards: hasLowLiquidityRewards(raw),
   };
 }
 
@@ -126,14 +218,19 @@ async function fetchPoolsData(): Promise<void> {
     const json = await response.json();
     const rawPools: any[] = json.data || [];
 
-    const pools: Pool[] = rawPools
+    const transformedData = rawPools
       .filter((p: any) => p.tvlUsd > 0 && p.apy !== null && p.apy >= 0)
       .map(transformPool);
 
-    const poolsWithScore: PoolWithScore[] = pools.map((p) => ({
-      ...p,
-      riskAdjustedScore: calculateRiskAdjustedScore(p),
-      isHot: isHotPool(p),
+    const pools: Pool[] = transformedData.map(d => d.pool);
+
+    const poolsWithScore: PoolWithScore[] = transformedData.map((data, idx) => ({
+      ...data.pool,
+      riskAdjustedScore: calculateRiskAdjustedScore(data.pool),
+      isHot: isHotPool(rawPools.find(r => r.pool === data.pool.pool) || data.pool),
+      apyDeclining: data.apyDeclining,
+      lowLiquidityRewards: data.lowLiquidityRewards,
+      ilPctActual: data.ilPctActual,
     }));
 
     const chainTvl: Record<string, { tvl: number; count: number }> = {};
