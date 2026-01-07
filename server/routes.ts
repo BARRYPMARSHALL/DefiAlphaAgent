@@ -331,5 +331,88 @@ export async function registerRoutes(
     }
   });
 
+  app.get("/api/portfolio/:address", async (req, res) => {
+    try {
+      const { address } = req.params;
+      
+      if (!address || !/^0x[a-fA-F0-9]{40}$/.test(address)) {
+        return res.status(400).json({ error: "Invalid address" });
+      }
+
+      const response = await fetch(
+        `https://api.zapper.xyz/v2/balances/apps?addresses[]=${address}`,
+        {
+          headers: {
+            'Accept': 'application/json',
+          },
+        }
+      );
+
+      if (!response.ok) {
+        console.log("Zapper API returned:", response.status);
+        return res.json({ positions: [], totalValue: 0, message: "Portfolio tracking requires Zapper API access" });
+      }
+
+      const data = await response.json();
+      
+      interface ZapperPosition {
+        appId: string;
+        appName: string;
+        network: string;
+        balanceUSD: number;
+        products?: Array<{
+          label: string;
+          assets: Array<{
+            type: string;
+            symbol: string;
+            balanceUSD: number;
+            apy?: number;
+            tokens?: Array<{ symbol: string }>;
+          }>;
+        }>;
+      }
+      
+      const positions: Array<{
+        protocol: string;
+        chain: string;
+        symbol: string;
+        balanceUsd: number;
+        apy: number | null;
+        type: string;
+      }> = [];
+
+      if (Array.isArray(data)) {
+        data.forEach((app: ZapperPosition) => {
+          if (app.products) {
+            app.products.forEach(product => {
+              if (product.assets) {
+                product.assets.forEach(asset => {
+                  positions.push({
+                    protocol: app.appName || app.appId,
+                    chain: app.network,
+                    symbol: asset.tokens?.map(t => t.symbol).join('-') || asset.symbol,
+                    balanceUsd: asset.balanceUSD || 0,
+                    apy: asset.apy || null,
+                    type: product.label || asset.type,
+                  });
+                });
+              }
+            });
+          }
+        });
+      }
+
+      const totalValue = positions.reduce((sum, p) => sum + p.balanceUsd, 0);
+
+      res.json({ 
+        positions: positions.sort((a, b) => b.balanceUsd - a.balanceUsd),
+        totalValue 
+      });
+    } catch (error) {
+      console.error("Error fetching portfolio:", error);
+      res.json({ positions: [], totalValue: 0, message: "Unable to fetch portfolio data" });
+    }
+  });
+
   return httpServer;
 }

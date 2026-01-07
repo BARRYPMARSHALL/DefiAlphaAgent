@@ -16,6 +16,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { SiWalletconnect } from 'react-icons/si';
 
 function formatAddress(address: string): string {
   return `${address.slice(0, 6)}...${address.slice(-4)}`;
@@ -32,7 +33,7 @@ export function ConnectWallet() {
     balanceDecimals,
     connect, 
     disconnect,
-    hasProvider 
+    connectors 
   } = useWallet();
   
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -60,6 +61,11 @@ export function ConnectWallet() {
       const explorer = explorers[chain.id] || 'https://etherscan.io';
       window.open(`${explorer}/address/${address}`, '_blank');
     }
+  };
+
+  const handleConnectorClick = async (connectorId: string) => {
+    connect(connectorId);
+    setIsDialogOpen(false);
   };
 
   if (isConnected && address) {
@@ -90,7 +96,7 @@ export function ConnectWallet() {
             View on Explorer
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={disconnect} data-testid="button-disconnect">
+          <DropdownMenuItem onClick={() => disconnect()} data-testid="button-disconnect">
             <LogOut className="h-4 w-4 mr-2" />
             Disconnect
           </DropdownMenuItem>
@@ -98,6 +104,9 @@ export function ConnectWallet() {
       </DropdownMenu>
     );
   }
+
+  const injectedConnector = connectors.find(c => c.id === 'injected');
+  const wcConnector = connectors.find(c => c.id === 'walletConnect');
 
   return (
     <>
@@ -121,14 +130,11 @@ export function ConnectWallet() {
             </DialogDescription>
           </DialogHeader>
           <div className="grid gap-3 py-4">
-            {hasProvider ? (
+            {injectedConnector && (
               <Button
                 variant="outline"
                 className="w-full justify-start gap-3 h-14"
-                onClick={async () => {
-                  await connect();
-                  setIsDialogOpen(false);
-                }}
+                onClick={() => handleConnectorClick('injected')}
                 disabled={isConnecting}
                 data-testid="button-connector-injected"
               >
@@ -144,7 +150,31 @@ export function ConnectWallet() {
                   </div>
                 </div>
               </Button>
-            ) : (
+            )}
+
+            {wcConnector && (
+              <Button
+                variant="outline"
+                className="w-full justify-start gap-3 h-14"
+                onClick={() => handleConnectorClick('walletConnect')}
+                disabled={isConnecting}
+                data-testid="button-connector-walletconnect"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="h-8 w-8 rounded-md bg-[#3B99FC] flex items-center justify-center">
+                    <SiWalletconnect className="h-5 w-5 text-white" />
+                  </div>
+                  <div className="text-left">
+                    <p className="font-medium">WalletConnect</p>
+                    <p className="text-xs text-muted-foreground">
+                      Scan with mobile wallet
+                    </p>
+                  </div>
+                </div>
+              </Button>
+            )}
+
+            {connectors.length === 0 && (
               <div className="text-center py-4 text-muted-foreground">
                 <p className="text-sm">No wallet detected</p>
                 <p className="text-xs mt-1">Install MetaMask or another browser wallet extension</p>

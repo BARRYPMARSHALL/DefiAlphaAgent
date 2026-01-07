@@ -1,167 +1,73 @@
-import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react';
-import { createPublicClient, http, formatUnits, type Address, type Chain } from 'viem';
-import { mainnet, arbitrum, optimism, polygon, base, bsc, avalanche } from 'viem/chains';
+import { createContext, useContext, type ReactNode } from 'react';
+import { WagmiProvider, useAccount, useConnect, useDisconnect, useBalance, useChainId } from 'wagmi';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { wagmiConfig, chains } from './wagmi-config';
+import { formatUnits, type Address } from 'viem';
 
-interface WalletState {
-  address: Address | null;
-  chainId: number | null;
+const queryClient = new QueryClient();
+
+interface WalletContextValue {
+  address: Address | undefined;
+  chainId: number | undefined;
   balance: bigint | null;
   balanceSymbol: string;
   balanceDecimals: number;
   isConnected: boolean;
   isConnecting: boolean;
-  chain: Chain | null;
-}
-
-interface WalletContextValue extends WalletState {
-  connect: () => Promise<void>;
+  chain: typeof chains[number] | undefined;
+  connect: (connectorId?: string) => void;
   disconnect: () => void;
-  hasProvider: boolean;
+  connectors: ReturnType<typeof useConnect>['connectors'];
 }
-
-const chains: Chain[] = [mainnet, arbitrum, optimism, polygon, base, bsc, avalanche];
-
-const getChainById = (chainId: number): Chain | null => {
-  return chains.find(c => c.id === chainId) || null;
-};
 
 const WalletContext = createContext<WalletContextValue | null>(null);
 
-export function WalletProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<WalletState>({
-    address: null,
-    chainId: null,
-    balance: null,
-    balanceSymbol: 'ETH',
-    balanceDecimals: 18,
-    isConnected: false,
-    isConnecting: false,
-    chain: null,
-  });
+function WalletContextProvider({ children }: { children: ReactNode }) {
+  const { address, isConnected, isConnecting, chain } = useAccount();
+  const chainId = useChainId();
+  const { connect, connectors } = useConnect();
+  const { disconnect } = useDisconnect();
+  const { data: balanceData } = useBalance({ address });
 
-  const [hasProvider, setHasProvider] = useState(false);
-
-  useEffect(() => {
-    const checkProvider = () => {
-      const provider = typeof window !== 'undefined' && (window as any).ethereum;
-      setHasProvider(!!provider);
-    };
-    checkProvider();
-    
-    if (typeof window !== 'undefined') {
-      window.addEventListener('ethereum#initialized', checkProvider);
-      return () => window.removeEventListener('ethereum#initialized', checkProvider);
+  const handleConnect = (connectorId?: string) => {
+    const connector = connectorId 
+      ? connectors.find(c => c.id === connectorId || c.name.toLowerCase().includes(connectorId.toLowerCase()))
+      : connectors[0];
+    if (connector) {
+      connect({ connector });
     }
-  }, []);
+  };
 
-  const fetchBalance = useCallback(async (address: Address, chainId: number) => {
-    const chain = getChainById(chainId);
-    if (!chain) return;
-
-    try {
-      const client = createPublicClient({
-        chain,
-        transport: http(),
-      });
-
-      const balance = await client.getBalance({ address });
-      setState(prev => ({
-        ...prev,
-        balance,
-        balanceSymbol: chain.nativeCurrency.symbol,
-        balanceDecimals: chain.nativeCurrency.decimals,
-      }));
-    } catch (error) {
-      console.error('Failed to fetch balance:', error);
-    }
-  }, []);
-
-  const connect = useCallback(async () => {
-    const provider = (window as any).ethereum;
-    if (!provider) return;
-
-    setState(prev => ({ ...prev, isConnecting: true }));
-
-    try {
-      const accounts = await provider.request({ method: 'eth_requestAccounts' });
-      const chainIdHex = await provider.request({ method: 'eth_chainId' });
-      const chainId = parseInt(chainIdHex, 16);
-      const chain = getChainById(chainId);
-      const address = accounts[0] as Address;
-
-      setState(prev => ({
-        ...prev,
-        address,
-        chainId,
-        chain,
-        isConnected: true,
-        isConnecting: false,
-      }));
-
-      await fetchBalance(address, chainId);
-    } catch (error) {
-      console.error('Failed to connect:', error);
-      setState(prev => ({ ...prev, isConnecting: false }));
-    }
-  }, [fetchBalance]);
-
-  const disconnect = useCallback(() => {
-    setState({
-      address: null,
-      chainId: null,
-      balance: null,
-      balanceSymbol: 'ETH',
-      balanceDecimals: 18,
-      isConnected: false,
-      isConnecting: false,
-      chain: null,
-    });
-  }, []);
-
-  useEffect(() => {
-    const provider = (window as any).ethereum;
-    if (!provider) return;
-
-    const handleAccountsChanged = (accounts: string[]) => {
-      if (accounts.length === 0) {
-        disconnect();
-      } else {
-        const address = accounts[0] as Address;
-        setState(prev => ({ ...prev, address }));
-        if (state.chainId) {
-          fetchBalance(address, state.chainId);
-        }
-      }
-    };
-
-    const handleChainChanged = (chainIdHex: string) => {
-      const chainId = parseInt(chainIdHex, 16);
-      const chain = getChainById(chainId);
-      setState(prev => ({ ...prev, chainId, chain }));
-      if (state.address) {
-        fetchBalance(state.address, chainId);
-      }
-    };
-
-    const handleDisconnect = () => {
-      disconnect();
-    };
-
-    provider.on('accountsChanged', handleAccountsChanged);
-    provider.on('chainChanged', handleChainChanged);
-    provider.on('disconnect', handleDisconnect);
-
-    return () => {
-      provider.removeListener('accountsChanged', handleAccountsChanged);
-      provider.removeListener('chainChanged', handleChainChanged);
-      provider.removeListener('disconnect', handleDisconnect);
-    };
-  }, [state.address, state.chainId, disconnect, fetchBalance]);
+  const value: WalletContextValue = {
+    address,
+    chainId,
+    balance: balanceData?.value ?? null,
+    balanceSymbol: balanceData?.symbol || 'ETH',
+    balanceDecimals: balanceData?.decimals || 18,
+    isConnected,
+    isConnecting,
+    chain,
+    connect: handleConnect,
+    disconnect,
+    connectors,
+  };
 
   return (
-    <WalletContext.Provider value={{ ...state, connect, disconnect, hasProvider }}>
+    <WalletContext.Provider value={value}>
       {children}
     </WalletContext.Provider>
+  );
+}
+
+export function WalletProvider({ children }: { children: ReactNode }) {
+  return (
+    <WagmiProvider config={wagmiConfig}>
+      <QueryClientProvider client={queryClient}>
+        <WalletContextProvider>
+          {children}
+        </WalletContextProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
   );
 }
 
