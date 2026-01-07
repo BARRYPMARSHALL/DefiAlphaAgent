@@ -1,4 +1,4 @@
-import { Sparkles, TrendingUp, ArrowRight, ExternalLink, Zap, Shield, Flame, AlertTriangle, ArrowDown } from "lucide-react";
+import { Sparkles, TrendingUp, ArrowRight, ExternalLink, Zap, Shield, Flame, AlertTriangle, ArrowDown, RefreshCw, Check } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -176,6 +176,12 @@ export function Recommendations({ pools, isLoading }: RecommendationsProps) {
                       Low Liquidity Rewards
                     </span>
                   )}
+                  {pool.autoCompound && (
+                    <Badge variant="outline" className="bg-chart-2/10 text-chart-2 border-chart-2/30 text-xs">
+                      <Check className="h-2.5 w-2.5 mr-0.5" />
+                      Auto-Compound
+                    </Badge>
+                  )}
                   <MomentumBadge apyPct7D={pool.apyPct7D} />
                 </div>
                 <div className="flex items-start gap-1.5 mt-2 p-2 rounded bg-muted/50">
@@ -187,7 +193,7 @@ export function Recommendations({ pools, isLoading }: RecommendationsProps) {
                     {generateInsight(pool, pools)}
                   </span>
                 </div>
-                <div className="flex items-center gap-2 mt-3">
+                <div className="flex items-center gap-2 mt-3 flex-wrap">
                   <Button
                     variant="ghost"
                     size="sm"
@@ -204,7 +210,25 @@ export function Recommendations({ pools, isLoading }: RecommendationsProps) {
                       View
                     </a>
                   </Button>
-                  {pool.url && (
+                  {pool.autoCompound && (
+                    <Button
+                      variant="default"
+                      size="sm"
+                      asChild
+                      className="h-7 text-xs bg-chart-2 hover:bg-chart-2/90"
+                      data-testid={`button-rec-zap-auto-${index}`}
+                    >
+                      <a
+                        href={`https://app.beefy.com?search=${encodeURIComponent(pool.symbol)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <RefreshCw className="h-3 w-3 mr-1" />
+                        Zap In (Auto)
+                      </a>
+                    </Button>
+                  )}
+                  {pool.url && !pool.autoCompound && (
                     <Button
                       variant="outline"
                       size="sm"

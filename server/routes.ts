@@ -160,6 +160,48 @@ function hasLowLiquidityRewards(pool: any): boolean {
   return false;
 }
 
+const AUTO_COMPOUND_PROJECTS = new Set([
+  'beefy',
+  'yearn-finance', 
+  'gamma',
+  'arrakis',
+  'reaper-farm',
+  'autofarm',
+  'concentrator',
+  'origin-dollar',
+  'aura',
+  'convex-finance',
+  'convex',
+  'pendle',
+  'sommelier',
+  'pickle-finance',
+  'harvest-finance',
+]);
+
+const AUTO_COMPOUND_KEYWORDS = ['vault', 'auto', 'compound', 'autocompound'];
+
+function detectAutoCompound(pool: any): { autoCompound: boolean; autoCompoundProject: string | null } {
+  const project = (pool.project || '').toLowerCase();
+  
+  if (AUTO_COMPOUND_PROJECTS.has(project)) {
+    const displayName = pool.project.split('-').map((w: string) => 
+      w.charAt(0).toUpperCase() + w.slice(1)
+    ).join(' ');
+    return { autoCompound: true, autoCompoundProject: displayName };
+  }
+  
+  const poolMeta = (pool.poolMeta || '').toLowerCase();
+  const symbol = (pool.symbol || '').toLowerCase();
+  
+  for (const keyword of AUTO_COMPOUND_KEYWORDS) {
+    if (poolMeta.includes(keyword) || symbol.includes(keyword)) {
+      return { autoCompound: true, autoCompoundProject: pool.project };
+    }
+  }
+  
+  return { autoCompound: false, autoCompoundProject: null };
+}
+
 interface TransformedPoolData {
   pool: Pool;
   ilPctActual: number | null;
@@ -224,14 +266,23 @@ async function fetchPoolsData(): Promise<void> {
 
     const pools: Pool[] = transformedData.map(d => d.pool);
 
-    const poolsWithScore: PoolWithScore[] = transformedData.map((data, idx) => ({
-      ...data.pool,
-      riskAdjustedScore: calculateRiskAdjustedScore(data.pool),
-      isHot: isHotPool(rawPools.find(r => r.pool === data.pool.pool) || data.pool),
-      apyDeclining: data.apyDeclining,
-      lowLiquidityRewards: data.lowLiquidityRewards,
-      ilPctActual: data.ilPctActual,
-    }));
+    const poolsWithScore: PoolWithScore[] = transformedData.map((data) => {
+      const rawPool = rawPools.find(r => r.pool === data.pool.pool) || data.pool;
+      const autoCompoundInfo = detectAutoCompound(rawPool);
+      const baseScore = calculateRiskAdjustedScore(data.pool);
+      const autoCompoundBoost = autoCompoundInfo.autoCompound ? 1.1 : 1.0;
+      
+      return {
+        ...data.pool,
+        riskAdjustedScore: baseScore * autoCompoundBoost,
+        isHot: isHotPool(rawPool),
+        apyDeclining: data.apyDeclining,
+        lowLiquidityRewards: data.lowLiquidityRewards,
+        ilPctActual: data.ilPctActual,
+        autoCompound: autoCompoundInfo.autoCompound,
+        autoCompoundProject: autoCompoundInfo.autoCompoundProject,
+      };
+    });
 
     const chainTvl: Record<string, { tvl: number; count: number }> = {};
     pools.forEach((p) => {

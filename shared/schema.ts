@@ -77,6 +77,8 @@ export interface PoolWithScore extends Pool {
   apyDeclining: boolean;
   lowLiquidityRewards: boolean;
   ilPctActual: number | null;
+  autoCompound: boolean;
+  autoCompoundProject: string | null;
 }
 
 export interface FilterState {

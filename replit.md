@@ -40,6 +40,8 @@ Preferred communication style: Simple, everyday language.
 
 **Enhanced IL Risk Detection**: Uses actual il7d/il14d data from DeFiLlama when available. Falls back to symbol-based classification (stable pairs = low risk, volatile pairs = high risk).
 
+**Auto-Compound Detection**: Pools are flagged as auto-compounding if their project is in the auto-compound list (Beefy, Yearn, Gamma, Arrakis, Convex, etc.) or if poolMeta/symbol contains keywords like 'vault', 'auto', 'compound'. Auto-compound pools receive a 10% score boost and display a green checkmark badge with "Zap In (Auto-Compound)" button linking to the protocol.
+
 **Sustainability Flags**:
 - `apyDeclining`: True if APY dropped more than 20% in the last 7 days (displayed as red down-arrow)
 - `lowLiquidityRewards`: Warning if reward tokens likely have low liquidity (high reward ratio + low TVL/volume)

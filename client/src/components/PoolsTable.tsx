@@ -1,4 +1,4 @@
-import { ExternalLink, Flame, TrendingDown, TrendingUp, Zap, AlertTriangle, ArrowDown } from "lucide-react";
+import { ExternalLink, Flame, TrendingDown, TrendingUp, Zap, AlertTriangle, ArrowDown, Check, X, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -86,7 +86,7 @@ function getZapperUrl(pool: PoolWithScore): string {
   return `https://zapper.xyz/explore?search=${encodeURIComponent(pool.symbol)}`;
 }
 
-function getBeefyUrl(pool: PoolWithScore): string | null {
+function getAutoCompoundUrl(pool: PoolWithScore): string {
   const beefyChains: Record<string, string> = {
     "Ethereum": "ethereum",
     "Arbitrum": "arbitrum",
@@ -98,16 +98,23 @@ function getBeefyUrl(pool: PoolWithScore): string | null {
     "Fantom": "fantom",
   };
   
-  const autoCompounders = ["yearn-finance", "beefy", "convex-finance", "pendle", "aura-finance"];
-  if (autoCompounders.includes(pool.project) && beefyChains[pool.chain]) {
-    return `https://app.beefy.com/${beefyChains[pool.chain]}`;
-  }
-  return null;
-}
-
-function isAutoCompounder(pool: PoolWithScore): boolean {
-  const autoCompounders = ["yearn-finance", "beefy", "convex-finance", "pendle", "aura-finance", "concentrator"];
-  return autoCompounders.includes(pool.project);
+  const projectUrls: Record<string, string> = {
+    "beefy": `https://app.beefy.com/${beefyChains[pool.chain] || 'ethereum'}`,
+    "yearn-finance": "https://yearn.fi/vaults",
+    "convex-finance": "https://www.convexfinance.com/stake",
+    "gamma": "https://app.gamma.xyz",
+    "arrakis": "https://app.arrakis.fi",
+    "reaper-farm": "https://reaper.farm",
+    "autofarm": "https://autofarm.network",
+    "concentrator": "https://concentrator.aladdin.club",
+    "origin-dollar": "https://app.oeth.com",
+    "aura": "https://app.aura.finance",
+    "pendle": "https://app.pendle.finance/trade/pools",
+    "sommelier": "https://app.sommelier.finance",
+  };
+  
+  const projectLower = pool.project.toLowerCase();
+  return projectUrls[projectLower] || `https://app.beefy.com/${beefyChains[pool.chain] || 'ethereum'}?search=${encodeURIComponent(pool.symbol)}`;
 }
 
 function getProtocolUrl(pool: PoolWithScore): string {
@@ -200,6 +207,7 @@ export function PoolsTable({
               <TableHead className="text-right">APY</TableHead>
               <TableHead className="text-center">Trend</TableHead>
               <TableHead>IL Risk</TableHead>
+              <TableHead className="text-center">Auto-Compound</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -213,6 +221,7 @@ export function PoolsTable({
                 <TableCell><Skeleton className="h-6 w-16 ml-auto" /></TableCell>
                 <TableCell><Skeleton className="h-6 w-16 mx-auto" /></TableCell>
                 <TableCell><Skeleton className="h-6 w-16" /></TableCell>
+                <TableCell><Skeleton className="h-6 w-20 mx-auto" /></TableCell>
                 <TableCell><Skeleton className="h-8 w-24 ml-auto" /></TableCell>
               </TableRow>
             ))}
@@ -243,6 +252,7 @@ export function PoolsTable({
             <SortableHeader field="apy" className="text-right">APY</SortableHeader>
             <TableHead className="text-center">Trend</TableHead>
             <TableHead>IL Risk</TableHead>
+            <TableHead className="text-center">Auto-Compound</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -339,6 +349,35 @@ export function PoolsTable({
                   )}
                 </div>
               </TableCell>
+              <TableCell className="text-center">
+                {pool.autoCompound ? (
+                  <div className="flex flex-col items-center gap-1">
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Badge variant="outline" className="bg-chart-2/10 text-chart-2 border-chart-2/30">
+                          <Check className="h-3 w-3 mr-1" />
+                          Yes
+                        </Badge>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Auto via {pool.autoCompoundProject}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+                ) : (
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Badge variant="secondary" className="text-muted-foreground">
+                        <X className="h-3 w-3 mr-1" />
+                        No
+                      </Badge>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Manual claim & reinvest needed</p>
+                    </TooltipContent>
+                  </Tooltip>
+                )}
+              </TableCell>
               <TableCell className="text-right">
                 <div className="flex items-center justify-end gap-1">
                   <Tooltip>
@@ -364,29 +403,56 @@ export function PoolsTable({
                       <p>View on DeFiLlama</p>
                     </TooltipContent>
                   </Tooltip>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        asChild
-                        data-testid={`button-zap-${pool.pool.slice(0, 8)}`}
-                      >
-                        <a
-                          href={isAutoCompounder(pool) && getBeefyUrl(pool) ? getBeefyUrl(pool)! : getZapperUrl(pool)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="gap-1"
+                  {pool.autoCompound ? (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="default"
+                          size="sm"
+                          asChild
+                          className="bg-chart-2 hover:bg-chart-2/90"
+                          data-testid={`button-zap-auto-${pool.pool.slice(0, 8)}`}
                         >
-                          <Zap className="h-3 w-3" />
-                          <span className="hidden lg:inline">Zap</span>
-                        </a>
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>{isAutoCompounder(pool) ? "Zap In via Beefy" : "Zap In via Zapper"}</p>
-                    </TooltipContent>
-                  </Tooltip>
+                          <a
+                            href={getAutoCompoundUrl(pool)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="gap-1"
+                          >
+                            <RefreshCw className="h-3 w-3" />
+                            <span className="hidden lg:inline">Zap In</span>
+                          </a>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Zap In (Auto-Compound via {pool.autoCompoundProject})</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  ) : (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          asChild
+                          data-testid={`button-zap-${pool.pool.slice(0, 8)}`}
+                        >
+                          <a
+                            href={getZapperUrl(pool)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="gap-1"
+                          >
+                            <Zap className="h-3 w-3" />
+                            <span className="hidden lg:inline">Zap</span>
+                          </a>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Zap In via Zapper</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  )}
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button variant="outline" size="sm" asChild data-testid={`button-add-${pool.pool.slice(0, 8)}`}>
