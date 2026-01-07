@@ -1,4 +1,4 @@
-import { Sparkles, TrendingUp, ArrowRight, ExternalLink } from "lucide-react";
+import { Sparkles, TrendingUp, ArrowRight, ExternalLink, Zap, Shield, Flame } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -20,6 +20,55 @@ function formatNumber(num: number): string {
 
 function formatApy(apy: number): string {
   return `${apy.toFixed(2)}%`;
+}
+
+function generateInsight(pool: PoolWithScore, allPools: PoolWithScore[]): string {
+  const stablePools = allPools.filter(p => p.stablecoin);
+  const avgStableApy = stablePools.length > 0 
+    ? stablePools.reduce((sum, p) => sum + (p.apy || 0), 0) / stablePools.length 
+    : 0;
+  
+  const sameCategoryPools = allPools.filter(p => 
+    p.stablecoin === pool.stablecoin && p.ilRisk === pool.ilRisk
+  );
+  const avgCategoryApy = sameCategoryPools.length > 0
+    ? sameCategoryPools.reduce((sum, p) => sum + (p.apy || 0), 0) / sameCategoryPools.length
+    : 0;
+
+  if (pool.stablecoin && avgStableApy > 0) {
+    const pctAbove = ((pool.apy - avgStableApy) / avgStableApy) * 100;
+    if (pctAbove > 10) {
+      return `${Math.round(pctAbove)}% higher APY than avg stablecoin pools`;
+    }
+  }
+  
+  if (pool.ilRisk === "none" && pool.apy > avgCategoryApy * 1.1) {
+    return "No impermanent loss risk with above-average yield";
+  }
+  
+  if (pool.ilRisk === "low" && pool.tvlUsd > 10000000) {
+    return "Low IL risk with strong TVL backing";
+  }
+  
+  if (pool.apyPct7D && pool.apyPct7D > 0.5) {
+    return `APY up ${pool.apyPct7D.toFixed(1)}% in the last 7 days`;
+  }
+  
+  if (pool.tvlUsd > 50000000) {
+    return "High liquidity pool with proven stability";
+  }
+  
+  if (pool.riskAdjustedScore > 1) {
+    return "Strong risk-adjusted returns";
+  }
+  
+  return "Balanced risk-reward profile";
+}
+
+function getInsightIcon(pool: PoolWithScore): typeof Zap {
+  if (pool.ilRisk === "none") return Shield;
+  if (pool.apyPct7D && pool.apyPct7D > 0) return Flame;
+  return Zap;
 }
 
 export function Recommendations({ pools, isLoading }: RecommendationsProps) {
@@ -109,6 +158,15 @@ export function Recommendations({ pools, isLoading }: RecommendationsProps) {
                       Stable
                     </Badge>
                   )}
+                </div>
+                <div className="flex items-start gap-1.5 mt-2 p-2 rounded bg-muted/50">
+                  {(() => {
+                    const InsightIcon = getInsightIcon(pool);
+                    return <InsightIcon className="h-3 w-3 text-chart-4 mt-0.5 shrink-0" />;
+                  })()}
+                  <span className="text-xs text-muted-foreground" data-testid={`rec-insight-${index}`}>
+                    {generateInsight(pool, pools)}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2 mt-3">
                   <Button
