@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
+import { MomentumBadge } from "@/components/Sparkline";
 import type { PoolWithScore } from "@shared/schema";
 
 interface RecommendationsProps {
@@ -175,6 +176,7 @@ export function Recommendations({ pools, isLoading }: RecommendationsProps) {
                       Low Liquidity Rewards
                     </span>
                   )}
+                  <MomentumBadge apyPct7D={pool.apyPct7D} />
                 </div>
                 <div className="flex items-start gap-1.5 mt-2 p-2 rounded bg-muted/50">
                   {(() => {

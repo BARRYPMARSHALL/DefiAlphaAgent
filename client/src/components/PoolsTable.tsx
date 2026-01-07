@@ -15,6 +15,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { Sparkline } from "@/components/Sparkline";
 import type { PoolWithScore, SortState } from "@shared/schema";
 
 interface PoolsTableProps {
@@ -197,8 +198,7 @@ export function PoolsTable({
               <TableHead>Symbol</TableHead>
               <TableHead className="text-right">TVL</TableHead>
               <TableHead className="text-right">APY</TableHead>
-              <TableHead className="text-right">Base APY</TableHead>
-              <TableHead className="text-right">Reward APY</TableHead>
+              <TableHead className="text-center">Trend</TableHead>
               <TableHead>IL Risk</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
@@ -211,8 +211,7 @@ export function PoolsTable({
                 <TableCell><Skeleton className="h-6 w-32" /></TableCell>
                 <TableCell><Skeleton className="h-6 w-20 ml-auto" /></TableCell>
                 <TableCell><Skeleton className="h-6 w-16 ml-auto" /></TableCell>
-                <TableCell><Skeleton className="h-6 w-16 ml-auto" /></TableCell>
-                <TableCell><Skeleton className="h-6 w-16 ml-auto" /></TableCell>
+                <TableCell><Skeleton className="h-6 w-16 mx-auto" /></TableCell>
                 <TableCell><Skeleton className="h-6 w-16" /></TableCell>
                 <TableCell><Skeleton className="h-8 w-24 ml-auto" /></TableCell>
               </TableRow>
@@ -242,8 +241,7 @@ export function PoolsTable({
             <TableHead>Symbol</TableHead>
             <SortableHeader field="tvlUsd" className="text-right">TVL</SortableHeader>
             <SortableHeader field="apy" className="text-right">APY</SortableHeader>
-            <TableHead className="text-right">Base APY</TableHead>
-            <TableHead className="text-right">Reward APY</TableHead>
+            <TableHead className="text-center">Trend</TableHead>
             <TableHead>IL Risk</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
@@ -310,31 +308,17 @@ export function PoolsTable({
                 {formatNumber(pool.tvlUsd)}
               </TableCell>
               <TableCell className="text-right">
-                <div className="flex items-center justify-end gap-2">
-                  <span className="font-mono font-semibold text-chart-2">
-                    {formatApy(pool.apy)}
-                  </span>
-                  {pool.apyPct7D !== null && pool.apyPct7D !== 0 && (
-                    <Tooltip>
-                      <TooltipTrigger>
-                        {pool.apyPct7D > 0 ? (
-                          <TrendingUp className="h-4 w-4 text-chart-2" />
-                        ) : (
-                          <TrendingDown className="h-4 w-4 text-destructive" />
-                        )}
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>7d change: {pool.apyPct7D > 0 ? "+" : ""}{pool.apyPct7D.toFixed(2)}%</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  )}
-                </div>
+                <span className="font-mono font-semibold text-chart-2">
+                  {formatApy(pool.apy)}
+                </span>
               </TableCell>
-              <TableCell className="text-right font-mono text-muted-foreground">
-                {formatApy(pool.apyBase)}
-              </TableCell>
-              <TableCell className="text-right font-mono text-muted-foreground">
-                {formatApy(pool.apyReward)}
+              <TableCell className="text-center">
+                <Sparkline
+                  apyPct1D={pool.apyPct1D}
+                  apyPct7D={pool.apyPct7D}
+                  apyPct30D={pool.apyPct30D}
+                  currentApy={pool.apy}
+                />
               </TableCell>
               <TableCell>
                 <div className="flex items-center gap-2">

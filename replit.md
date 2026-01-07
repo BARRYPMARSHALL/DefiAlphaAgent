@@ -44,6 +44,8 @@ Preferred communication style: Simple, everyday language.
 - `apyDeclining`: True if APY dropped more than 20% in the last 7 days (displayed as red down-arrow)
 - `lowLiquidityRewards`: Warning if reward tokens likely have low liquidity (high reward ratio + low TVL/volume)
 
+**Sparkline Trends & Momentum**: Each pool shows a sparkline chart derived from apyPct1D, apyPct7D, and apyPct30D data. Momentum indicator shows Rising (green), Falling (red), or Stable based on 7-day APY change.
+
 **Persistent user preferences**: Filter and sort preferences are saved to localStorage and restored on page load.
 
 **Auto-refresh pattern**: Data refreshes every 5 minutes using React Query's refetch interval.
