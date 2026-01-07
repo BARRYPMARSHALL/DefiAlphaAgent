@@ -1,4 +1,4 @@
-import { ExternalLink, Flame, TrendingDown, TrendingUp } from "lucide-react";
+import { ExternalLink, Flame, TrendingDown, TrendingUp, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -65,6 +65,53 @@ function getChainColor(chain: string): string {
     Solana: "bg-gradient-to-r from-purple-500/10 to-cyan-500/10 text-purple-600 dark:text-purple-400",
   };
   return colors[chain] || "bg-muted text-muted-foreground";
+}
+
+function getZapperUrl(pool: PoolWithScore): string {
+  const chainMap: Record<string, string> = {
+    "Ethereum": "ethereum",
+    "Arbitrum": "arbitrum",
+    "Optimism": "optimism",
+    "Polygon": "polygon",
+    "Base": "base",
+    "BSC": "binance-smart-chain",
+    "Avalanche": "avalanche",
+  };
+  
+  const zapperChain = chainMap[pool.chain];
+  if (zapperChain && pool.underlyingTokens?.[0]) {
+    return `https://zapper.xyz/token/${zapperChain}/${pool.underlyingTokens[0]}`;
+  }
+  return `https://zapper.xyz/explore?search=${encodeURIComponent(pool.symbol)}`;
+}
+
+function getProtocolUrl(pool: PoolWithScore): string {
+  const protocolUrls: Record<string, string> = {
+    "uniswap-v3": "https://app.uniswap.org/pools",
+    "uniswap-v2": "https://app.uniswap.org/pools",
+    "curve-dex": "https://curve.fi",
+    "aave-v3": "https://app.aave.com",
+    "aave-v2": "https://app.aave.com",
+    "compound-v3": "https://app.compound.finance",
+    "compound-v2": "https://app.compound.finance",
+    "convex-finance": "https://www.convexfinance.com/stake",
+    "yearn-finance": "https://yearn.fi/vaults",
+    "balancer-v2": "https://app.balancer.fi",
+    "sushiswap": "https://www.sushi.com/pool",
+    "pancakeswap-amm-v3": "https://pancakeswap.finance/liquidity",
+    "pancakeswap-amm-v2": "https://pancakeswap.finance/liquidity",
+    "raydium-amm": "https://raydium.io/liquidity",
+    "morpho-v1": "https://app.morpho.org",
+    "pendle": "https://app.pendle.finance/trade/pools",
+    "lido": "https://stake.lido.fi",
+    "rocket-pool": "https://stake.rocketpool.net",
+    "gmx": "https://app.gmx.io",
+    "velodrome-v2": "https://velodrome.finance/liquidity",
+    "aerodrome-v1": "https://aerodrome.finance/liquidity",
+  };
+  
+  const baseUrl = protocolUrls[pool.project] || `https://defillama.com/yields/pool/${pool.pool}`;
+  return baseUrl;
 }
 
 export function PoolsTable({
@@ -263,25 +310,43 @@ export function PoolsTable({
                       <p>View on DeFiLlama</p>
                     </TooltipContent>
                   </Tooltip>
-                  {pool.url && (
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button variant="outline" size="sm" asChild>
-                          <a
-                            href={pool.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            data-testid={`button-add-liquidity-${pool.pool.slice(0, 8)}`}
-                          >
-                            Add
-                          </a>
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Add liquidity on {pool.project}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  )}
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        asChild
+                        data-testid={`button-zap-${pool.pool.slice(0, 8)}`}
+                      >
+                        <a
+                          href={getZapperUrl(pool)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <Zap className="h-4 w-4" />
+                        </a>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Zap In via Zapper</p>
+                    </TooltipContent>
+                  </Tooltip>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button variant="outline" size="sm" asChild data-testid={`button-add-${pool.pool.slice(0, 8)}`}>
+                        <a
+                          href={getProtocolUrl(pool)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Add
+                        </a>
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Add liquidity on {pool.project}</p>
+                    </TooltipContent>
+                  </Tooltip>
                 </div>
               </TableCell>
             </TableRow>

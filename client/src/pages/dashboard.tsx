@@ -6,6 +6,7 @@ import { FiltersBar } from "@/components/FiltersBar";
 import { PoolsTable } from "@/components/PoolsTable";
 import { Recommendations } from "@/components/Recommendations";
 import { ChainChart } from "@/components/ChainChart";
+import { UserPositions } from "@/components/UserPositions";
 import { queryClient } from "@/lib/queryClient";
 import type { FilterState, SortState, PoolsResponse } from "@shared/schema";
 
@@ -188,6 +189,11 @@ export default function Dashboard() {
           </div>
 
           <div className="space-y-6">
+            <UserPositions
+              topPools={pools.filter(p => p.riskAdjustedScore > 0).slice(0, 10)}
+              isLoading={isLoading}
+            />
+
             <Recommendations
               pools={pools.filter(p => p.riskAdjustedScore > 0).slice(0, 10)}
               isLoading={isLoading}

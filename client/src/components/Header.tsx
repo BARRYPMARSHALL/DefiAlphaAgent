@@ -1,6 +1,7 @@
-import { RefreshCw, TrendingUp, Wallet } from "lucide-react";
+import { RefreshCw, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "./ThemeToggle";
+import { ConnectWallet } from "./ConnectWallet";
 
 interface HeaderProps {
   onRefresh: () => void;
@@ -40,10 +41,7 @@ export function Header({ onRefresh, isRefreshing, lastUpdated }: HeaderProps) {
             Refresh
           </Button>
 
-          <Button variant="default" size="sm" data-testid="button-connect-wallet">
-            <Wallet className="h-4 w-4 mr-2" />
-            Connect Wallet
-          </Button>
+          <ConnectWallet />
 
           <ThemeToggle />
         </div>
