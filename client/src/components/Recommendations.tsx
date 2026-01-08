@@ -1,4 +1,4 @@
-import { Sparkles, TrendingUp, ArrowRight, ExternalLink, Zap, Shield, Flame, AlertTriangle, ArrowDown, RefreshCw, Check } from "lucide-react";
+import { Sparkles, TrendingUp, ArrowRight, ExternalLink, Zap, Shield, Flame, AlertTriangle, ArrowDown, RefreshCw, Check, Leaf } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,28 @@ function formatNumber(num: number): string {
 
 function formatApy(apy: number): string {
   return `${apy.toFixed(2)}%`;
+}
+
+const BEEFY_CHAIN_SLUGS: Record<string, string> = {
+  "Ethereum": "ethereum",
+  "Arbitrum": "arbitrum",
+  "Optimism": "optimism",
+  "Polygon": "polygon",
+  "Base": "base",
+  "BSC": "bsc",
+  "Avalanche": "avax",
+  "Fantom": "fantom",
+  "Cronos": "cronos",
+  "zkSync Era": "zksync",
+  "Linea": "linea",
+  "Mantle": "mantle",
+  "Scroll": "scroll",
+  "Mode": "mode",
+  "Fraxtal": "fraxtal",
+};
+
+function getBeefyChainSlug(chain: string): string {
+  return BEEFY_CHAIN_SLUGS[chain] || 'ethereum';
 }
 
 function generateInsight(pool: PoolWithScore, allPools: PoolWithScore[]): string {
@@ -167,10 +189,20 @@ export function Recommendations({ pools, isLoading }: RecommendationsProps) {
                       Stable
                     </Badge>
                   )}
-                  {pool.autoCompound ? (
+                  {pool.isBeefy ? (
+                    <Badge variant="outline" className="bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/40 text-xs">
+                      <Check className="h-2.5 w-2.5 mr-0.5" />
+                      Beefy Vault
+                    </Badge>
+                  ) : pool.autoCompound ? (
                     <Badge variant="outline" className="bg-chart-2/10 text-chart-2 border-chart-2/30 text-xs">
                       <Check className="h-2.5 w-2.5 mr-0.5" />
                       Auto via {pool.autoCompoundProject}
+                    </Badge>
+                  ) : pool.beefyAvailable ? (
+                    <Badge variant="outline" className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 text-xs">
+                      <RefreshCw className="h-2.5 w-2.5 mr-0.5" />
+                      Beefy Available
                     </Badge>
                   ) : (
                     <Badge variant="secondary" className="text-xs text-muted-foreground">
@@ -222,7 +254,24 @@ export function Recommendations({ pools, isLoading }: RecommendationsProps) {
                       View
                     </a>
                   </Button>
-                  {pool.autoCompound && (
+                  {pool.isBeefy ? (
+                    <Button
+                      variant="default"
+                      size="sm"
+                      asChild
+                      className="h-7 text-xs bg-emerald-600 hover:bg-emerald-700"
+                      data-testid={`button-rec-zap-beefy-${index}`}
+                    >
+                      <a
+                        href={`https://app.beefy.com/#/${getBeefyChainSlug(pool.chain)}?search=${encodeURIComponent(pool.symbol)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <RefreshCw className="h-3 w-3 mr-1" />
+                        Zap via Beefy
+                      </a>
+                    </Button>
+                  ) : pool.autoCompound ? (
                     <Button
                       variant="default"
                       size="sm"
@@ -239,8 +288,24 @@ export function Recommendations({ pools, isLoading }: RecommendationsProps) {
                         Zap In (Auto)
                       </a>
                     </Button>
-                  )}
-                  {pool.url && !pool.autoCompound && (
+                  ) : pool.beefyAvailable ? (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      asChild
+                      className="h-7 text-xs border-emerald-500/50 text-emerald-600 dark:text-emerald-400"
+                      data-testid={`button-rec-check-beefy-${index}`}
+                    >
+                      <a
+                        href={`https://app.beefy.com/#/${getBeefyChainSlug(pool.chain)}?search=${encodeURIComponent(pool.symbol)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <RefreshCw className="h-3 w-3 mr-1" />
+                        Check Beefy
+                      </a>
+                    </Button>
+                  ) : pool.url && (
                     <Button
                       variant="outline"
                       size="sm"
@@ -264,12 +329,20 @@ export function Recommendations({ pools, isLoading }: RecommendationsProps) {
           </div>
         ))}
 
-        <div className="pt-2">
+        <div className="pt-2 space-y-2">
+          <div className="p-3 rounded-md bg-emerald-500/10 border border-emerald-500/20">
+            <div className="flex items-start gap-2">
+              <Leaf className="h-4 w-4 text-emerald-600 dark:text-emerald-400 mt-0.5 shrink-0" />
+              <p className="text-xs text-muted-foreground">
+                <span className="font-medium text-emerald-600 dark:text-emerald-400">Beefy tip:</span> Beefy vaults auto-compound rewards multiple times per day — best for passive yields without gas costs.
+              </p>
+            </div>
+          </div>
           <div className="p-3 rounded-md bg-muted/50">
             <div className="flex items-start gap-2">
               <TrendingUp className="h-4 w-4 text-chart-2 mt-0.5 shrink-0" />
               <p className="text-xs text-muted-foreground">
-                <span className="font-medium text-foreground">Pro tip:</span> These pools are ranked by risk-adjusted returns, considering APY, TVL stability, and impermanent loss risk.
+                <span className="font-medium text-foreground">Pro tip:</span> Pools are ranked by risk-adjusted returns. Beefy vaults get a ranking boost for passive compounding.
               </p>
             </div>
           </div>

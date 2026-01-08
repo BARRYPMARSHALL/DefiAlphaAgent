@@ -86,20 +86,35 @@ function getZapperUrl(pool: PoolWithScore): string {
   return `https://zapper.xyz/explore?search=${encodeURIComponent(pool.symbol)}`;
 }
 
+const BEEFY_CHAIN_SLUGS: Record<string, string> = {
+  "Ethereum": "ethereum",
+  "Arbitrum": "arbitrum",
+  "Optimism": "optimism",
+  "Polygon": "polygon",
+  "Base": "base",
+  "BSC": "bsc",
+  "Avalanche": "avax",
+  "Fantom": "fantom",
+  "Cronos": "cronos",
+  "zkSync Era": "zksync",
+  "Linea": "linea",
+  "Mantle": "mantle",
+  "Scroll": "scroll",
+  "Mode": "mode",
+  "Fraxtal": "fraxtal",
+};
+
+function getBeefyUrl(pool: PoolWithScore): string {
+  const chainSlug = BEEFY_CHAIN_SLUGS[pool.chain] || 'ethereum';
+  return `https://app.beefy.com/#/${chainSlug}?search=${encodeURIComponent(pool.symbol)}`;
+}
+
 function getAutoCompoundUrl(pool: PoolWithScore): string {
-  const beefyChains: Record<string, string> = {
-    "Ethereum": "ethereum",
-    "Arbitrum": "arbitrum",
-    "Optimism": "optimism",
-    "Polygon": "polygon",
-    "Base": "base",
-    "BSC": "bsc",
-    "Avalanche": "avax",
-    "Fantom": "fantom",
-  };
+  if (pool.isBeefy || pool.autoCompoundProject?.toLowerCase() === 'beefy') {
+    return getBeefyUrl(pool);
+  }
   
   const projectUrls: Record<string, string> = {
-    "beefy": `https://app.beefy.com/${beefyChains[pool.chain] || 'ethereum'}`,
     "yearn-finance": "https://yearn.fi/vaults",
     "convex-finance": "https://www.convexfinance.com/stake",
     "gamma": "https://app.gamma.xyz",
@@ -114,7 +129,7 @@ function getAutoCompoundUrl(pool: PoolWithScore): string {
   };
   
   const projectLower = pool.project.toLowerCase();
-  return projectUrls[projectLower] || `https://app.beefy.com/${beefyChains[pool.chain] || 'ethereum'}?search=${encodeURIComponent(pool.symbol)}`;
+  return projectUrls[projectLower] || getBeefyUrl(pool);
 }
 
 function getProtocolUrl(pool: PoolWithScore): string {
@@ -350,26 +365,48 @@ export function PoolsTable({
                 </div>
               </TableCell>
               <TableCell className="text-center">
-                {pool.autoCompound ? (
-                  <div className="flex flex-col items-center gap-1">
-                    <Tooltip>
-                      <TooltipTrigger>
-                        <Badge variant="outline" className="bg-chart-2/10 text-chart-2 border-chart-2/30">
-                          <Check className="h-3 w-3 mr-1" />
-                          Yes
-                        </Badge>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>Auto via {pool.autoCompoundProject}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </div>
+                {pool.isBeefy ? (
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Badge variant="outline" className="bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/40">
+                        <Check className="h-3 w-3 mr-1" />
+                        Beefy
+                      </Badge>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Beefy vault - Auto-compounds multiple times daily</p>
+                    </TooltipContent>
+                  </Tooltip>
+                ) : pool.autoCompound ? (
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Badge variant="outline" className="bg-chart-2/10 text-chart-2 border-chart-2/30">
+                        <Check className="h-3 w-3 mr-1" />
+                        Yes
+                      </Badge>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Auto via {pool.autoCompoundProject}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                ) : pool.beefyAvailable ? (
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <Badge variant="outline" className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/30">
+                        <RefreshCw className="h-3 w-3 mr-1" />
+                        Beefy
+                      </Badge>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Beefy vault may be available for this pool</p>
+                    </TooltipContent>
+                  </Tooltip>
                 ) : (
                   <Tooltip>
                     <TooltipTrigger>
                       <Badge variant="secondary" className="text-muted-foreground">
                         <X className="h-3 w-3 mr-1" />
-                        No
+                        Manual
                       </Badge>
                     </TooltipTrigger>
                     <TooltipContent>
@@ -403,7 +440,32 @@ export function PoolsTable({
                       <p>View on DeFiLlama</p>
                     </TooltipContent>
                   </Tooltip>
-                  {pool.autoCompound ? (
+                  {pool.isBeefy ? (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="default"
+                          size="sm"
+                          asChild
+                          className="bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-600 dark:hover:bg-emerald-700"
+                          data-testid={`button-zap-beefy-${pool.pool.slice(0, 8)}`}
+                        >
+                          <a
+                            href={getBeefyUrl(pool)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="gap-1"
+                          >
+                            <RefreshCw className="h-3 w-3" />
+                            <span className="hidden lg:inline">Zap Beefy</span>
+                          </a>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Zap via Beefy - Auto-compounds daily</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  ) : pool.autoCompound ? (
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Button
@@ -426,6 +488,31 @@ export function PoolsTable({
                       </TooltipTrigger>
                       <TooltipContent>
                         <p>Zap In (Auto-Compound via {pool.autoCompoundProject})</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  ) : pool.beefyAvailable ? (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          asChild
+                          className="border-emerald-500/50 text-emerald-600 dark:text-emerald-400"
+                          data-testid={`button-check-beefy-${pool.pool.slice(0, 8)}`}
+                        >
+                          <a
+                            href={getBeefyUrl(pool)}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="gap-1"
+                          >
+                            <RefreshCw className="h-3 w-3" />
+                            <span className="hidden lg:inline">Beefy</span>
+                          </a>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Check Beefy vault for auto-compounding</p>
                       </TooltipContent>
                     </Tooltip>
                   ) : (

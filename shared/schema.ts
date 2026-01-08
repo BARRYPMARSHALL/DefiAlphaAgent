@@ -79,6 +79,8 @@ export interface PoolWithScore extends Pool {
   ilPctActual: number | null;
   autoCompound: boolean;
   autoCompoundProject: string | null;
+  isBeefy: boolean;
+  beefyAvailable: boolean;
 }
 
 export interface FilterState {

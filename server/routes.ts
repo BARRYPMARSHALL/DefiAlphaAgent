@@ -180,14 +180,82 @@ const AUTO_COMPOUND_PROJECTS = new Set([
 
 const AUTO_COMPOUND_KEYWORDS = ['vault', 'auto', 'compound', 'autocompound'];
 
-function detectAutoCompound(pool: any): { autoCompound: boolean; autoCompoundProject: string | null } {
+const BEEFY_SUPPORTED_PROTOCOLS = new Set([
+  'aerodrome-v1',
+  'aerodrome-v2',
+  'velodrome-v2',
+  'velodrome-v1',
+  'uniswap-v3',
+  'uniswap-v2',
+  'pancakeswap-amm-v3',
+  'pancakeswap-amm-v2',
+  'sushiswap',
+  'curve-dex',
+  'curve',
+  'balancer-v2',
+  'camelot-v3',
+  'camelot-v2',
+  'trader-joe-dex',
+  'quickswap-dex',
+  'thena-v1',
+  'thena-v2',
+  'ramses-v2',
+  'lynex',
+  'solidly-v2',
+  'equalizer',
+]);
+
+const BEEFY_SUPPORTED_CHAINS = new Set([
+  'Ethereum',
+  'Arbitrum',
+  'Optimism',
+  'Polygon',
+  'Base',
+  'BSC',
+  'Avalanche',
+  'Fantom',
+  'Cronos',
+  'zkSync Era',
+  'Linea',
+  'Mantle',
+  'Scroll',
+  'Mode',
+  'Fraxtal',
+]);
+
+interface AutoCompoundInfo {
+  autoCompound: boolean;
+  autoCompoundProject: string | null;
+  isBeefy: boolean;
+  beefyAvailable: boolean;
+}
+
+function detectAutoCompound(pool: any): AutoCompoundInfo {
   const project = (pool.project || '').toLowerCase();
+  const chain = pool.chain || '';
+  
+  if (project === 'beefy') {
+    return { 
+      autoCompound: true, 
+      autoCompoundProject: 'Beefy',
+      isBeefy: true,
+      beefyAvailable: true
+    };
+  }
   
   if (AUTO_COMPOUND_PROJECTS.has(project)) {
     const displayName = pool.project.split('-').map((w: string) => 
       w.charAt(0).toUpperCase() + w.slice(1)
     ).join(' ');
-    return { autoCompound: true, autoCompoundProject: displayName };
+    
+    const beefyAvailable = BEEFY_SUPPORTED_PROTOCOLS.has(project) && BEEFY_SUPPORTED_CHAINS.has(chain);
+    
+    return { 
+      autoCompound: true, 
+      autoCompoundProject: displayName,
+      isBeefy: false,
+      beefyAvailable
+    };
   }
   
   const poolMeta = (pool.poolMeta || '').toLowerCase();
@@ -195,11 +263,24 @@ function detectAutoCompound(pool: any): { autoCompound: boolean; autoCompoundPro
   
   for (const keyword of AUTO_COMPOUND_KEYWORDS) {
     if (poolMeta.includes(keyword) || symbol.includes(keyword)) {
-      return { autoCompound: true, autoCompoundProject: pool.project };
+      const beefyAvailable = BEEFY_SUPPORTED_PROTOCOLS.has(project) && BEEFY_SUPPORTED_CHAINS.has(chain);
+      return { 
+        autoCompound: true, 
+        autoCompoundProject: pool.project,
+        isBeefy: false,
+        beefyAvailable
+      };
     }
   }
   
-  return { autoCompound: false, autoCompoundProject: null };
+  const beefyAvailable = BEEFY_SUPPORTED_PROTOCOLS.has(project) && BEEFY_SUPPORTED_CHAINS.has(chain);
+  
+  return { 
+    autoCompound: false, 
+    autoCompoundProject: null,
+    isBeefy: false,
+    beefyAvailable
+  };
 }
 
 interface TransformedPoolData {
@@ -270,17 +351,20 @@ async function fetchPoolsData(): Promise<void> {
       const rawPool = rawPools.find(r => r.pool === data.pool.pool) || data.pool;
       const autoCompoundInfo = detectAutoCompound(rawPool);
       const baseScore = calculateRiskAdjustedScore(data.pool);
+      const beefyBoost = autoCompoundInfo.isBeefy ? 1.15 : 1.0;
       const autoCompoundBoost = autoCompoundInfo.autoCompound ? 1.1 : 1.0;
       
       return {
         ...data.pool,
-        riskAdjustedScore: baseScore * autoCompoundBoost,
+        riskAdjustedScore: baseScore * autoCompoundBoost * beefyBoost,
         isHot: isHotPool(rawPool),
         apyDeclining: data.apyDeclining,
         lowLiquidityRewards: data.lowLiquidityRewards,
         ilPctActual: data.ilPctActual,
         autoCompound: autoCompoundInfo.autoCompound,
         autoCompoundProject: autoCompoundInfo.autoCompoundProject,
+        isBeefy: autoCompoundInfo.isBeefy,
+        beefyAvailable: autoCompoundInfo.beefyAvailable,
       };
     });
 
