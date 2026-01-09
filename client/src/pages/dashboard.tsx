@@ -10,6 +10,8 @@ import { queryClient } from "@/lib/queryClient";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Search, TrendingUp, Shield, Zap, HelpCircle } from "lucide-react";
+import { ShareBar } from "@/components/ShareBar";
+import { ShareMyFind } from "@/components/ShareMyFind";
 import type { FilterState, SortState, PoolsResponse } from "@shared/schema";
 
 const DEFAULT_FILTERS: FilterState = {
@@ -183,6 +185,10 @@ export default function Dashboard() {
               <Zap className="h-4 w-4 text-emerald-500" />
               <span>Auto-compound detection</span>
             </div>
+          </div>
+          <div className="flex items-center justify-center gap-4 pt-2">
+            <ShareMyFind pools={pools.filter(p => p.riskAdjustedScore > 0)} />
+            <ShareBar />
           </div>
         </div>
 

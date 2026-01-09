@@ -1,6 +1,7 @@
 import { RefreshCw, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "./ThemeToggle";
+import { ShareBar } from "./ShareBar";
 
 interface HeaderProps {
   onRefresh: () => void;
@@ -29,6 +30,8 @@ export function Header({ onRefresh, isRefreshing, lastUpdated }: HeaderProps) {
         </div>
 
         <div className="flex items-center gap-2 flex-wrap">
+          <ShareBar compact />
+          
           <Button
             variant="outline"
             size="sm"

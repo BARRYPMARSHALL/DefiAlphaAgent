@@ -1,4 +1,5 @@
-import { ExternalLink, Flame, TrendingDown, TrendingUp, Zap, AlertTriangle, ArrowDown, Check, X, RefreshCw } from "lucide-react";
+import { ExternalLink, Flame, TrendingDown, TrendingUp, Zap, AlertTriangle, ArrowDown, Check, X, RefreshCw, Share2 } from "lucide-react";
+import { SharePoolButton } from "@/components/ShareBar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -275,7 +276,7 @@ export function PoolsTable({
           {pools.map((pool) => (
             <TableRow
               key={pool.pool}
-              className="hover-elevate"
+              className="hover-elevate group"
               data-testid={`row-pool-${pool.pool.slice(0, 8)}`}
             >
               <TableCell>
@@ -417,6 +418,7 @@ export function PoolsTable({
               </TableCell>
               <TableCell className="text-right">
                 <div className="flex items-center justify-end gap-1">
+                  <SharePoolButton pool={pool} />
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button
