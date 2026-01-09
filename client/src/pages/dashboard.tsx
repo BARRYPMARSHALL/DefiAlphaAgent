@@ -7,6 +7,9 @@ import { PoolsTable } from "@/components/PoolsTable";
 import { Recommendations } from "@/components/Recommendations";
 import { ChainChart } from "@/components/ChainChart";
 import { queryClient } from "@/lib/queryClient";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Search, TrendingUp, Shield, Zap, HelpCircle } from "lucide-react";
 import type { FilterState, SortState, PoolsResponse } from "@shared/schema";
 
 const DEFAULT_FILTERS: FilterState = {
@@ -159,6 +162,30 @@ export default function Dashboard() {
       />
 
       <main className="max-w-7xl mx-auto px-4 py-6 space-y-6">
+        <div className="text-center space-y-3 pb-2">
+          <p className="text-muted-foreground max-w-2xl mx-auto" data-testid="text-description">
+            Find the best DeFi yield opportunities across 100+ chains. We analyze thousands of liquidity pools and lending protocols in real-time, scoring them by risk-adjusted returns so you can maximize your earnings while managing risk.
+          </p>
+          <div className="flex items-center justify-center gap-6 text-sm text-muted-foreground flex-wrap">
+            <div className="flex items-center gap-1.5">
+              <Search className="h-4 w-4 text-chart-1" />
+              <span>Real-time data</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Shield className="h-4 w-4 text-chart-2" />
+              <span>Risk scoring</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <TrendingUp className="h-4 w-4 text-chart-3" />
+              <span>Smart recommendations</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Zap className="h-4 w-4 text-emerald-500" />
+              <span>Auto-compound detection</span>
+            </div>
+          </div>
+        </div>
+
         <SummaryCards
           totalPools={stats.totalPools}
           avgApy={stats.avgApy}
@@ -201,7 +228,58 @@ export default function Dashboard() {
         </div>
       </main>
 
-      <footer className="border-t mt-12">
+      <section className="max-w-7xl mx-auto px-4 py-8">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <HelpCircle className="h-5 w-5" />
+              Frequently Asked Questions
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="what-is-apy">
+                <AccordionTrigger data-testid="faq-trigger-apy">What is APY and how is it calculated?</AccordionTrigger>
+                <AccordionContent>
+                  APY (Annual Percentage Yield) represents your expected yearly return, including compound interest. It combines base yields from trading fees or lending interest with additional reward token emissions. The rates shown are real-time from DeFiLlama and can fluctuate based on market conditions.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="risk-score">
+                <AccordionTrigger data-testid="faq-trigger-risk">How does the risk-adjusted score work?</AccordionTrigger>
+                <AccordionContent>
+                  Our risk-adjusted score balances APY with safety factors. We consider TVL (higher is safer), impermanent loss risk (based on asset volatility), and APY sustainability. Pools with declining yields or low-liquidity reward tokens are flagged. Beefy auto-compounding vaults receive a ranking boost for their passive, gas-efficient strategy.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="impermanent-loss">
+                <AccordionTrigger data-testid="faq-trigger-il">What is impermanent loss?</AccordionTrigger>
+                <AccordionContent>
+                  Impermanent loss occurs when you provide liquidity to a pool and the relative prices of your deposited assets change. The greater the price divergence, the more IL you experience. Stablecoin pairs have minimal IL risk, while volatile pairs like ETH/altcoins carry higher risk. We classify pools as None, Low, Medium, or High IL risk to help you make informed decisions.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="auto-compound">
+                <AccordionTrigger data-testid="faq-trigger-autocompound">What are auto-compounding vaults?</AccordionTrigger>
+                <AccordionContent>
+                  Auto-compounding vaults (like Beefy, Yearn, and Convex) automatically harvest your reward tokens and reinvest them into the pool. This saves you gas fees and time while maximizing your compound returns. Beefy vaults compound multiple times per day across 15+ chains, making them ideal for passive yield farming.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="tvl-importance">
+                <AccordionTrigger data-testid="faq-trigger-tvl">Why does TVL matter?</AccordionTrigger>
+                <AccordionContent>
+                  TVL (Total Value Locked) indicates how much capital is deposited in a pool. Higher TVL generally means more liquidity, lower slippage, and greater trust from the community. We filter for pools with at least $5M TVL by default to help you avoid illiquid or risky opportunities.
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="data-source">
+                <AccordionTrigger data-testid="faq-trigger-data">Where does this data come from?</AccordionTrigger>
+                <AccordionContent>
+                  All yield data is sourced from DeFiLlama, the largest DeFi analytics platform. They aggregate data from hundreds of protocols across 100+ blockchains. Our dashboard refreshes every 5 minutes to ensure you're seeing the latest opportunities.
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </CardContent>
+        </Card>
+      </section>
+
+      <footer className="border-t mt-4">
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between gap-4 flex-wrap text-sm text-muted-foreground">
             <p>
