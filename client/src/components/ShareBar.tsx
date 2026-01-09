@@ -18,6 +18,14 @@ export function ShareBar({ className = "", compact = false }: ShareBarProps) {
   const { toast } = useToast();
 
   const handleCopyLink = async () => {
+    if (typeof navigator === "undefined" || !navigator.clipboard) {
+      toast({
+        title: "Cannot copy",
+        description: "Clipboard not available. Please copy the URL manually.",
+        variant: "destructive",
+      });
+      return;
+    }
     try {
       await navigator.clipboard.writeText(SHARE_URL);
       setCopied(true);
@@ -47,11 +55,19 @@ export function ShareBar({ className = "", compact = false }: ShareBarProps) {
 
   const shareToDiscord = () => {
     const text = `${SHARE_TEXT}\n${SHARE_URL}`;
-    navigator.clipboard.writeText(text);
-    toast({
-      title: "Copied for Discord!",
-      description: "Paste this message in your favorite Discord server.",
-    });
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      navigator.clipboard.writeText(text);
+      toast({
+        title: "Copied for Discord!",
+        description: "Paste this message in your favorite Discord server.",
+      });
+    } else {
+      toast({
+        title: "Cannot copy",
+        description: "Please copy the link manually.",
+        variant: "destructive",
+      });
+    }
   };
 
   const shareToReddit = () => {
@@ -156,21 +172,24 @@ export function SharePoolButton({ pool }: SharePoolButtonProps) {
   const { toast } = useToast();
 
   const handleShare = () => {
-    const text = `Found ${pool.apy.toFixed(1)}% APY on ${pool.symbol} (${pool.project} / ${pool.chain}) via Alpha Yield Scout!`;
+    const apyText = pool.apy != null ? `${pool.apy.toFixed(1)}%` : "high";
+    const text = `Found ${apyText} APY on ${pool.symbol} (${pool.project} / ${pool.chain}) via Alpha Yield Scout!`;
     const url = `${SHARE_URL}?pool=${pool.pool}`;
     const fullText = `${text}\n${url}`;
     
-    if (navigator.share) {
+    if (typeof navigator !== "undefined" && navigator.share) {
       navigator.share({
         title: "Alpha Yield Scout - Pool Discovery",
         text: text,
         url: url,
       }).catch(() => {
-        navigator.clipboard.writeText(fullText);
-        toast({
-          title: "Copied to clipboard!",
-          description: "Share this pool with your friends.",
-        });
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(fullText);
+          toast({
+            title: "Copied to clipboard!",
+            description: "Share this pool with your friends.",
+          });
+        }
       });
     } else {
       const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`;

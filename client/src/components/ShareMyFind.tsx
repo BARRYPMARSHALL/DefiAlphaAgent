@@ -14,7 +14,8 @@ interface ShareMyFindProps {
 
 const SHARE_URL = typeof window !== "undefined" ? window.location.origin : "https://alphayieldscout.replit.app";
 
-function formatApy(apy: number): string {
+function formatApy(apy: number | null | undefined): string {
+  if (apy == null) return "high";
   return `${apy.toFixed(2)}%`;
 }
 
@@ -31,13 +32,35 @@ export function ShareMyFind({ pools }: ShareMyFindProps) {
   const { toast } = useToast();
   const cardRef = useRef<HTMLDivElement>(null);
 
-  const topPool = pools.length > 0 ? pools[0] : null;
+  const sortedByScore = [...pools].sort((a, b) => {
+    const aBoost = a.isBeefy ? 1.15 : a.autoCompound ? 1.10 : 1;
+    const bBoost = b.isBeefy ? 1.15 : b.autoCompound ? 1.10 : 1;
+    return (b.riskAdjustedScore * bBoost) - (a.riskAdjustedScore * aBoost);
+  });
+  
+  const topPool = sortedByScore.length > 0 ? sortedByScore[0] : null;
 
-  if (!topPool) return null;
+  if (!topPool) {
+    return (
+      <Button
+        variant="outline"
+        size="sm"
+        disabled
+        data-testid="button-share-my-find-disabled"
+      >
+        <Sparkles className="h-4 w-4 mr-2" />
+        No Pools Found
+      </Button>
+    );
+  }
 
   const shareText = `I found ${formatApy(topPool.apy)} APY on ${topPool.symbol} (${topPool.project}/${topPool.chain}) using Alpha Yield Scout!`;
 
   const handleCopy = async () => {
+    if (typeof navigator === "undefined" || !navigator.clipboard) {
+      toast({ title: "Cannot copy", description: "Clipboard not available", variant: "destructive" });
+      return;
+    }
     try {
       await navigator.clipboard.writeText(`${shareText}\n\nFind your own alpha: ${SHARE_URL}`);
       setCopied(true);
