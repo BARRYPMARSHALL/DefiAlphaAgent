@@ -96,6 +96,22 @@ export function ShareBar({ className = "", compact = false }: ShareBarProps) {
         </Tooltip>
         <Tooltip>
           <TooltipTrigger asChild>
+            <Button size="icon" variant="ghost" className="h-8 w-8" onClick={shareToDiscord} data-testid="button-share-discord-compact">
+              <SiDiscord className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Copy for Discord</TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button size="icon" variant="ghost" className="h-8 w-8" onClick={shareToReddit} data-testid="button-share-reddit-compact">
+              <SiReddit className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>Share on Reddit</TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
             <Button size="icon" variant="ghost" className="h-8 w-8" onClick={handleCopyLink} data-testid="button-share-copy">
               {copied ? <Check className="h-4 w-4 text-chart-2" /> : <Link2 className="h-4 w-4" />}
             </Button>
@@ -198,22 +214,39 @@ export function SharePoolButton({ pool }: SharePoolButtonProps) {
   };
 
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <Button
-          size="icon"
-          variant="ghost"
-          className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleShare();
-          }}
-          data-testid={`button-share-pool-${pool.pool}`}
-        >
-          <Share2 className="h-3.5 w-3.5" />
-        </Button>
-      </TooltipTrigger>
-      <TooltipContent>Share this pool</TooltipContent>
-    </Tooltip>
+    <Button
+      size="sm"
+      variant="ghost"
+      className="h-7 px-2 text-xs gap-1"
+      onClick={(e) => {
+        e.stopPropagation();
+        handleShare();
+      }}
+      data-testid={`button-share-pool-${pool.pool.slice(0, 8)}`}
+    >
+      <Share2 className="h-3 w-3" />
+      <span className="hidden sm:inline">Share</span>
+    </Button>
+  );
+}
+
+export function ShareCallToAction({ className = "" }: { className?: string }) {
+  return (
+    <div className={`bg-gradient-to-r from-chart-1/10 via-chart-2/10 to-chart-3/10 rounded-lg p-4 border ${className}`}>
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10">
+            <Share2 className="h-5 w-5 text-primary" />
+          </div>
+          <div>
+            <p className="font-medium">Spread the Alpha</p>
+            <p className="text-sm text-muted-foreground">Share with friends to help them find great yields too</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <ShareBar compact />
+        </div>
+      </div>
+    </div>
   );
 }

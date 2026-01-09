@@ -1,10 +1,11 @@
-import { Sparkles, TrendingUp, ArrowRight, ExternalLink, Zap, Shield, Flame, AlertTriangle, ArrowDown, RefreshCw, Check, Leaf } from "lucide-react";
+import { Sparkles, TrendingUp, ArrowRight, ExternalLink, Zap, Shield, Flame, AlertTriangle, ArrowDown, RefreshCw, Check, Leaf, Share2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { MomentumBadge } from "@/components/Sparkline";
+import { ShareCallToAction } from "@/components/ShareBar";
 import type { PoolWithScore } from "@shared/schema";
 
 interface RecommendationsProps {
@@ -346,6 +347,16 @@ export function Recommendations({ pools, isLoading }: RecommendationsProps) {
               </p>
             </div>
           </div>
+        </div>
+
+        <Separator className="my-4" />
+        
+        <div className="space-y-2">
+          <p className="text-sm font-medium flex items-center gap-2">
+            <Share2 className="h-4 w-4" />
+            Found something good?
+          </p>
+          <ShareCallToAction />
         </div>
       </CardContent>
     </Card>

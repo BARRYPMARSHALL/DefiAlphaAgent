@@ -10,7 +10,7 @@ import { queryClient } from "@/lib/queryClient";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Search, TrendingUp, Shield, Zap, HelpCircle } from "lucide-react";
-import { ShareBar } from "@/components/ShareBar";
+import { ShareBar, ShareCallToAction } from "@/components/ShareBar";
 import { ShareMyFind } from "@/components/ShareMyFind";
 import type { FilterState, SortState, PoolsResponse } from "@shared/schema";
 
@@ -186,10 +186,6 @@ export default function Dashboard() {
               <span>Auto-compound detection</span>
             </div>
           </div>
-          <div className="flex items-center justify-center gap-4 pt-2">
-            <ShareMyFind pools={pools.filter(p => p.riskAdjustedScore > 0)} />
-            <ShareBar />
-          </div>
         </div>
 
         <SummaryCards
@@ -233,6 +229,28 @@ export default function Dashboard() {
           </div>
         </div>
       </main>
+
+      <section className="max-w-7xl mx-auto px-4 py-6">
+        <Card className="bg-gradient-to-br from-chart-1/5 via-chart-2/5 to-chart-3/5">
+          <CardContent className="py-6">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-primary text-primary-foreground">
+                  <TrendingUp className="h-6 w-6" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold">Share Alpha Yield Scout</h3>
+                  <p className="text-sm text-muted-foreground">Help your friends discover the best DeFi yields</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 flex-wrap justify-center">
+                <ShareMyFind pools={pools.filter(p => p.riskAdjustedScore > 0)} />
+                <ShareBar />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
 
       <section className="max-w-7xl mx-auto px-4 py-8">
         <Card>
@@ -281,6 +299,11 @@ export default function Dashboard() {
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
+
+            <div className="mt-6 pt-4 border-t">
+              <p className="text-sm text-muted-foreground mb-3">Found this helpful? Share with others who want to optimize their DeFi yields:</p>
+              <ShareCallToAction />
+            </div>
           </CardContent>
         </Card>
       </section>
