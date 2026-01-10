@@ -317,7 +317,7 @@ export default function Dashboard() {
       </section>
 
       <footer className="border-t mt-4">
-        <div className="max-w-7xl mx-auto px-4 py-6">
+        <div className="max-w-7xl mx-auto px-4 py-6 space-y-3">
           <div className="flex items-center justify-between gap-4 flex-wrap text-sm text-muted-foreground">
             <p>
               Data from{" "}
@@ -332,6 +332,9 @@ export default function Dashboard() {
             </p>
             <p>Auto-refreshes every 5 minutes</p>
           </div>
+          <p className="text-xs text-muted-foreground/70 text-center" data-testid="text-affiliate-disclaimer">
+            Affiliate links – we may earn commission at no extra cost to you.
+          </p>
         </div>
       </footer>
     </div>
