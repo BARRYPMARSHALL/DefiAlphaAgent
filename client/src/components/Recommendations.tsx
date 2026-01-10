@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { MomentumBadge } from "@/components/Sparkline";
 import { ShareCallToAction } from "@/components/ShareBar";
+import { BlockchainsBanner } from "@/components/BlockchainsSidebar";
 import type { PoolWithScore } from "@shared/schema";
 
 interface RecommendationsProps {
@@ -151,6 +152,7 @@ export function Recommendations({ pools, isLoading }: RecommendationsProps) {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
+        <BlockchainsBanner />
         {topPools.map((pool, index) => (
           <div key={pool.pool}>
             {index === 3 && (
