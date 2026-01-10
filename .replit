@@ -45,3 +45,4 @@ integrations = ["javascript_openrouter_ai_integrations:2.0.0"]
 
 [userenv.shared]
 VITE_NEXO_REFERRAL_URL = "https://nexo.com/ref/upb1iww3fa?src=web-link"
+VITE_KOINLY_REFERRAL_URL = "https://koinly.io/?via=24B89297&utm_source=affiliate"

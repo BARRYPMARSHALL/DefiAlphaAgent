@@ -13,6 +13,7 @@ import { Search, TrendingUp, Shield, Zap, HelpCircle } from "lucide-react";
 import { ShareBar, ShareCallToAction } from "@/components/ShareBar";
 import { ShareMyFind } from "@/components/ShareMyFind";
 import { NexoBanner } from "@/components/NexoBanner";
+import { KoinlyBanner } from "@/components/KoinlyBanner";
 import type { FilterState, SortState, PoolsResponse } from "@shared/schema";
 
 const DEFAULT_FILTERS: FilterState = {
@@ -309,6 +310,10 @@ export default function Dashboard() {
             </div>
           </CardContent>
         </Card>
+      </section>
+
+      <section className="max-w-7xl mx-auto px-4 pb-6">
+        <KoinlyBanner />
       </section>
 
       <footer className="border-t mt-4">
