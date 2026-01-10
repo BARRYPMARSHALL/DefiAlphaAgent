@@ -192,8 +192,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <NexoBanner />
-
         <SummaryCards
           totalPools={stats.totalPools}
           avgApy={stats.avgApy}
@@ -321,10 +319,6 @@ export default function Dashboard() {
             </div>
           </CardContent>
         </Card>
-      </section>
-
-      <section className="max-w-7xl mx-auto px-4 pb-6">
-        <KoinlyBanner />
       </section>
 
       <footer className="border-t mt-4">
