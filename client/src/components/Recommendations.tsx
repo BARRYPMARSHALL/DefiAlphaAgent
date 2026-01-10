@@ -152,9 +152,13 @@ export function Recommendations({ pools, isLoading }: RecommendationsProps) {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <BlockchainsBanner />
         {topPools.map((pool, index) => (
           <div key={pool.pool}>
+            {index === 5 && (
+              <div className="mb-4">
+                <BlockchainsBanner />
+              </div>
+            )}
             <div className="flex items-start gap-3">
               <div className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold shrink-0">
                 {index + 1}
