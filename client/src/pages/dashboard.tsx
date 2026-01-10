@@ -14,6 +14,7 @@ import { ShareBar, ShareCallToAction } from "@/components/ShareBar";
 import { ShareMyFind } from "@/components/ShareMyFind";
 import { NexoBanner } from "@/components/NexoBanner";
 import { KoinlyBanner } from "@/components/KoinlyBanner";
+import { NexoContextualCTA } from "@/components/NexoContextualCTA";
 import type { FilterState, SortState, PoolsResponse } from "@shared/schema";
 
 const DEFAULT_FILTERS: FilterState = {
@@ -211,6 +212,8 @@ export default function Dashboard() {
               onReset={handleReset}
               resultCount={pools.length}
             />
+
+            <NexoContextualCTA hasStablePools={pools.some(p => p.stablecoin || p.ilRisk === "none")} />
 
             <PoolsTable
               pools={pools}
