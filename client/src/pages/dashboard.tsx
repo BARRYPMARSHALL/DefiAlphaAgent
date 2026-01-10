@@ -315,7 +315,7 @@ export default function Dashboard() {
 
             <div className="mt-6 pt-4 border-t">
               <p className="text-xs text-muted-foreground mb-3">Want to level up your DeFi knowledge?</p>
-              <BlockchainsBanner variant="inline" storageKey="blockchains-inline-dismissed" />
+              <BlockchainsBanner variant="featured" storageKey="blockchains-inline-dismissed" />
             </div>
           </CardContent>
         </Card>
