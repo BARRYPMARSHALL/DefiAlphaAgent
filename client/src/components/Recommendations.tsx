@@ -155,35 +155,6 @@ export function Recommendations({ pools, isLoading }: RecommendationsProps) {
         <BlockchainsBanner />
         {topPools.map((pool, index) => (
           <div key={pool.pool}>
-            {index === 3 && (
-              <>
-                <a 
-                  href="https://www.cryptohopper.com/?atid=40147"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex justify-center py-2 mb-4 group"
-                  data-testid="banner-cryptohopper"
-                >
-                  <div className="relative overflow-hidden rounded-lg border border-cyan-400/40 p-3 w-full text-center hover:border-cyan-400/60 transition-colors"
-                    style={{
-                      background: "linear-gradient(135deg, rgba(6,182,212,0.1) 0%, rgba(59,130,246,0.1) 100%)",
-                    }}
-                  >
-                    <div className="flex items-center justify-center gap-2">
-                      <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 text-white shrink-0">
-                        <RefreshCw className="h-4 w-4" />
-                      </div>
-                      <div className="text-left">
-                        <p className="text-xs font-semibold text-foreground">Automate Your Trades</p>
-                        <p className="text-[10px] text-muted-foreground">Cryptohopper AI Trading Bot</p>
-                      </div>
-                      <ExternalLink className="h-3 w-3 text-muted-foreground group-hover:text-foreground ml-auto" />
-                    </div>
-                  </div>
-                </a>
-                <Separator className="mb-4" />
-              </>
-            )}
             <div className="flex items-start gap-3">
               <div className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold shrink-0">
                 {index + 1}
