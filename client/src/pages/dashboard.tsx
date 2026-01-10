@@ -15,6 +15,7 @@ import { ShareMyFind } from "@/components/ShareMyFind";
 import { NexoBanner } from "@/components/NexoBanner";
 import { KoinlyBanner } from "@/components/KoinlyBanner";
 import { NexoContextualCTA } from "@/components/NexoContextualCTA";
+import { BlockchainsBanner } from "@/components/BlockchainsSidebar";
 import type { FilterState, SortState, PoolsResponse } from "@shared/schema";
 
 const DEFAULT_FILTERS: FilterState = {
@@ -201,6 +202,8 @@ export default function Dashboard() {
           isLoading={isLoading}
         />
 
+        <BlockchainsBanner variant="featured" storageKey="blockchains-featured-dismissed" />
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
             <FiltersBar
@@ -310,6 +313,11 @@ export default function Dashboard() {
             <div className="mt-6 pt-4 border-t">
               <p className="text-sm text-muted-foreground mb-3">Found this helpful? Share with others who want to optimize their DeFi yields:</p>
               <ShareCallToAction />
+            </div>
+
+            <div className="mt-6 pt-4 border-t">
+              <p className="text-xs text-muted-foreground mb-3">Want to level up your DeFi knowledge?</p>
+              <BlockchainsBanner variant="inline" storageKey="blockchains-inline-dismissed" />
             </div>
           </CardContent>
         </Card>
