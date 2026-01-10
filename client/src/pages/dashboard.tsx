@@ -15,6 +15,7 @@ import { ShareMyFind } from "@/components/ShareMyFind";
 import { NexoBanner } from "@/components/NexoBanner";
 import { KoinlyBanner } from "@/components/KoinlyBanner";
 import { NexoContextualCTA } from "@/components/NexoContextualCTA";
+import { BlockchainsSidebar } from "@/components/BlockchainsSidebar";
 import type { FilterState, SortState, PoolsResponse } from "@shared/schema";
 
 const DEFAULT_FILTERS: FilterState = {
@@ -160,6 +161,7 @@ export default function Dashboard() {
 
   return (
     <div className="min-h-screen bg-background">
+      <BlockchainsSidebar />
       <Header
         onRefresh={handleRefresh}
         isRefreshing={isFetching}
