@@ -153,6 +153,22 @@ export function Recommendations({ pools, isLoading }: RecommendationsProps) {
       <CardContent className="space-y-4">
         {topPools.map((pool, index) => (
           <div key={pool.pool}>
+            {index === 3 && (
+              <>
+                <div className="flex justify-center py-2 mb-4" data-testid="banner-cryptohopper">
+                  <iframe 
+                    width="200" 
+                    height="200" 
+                    src="https://www.cryptohopper.com/html5banners/show.php?banner=200x200&version=2&atid=40147" 
+                    frameBorder="0" 
+                    allowFullScreen 
+                    style={{ width: 200, height: 200, overflow: "hidden", borderRadius: 8 }}
+                    title="Cryptohopper Trading Bot"
+                  />
+                </div>
+                <Separator className="mb-4" />
+              </>
+            )}
             <div className="flex items-start gap-3">
               <div className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-xs font-bold shrink-0">
                 {index + 1}
