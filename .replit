@@ -40,3 +40,8 @@ waitForPort = 5000
 
 [agent]
 integrations = ["javascript_openrouter_ai_integrations:2.0.0"]
+
+[userenv]
+
+[userenv.shared]
+VITE_NEXO_REFERRAL_URL = "https://nexo.com/ref/upb1iww3fa?src=web-link"

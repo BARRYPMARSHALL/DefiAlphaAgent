@@ -12,6 +12,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { Search, TrendingUp, Shield, Zap, HelpCircle } from "lucide-react";
 import { ShareBar, ShareCallToAction } from "@/components/ShareBar";
 import { ShareMyFind } from "@/components/ShareMyFind";
+import { NexoBanner } from "@/components/NexoBanner";
 import type { FilterState, SortState, PoolsResponse } from "@shared/schema";
 
 const DEFAULT_FILTERS: FilterState = {
@@ -187,6 +188,8 @@ export default function Dashboard() {
             </div>
           </div>
         </div>
+
+        <NexoBanner />
 
         <SummaryCards
           totalPools={stats.totalPools}
