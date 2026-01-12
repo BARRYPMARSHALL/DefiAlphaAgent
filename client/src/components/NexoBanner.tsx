@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useState, useEffect } from "react";
 
-const NEXO_URL = import.meta.env.VITE_NEXO_REFERRAL_URL || "https://nexo.com";
+const NEXO_URL = import.meta.env.VITE_NEXO_REFERRAL_URL || "https://nexo.com/ref/upb1iww3fa?src=web-link";
 
 interface NexoBannerProps {
   variant?: "compact" | "featured" | "inline";
