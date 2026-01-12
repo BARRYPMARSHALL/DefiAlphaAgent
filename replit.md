@@ -1,8 +1,8 @@
-# Alpha Yield Scout
+# DeFi Alpha Agent
 
 ## Overview
 
-Alpha Yield Scout is a real-time DeFi yield optimizer dashboard that helps users find the best liquidity pools and lending opportunities across multiple blockchain networks. The application fetches yield data from DeFiLlama's public API, calculates risk-adjusted scores, and presents actionable recommendations for yield farming strategies.
+DeFi Alpha Agent is a real-time DeFi yield optimizer dashboard that helps users find the best liquidity pools and lending opportunities across multiple blockchain networks. The application fetches yield data from DeFiLlama's public API, calculates risk-adjusted scores, and presents actionable recommendations for yield farming strategies.
 
 The dashboard displays yield opportunities with filtering, sorting, and smart recommendations based on APY, TVL, and impermanent loss risk factors.
 

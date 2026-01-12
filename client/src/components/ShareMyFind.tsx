@@ -12,7 +12,7 @@ interface ShareMyFindProps {
   pools: PoolWithScore[];
 }
 
-const SHARE_URL = typeof window !== "undefined" ? window.location.origin : "https://alphayieldscout.replit.app";
+const SHARE_URL = typeof window !== "undefined" ? window.location.origin : "https://defi-alpha-agent.replit.app";
 
 function formatApy(apy: number | null | undefined): string {
   if (apy == null) return "high";
@@ -54,7 +54,7 @@ export function ShareMyFind({ pools }: ShareMyFindProps) {
     );
   }
 
-  const shareText = `I found ${formatApy(topPool.apy)} APY on ${topPool.symbol} (${topPool.project}/${topPool.chain}) using Alpha Yield Scout!`;
+  const shareText = `I found ${formatApy(topPool.apy)} APY on ${topPool.symbol} (${topPool.project}/${topPool.chain}) using DeFi Alpha Agent!`;
 
   const handleCopy = async () => {
     if (typeof navigator === "undefined" || !navigator.clipboard) {

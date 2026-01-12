@@ -10,8 +10,8 @@ interface ShareBarProps {
   compact?: boolean;
 }
 
-const SHARE_TEXT = "I just discovered amazing DeFi yield opportunities on Alpha Yield Scout - the smartest yield optimizer dashboard!";
-const SHARE_URL = typeof window !== "undefined" ? window.location.origin : "https://alphayieldscout.replit.app";
+const SHARE_TEXT = "I just discovered amazing DeFi yield opportunities on DeFi Alpha Agent - the smartest yield optimizer dashboard!";
+const SHARE_URL = typeof window !== "undefined" ? window.location.origin : "https://defi-alpha-agent.replit.app";
 
 export function ShareBar({ className = "", compact = false }: ShareBarProps) {
   const [copied, setCopied] = useState(false);
@@ -71,7 +71,7 @@ export function ShareBar({ className = "", compact = false }: ShareBarProps) {
   };
 
   const shareToReddit = () => {
-    const url = `https://reddit.com/submit?url=${encodeURIComponent(SHARE_URL)}&title=${encodeURIComponent("Alpha Yield Scout - Best DeFi Yield Optimizer Dashboard")}`;
+    const url = `https://reddit.com/submit?url=${encodeURIComponent(SHARE_URL)}&title=${encodeURIComponent("DeFi Alpha Agent - Best DeFi Yield Optimizer Dashboard")}`;
     window.open(url, "_blank", "noopener,noreferrer,width=800,height=600");
   };
 

@@ -244,7 +244,7 @@ export default function Dashboard() {
                   <TrendingUp className="h-6 w-6" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold">Share Alpha Yield Scout</h3>
+                  <h3 className="text-lg font-semibold">Share DeFi Alpha Agent</h3>
                   <p className="text-sm text-muted-foreground">Help your friends discover the best DeFi yields</p>
                 </div>
               </div>

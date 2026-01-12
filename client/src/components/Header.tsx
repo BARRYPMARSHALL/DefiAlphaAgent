@@ -19,7 +19,7 @@ export function Header({ onRefresh, isRefreshing, lastUpdated }: HeaderProps) {
           </div>
           <div className="flex flex-col">
             <h1 className="text-xl font-bold tracking-tight" data-testid="text-app-title">
-              Alpha Yield Scout
+              DeFi Alpha Agent
             </h1>
             {lastUpdated && (
               <span className="text-xs text-muted-foreground" data-testid="text-last-updated">
