@@ -56,17 +56,26 @@ interface RecommendedPool {
   autoCompound: string;
   proTip: string;
   zapLink: string;
+  apyWarning?: string;
+  cefiComparison?: string;
 }
 
 interface RecommendResponse {
   success: boolean;
   query: string;
   riskProfile: string;
+  riskExpanded?: boolean;
   topPick: RecommendedPool | null;
   alternatives: RecommendedPool[];
+  fallbackPicks?: RecommendedPool[];
   summary: string;
+  suggestions?: string[];
   timestamp: string;
 }
+
+const CEFI_KEYWORDS = ["cefi", "nexo", "celsius", "blockfi", "centralized", "exchange"];
+const CEFI_BENCHMARK_APY = 8;
+const APY_ANOMALY_THRESHOLD = 10000;
 
 function formatTvl(tvl: number): string {
   if (tvl >= 1e9) return `$${(tvl / 1e9).toFixed(2)}B`;
@@ -98,10 +107,13 @@ function getRiskDescription(pool: PoolWithScore): string {
   return description;
 }
 
-function generateProTip(pool: PoolWithScore): string {
+function generateProTip(pool: PoolWithScore, includeCefiComparison: boolean = false): string {
   const tips: string[] = [];
   
-  if (pool.apy > 10) {
+  if (includeCefiComparison && pool.apy > CEFI_BENCHMARK_APY && pool.apy < APY_ANOMALY_THRESHOLD) {
+    const beatsCeFi = pool.apy - CEFI_BENCHMARK_APY;
+    tips.push(`Beats Nexo's ${CEFI_BENCHMARK_APY}% by ${beatsCeFi.toFixed(1)}% while keeping full on-chain control`);
+  } else if (pool.apy > 10 && pool.apy < APY_ANOMALY_THRESHOLD) {
     const beatsCeFi = pool.apy - 10;
     tips.push(`Beats centralized 10% rates by ${beatsCeFi.toFixed(1)}% while keeping full on-chain control`);
   }
@@ -127,6 +139,27 @@ function generateProTip(pool: PoolWithScore): string {
   }
   
   return tips.length > 0 ? tips[0] : "Solid risk-adjusted opportunity based on TVL and APY";
+}
+
+function generateCefiComparison(pool: PoolWithScore): string | undefined {
+  if (pool.apy >= APY_ANOMALY_THRESHOLD) {
+    return undefined;
+  }
+  if (pool.apy > CEFI_BENCHMARK_APY) {
+    const diff = pool.apy - CEFI_BENCHMARK_APY;
+    return `This beats Nexo's ${CEFI_BENCHMARK_APY}% by ${diff.toFixed(1)}%`;
+  }
+  return undefined;
+}
+
+function getApyWarning(pool: PoolWithScore): string | undefined {
+  if (pool.apy >= APY_ANOMALY_THRESHOLD) {
+    return `Extremely high APY (${pool.apy.toFixed(0)}%) - verify before investing, may be temporary or anomalous`;
+  }
+  if (pool.apy >= 1000) {
+    return "Very high APY - verify sustainability and check for reward token liquidity";
+  }
+  return undefined;
 }
 
 function generateZapLink(pool: PoolWithScore): string {
@@ -213,7 +246,7 @@ function poolMatchesUserQuery(pool: PoolWithScore, query: string): boolean {
   return words.some(word => poolText.includes(word));
 }
 
-function formatPoolForResponse(pool: PoolWithScore): RecommendedPool {
+function formatPoolForResponse(pool: PoolWithScore, includeCefiComparison: boolean = false): RecommendedPool {
   const apyBase = pool.apyBase || 0;
   const apyReward = pool.apyReward || 0;
   
@@ -226,7 +259,7 @@ function formatPoolForResponse(pool: PoolWithScore): RecommendedPool {
     autoCompoundText = "Beefy vault available";
   }
   
-  return {
+  const result: RecommendedPool = {
     pool: `${pool.symbol} on ${pool.project} (${pool.chain})`,
     apy: `${pool.apy.toFixed(2)}%`,
     apyBase: `${apyBase.toFixed(2)}%`,
@@ -236,9 +269,23 @@ function formatPoolForResponse(pool: PoolWithScore): RecommendedPool {
     chain: pool.chain,
     project: pool.project,
     autoCompound: autoCompoundText,
-    proTip: generateProTip(pool),
+    proTip: generateProTip(pool, includeCefiComparison),
     zapLink: generateZapLink(pool),
   };
+  
+  const apyWarning = getApyWarning(pool);
+  if (apyWarning) {
+    result.apyWarning = apyWarning;
+  }
+  
+  if (includeCefiComparison) {
+    const cefiComp = generateCefiComparison(pool);
+    if (cefiComp) {
+      result.cefiComparison = cefiComp;
+    }
+  }
+  
+  return result;
 }
 
 let cachedData: {
@@ -800,38 +847,85 @@ export async function registerRoutes(
         });
       }
 
-      const { chains, minApy, riskTolerance, userQuery } = parseResult.data;
+      let { chains, minApy, riskTolerance, userQuery } = parseResult.data;
+      
+      const queryLower = userQuery.toLowerCase();
+      const wantsCefiComparison = CEFI_KEYWORDS.some(kw => queryLower.includes(kw));
 
       let filteredPools = [...cachedData.pools];
+      let riskExpanded = false;
 
       if (chains !== "all") {
         const chainList = chains.split(",").map(c => c.trim());
+        const uniqueChains = Array.from(new Set(cachedData.pools.map(p => p.chain.toLowerCase())));
+        console.log(`[API] Chain filter: ${chainList.join(", ")} | Available: ${uniqueChains.slice(0, 10).join(", ")}...`);
+        
         filteredPools = filteredPools.filter(p => 
           chainList.some(c => chainMatchesFilter(p.chain, c))
         );
+        console.log(`[API] After chain filter: ${filteredPools.length} pools`);
       }
 
       filteredPools = filteredPools.filter(p => p.apy >= minApy);
 
-      if (riskTolerance === "low") {
-        filteredPools = filteredPools.filter(p => 
-          p.ilRisk === "none" || p.ilRisk === "low"
-        );
-        filteredPools = filteredPools.filter(p => p.tvlUsd >= 5000000);
-      } else if (riskTolerance === "medium") {
-        filteredPools = filteredPools.filter(p => 
-          p.ilRisk !== "high" || p.tvlUsd >= 10000000
-        );
-        filteredPools = filteredPools.filter(p => p.tvlUsd >= 1000000);
+      const applyRiskFilter = (pools: PoolWithScore[], risk: string): PoolWithScore[] => {
+        if (risk === "low") {
+          return pools
+            .filter(p => p.ilRisk === "none" || p.ilRisk === "low")
+            .filter(p => p.tvlUsd >= 5000000);
+        } else if (risk === "medium") {
+          return pools
+            .filter(p => p.ilRisk !== "high" || p.tvlUsd >= 10000000)
+            .filter(p => p.tvlUsd >= 1000000);
+        }
+        return pools;
+      };
+
+      let riskFilteredPools = applyRiskFilter(filteredPools, riskTolerance);
+
+      if (riskFilteredPools.length === 0 && riskTolerance === "low") {
+        riskFilteredPools = applyRiskFilter(filteredPools, "medium");
+        if (riskFilteredPools.length > 0) {
+          riskExpanded = true;
+          riskTolerance = "medium";
+        }
       }
+
+      filteredPools = riskFilteredPools;
 
       if (userQuery) {
         filteredPools = filteredPools.filter(p => poolMatchesUserQuery(p, userQuery));
       }
 
+      filteredPools = filteredPools.filter(p => p.apy < APY_ANOMALY_THRESHOLD);
+      
       filteredPools.sort((a, b) => b.riskAdjustedScore - a.riskAdjustedScore);
 
       const topPools = filteredPools.slice(0, 3);
+
+      let fallbackPicks: RecommendedPool[] | undefined;
+      const suggestions: string[] = [];
+      
+      if (topPools.length === 0) {
+        const allPoolsSorted = [...cachedData.pools]
+          .filter(p => p.apy < APY_ANOMALY_THRESHOLD)
+          .sort((a, b) => b.riskAdjustedScore - a.riskAdjustedScore)
+          .slice(0, 3);
+        
+        if (allPoolsSorted.length > 0) {
+          fallbackPicks = allPoolsSorted.map(p => formatPoolForResponse(p, wantsCefiComparison));
+        }
+        
+        if (chains !== "all") {
+          suggestions.push("Try chains=all for more options");
+        }
+        if (minApy > 5) {
+          suggestions.push(`Lower minApy threshold (currently ${minApy}%)`);
+        }
+        if (riskTolerance !== "high") {
+          suggestions.push("Try riskTolerance=high to include more volatile pools");
+        }
+      }
 
       const querySummary = userQuery 
         ? userQuery 
@@ -839,20 +933,35 @@ export async function registerRoutes(
 
       let summary = "";
       if (topPools.length === 0) {
-        summary = `No pools found matching your criteria. Try lowering minApy or adjusting riskTolerance.`;
-      } else if (topPools.length === 1) {
-        summary = `Found 1 opportunity matching your criteria.`;
+        summary = `No pools found matching your exact criteria.`;
+        if (fallbackPicks && fallbackPicks.length > 0) {
+          summary += ` Showing top ${fallbackPicks.length} overall picks instead.`;
+        }
       } else {
-        summary = `Found ${topPools.length} top opportunities for you. The top pick offers ${topPools[0].apy.toFixed(2)}% APY with ${topPools[0].ilRisk} IL risk.`;
+        if (riskExpanded) {
+          summary = `No low-risk pools found, expanded to medium risk. `;
+        }
+        if (topPools.length === 1) {
+          summary += `Found 1 opportunity matching your criteria.`;
+        } else {
+          const topApy = topPools[0].apy < 1000 ? `${topPools[0].apy.toFixed(2)}%` : `${topPools[0].apy.toFixed(0)}%`;
+          summary += `Found ${topPools.length} top opportunities. The top pick offers ${topApy} APY with ${topPools[0].ilRisk} IL risk.`;
+        }
+        if (wantsCefiComparison && topPools[0].apy > CEFI_BENCHMARK_APY) {
+          summary += ` All picks beat typical CeFi rates of ${CEFI_BENCHMARK_APY}%.`;
+        }
       }
 
       const response: RecommendResponse = {
         success: true,
         query: querySummary,
         riskProfile: riskTolerance,
-        topPick: topPools[0] ? formatPoolForResponse(topPools[0]) : null,
-        alternatives: topPools.slice(1).map(formatPoolForResponse),
+        ...(riskExpanded && { riskExpanded: true }),
+        topPick: topPools[0] ? formatPoolForResponse(topPools[0], wantsCefiComparison) : null,
+        alternatives: topPools.slice(1).map(p => formatPoolForResponse(p, wantsCefiComparison)),
+        ...(fallbackPicks && fallbackPicks.length > 0 && { fallbackPicks }),
         summary,
+        ...(suggestions.length > 0 && { suggestions }),
         timestamp: new Date().toISOString(),
       };
 
