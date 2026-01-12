@@ -868,26 +868,52 @@ export async function registerRoutes(
 
       filteredPools = filteredPools.filter(p => p.apy >= minApy);
 
-      const applyRiskFilter = (pools: PoolWithScore[], risk: string): PoolWithScore[] => {
-        if (risk === "low") {
-          return pools
-            .filter(p => p.ilRisk === "none" || p.ilRisk === "low")
-            .filter(p => p.tvlUsd >= 5000000);
-        } else if (risk === "medium") {
-          return pools
-            .filter(p => p.ilRisk !== "high" || p.tvlUsd >= 10000000)
-            .filter(p => p.tvlUsd >= 1000000);
-        }
-        return pools;
+      const applySmartFilter = (pools: PoolWithScore[], risk: string): PoolWithScore[] => {
+        return pools.filter(pool => {
+          const isLowRisk = pool.ilRisk === "none" || pool.ilRisk === "low";
+          const isMediumRisk = pool.ilRisk === "medium";
+          
+          let maxApy: number;
+          if (risk === "low") {
+            maxApy = isLowRisk ? 50 : 0;
+          } else if (risk === "medium") {
+            maxApy = isLowRisk ? 50 : (isMediumRisk ? 150 : 0);
+          } else {
+            maxApy = Infinity;
+          }
+          
+          const minTvl = risk === "low" ? 5000000 : 1000000;
+          
+          const apyBase = pool.apyBase || 0;
+          const isNotPurelyBoosted = apyBase >= 0.5 * pool.apy || pool.apy < 10;
+          
+          const symbolUpper = pool.symbol.toUpperCase();
+          const isNotTest = !symbolUpper.includes("TEST") && !symbolUpper.includes("MOCK");
+          
+          return (
+            pool.tvlUsd >= minTvl &&
+            pool.apy <= maxApy &&
+            isNotTest &&
+            isNotPurelyBoosted
+          );
+        });
       };
 
-      let riskFilteredPools = applyRiskFilter(filteredPools, riskTolerance);
+      let riskFilteredPools = applySmartFilter(filteredPools, riskTolerance);
 
       if (riskFilteredPools.length === 0 && riskTolerance === "low") {
-        riskFilteredPools = applyRiskFilter(filteredPools, "medium");
+        riskFilteredPools = applySmartFilter(filteredPools, "medium");
         if (riskFilteredPools.length > 0) {
           riskExpanded = true;
           riskTolerance = "medium";
+        }
+      }
+      
+      if (riskFilteredPools.length === 0 && riskTolerance !== "high") {
+        riskFilteredPools = applySmartFilter(filteredPools, "high");
+        if (riskFilteredPools.length > 0) {
+          riskExpanded = true;
+          riskTolerance = "high";
         }
       }
 
