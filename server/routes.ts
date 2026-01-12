@@ -156,6 +156,47 @@ function generateZapLink(pool: PoolWithScore): string {
   return `https://defillama.com/yields?project=${encodeURIComponent(pool.project)}`;
 }
 
+const CHAIN_ALIASES: Record<string, string[]> = {
+  bsc: ["binance", "bnb", "bsc"],
+  ethereum: ["eth", "ethereum", "mainnet"],
+  arbitrum: ["arb", "arbitrum"],
+  avalanche: ["avax", "avalanche"],
+  optimism: ["op", "optimism"],
+  polygon: ["matic", "polygon"],
+  base: ["base"],
+  solana: ["sol", "solana"],
+  fantom: ["ftm", "fantom"],
+};
+
+function normalizeChainName(input: string): string {
+  const lower = input.toLowerCase().trim();
+  for (const [canonical, aliases] of Object.entries(CHAIN_ALIASES)) {
+    if (aliases.includes(lower)) {
+      return canonical;
+    }
+  }
+  return lower;
+}
+
+function chainMatchesFilter(poolChain: string, filterChain: string): boolean {
+  const poolLower = poolChain.toLowerCase();
+  const filterLower = filterChain.toLowerCase().trim();
+  
+  if (poolLower === filterLower) return true;
+  if (poolLower.includes(filterLower)) return true;
+  
+  const normalizedFilter = normalizeChainName(filterLower);
+  if (poolLower === normalizedFilter) return true;
+  if (poolLower.includes(normalizedFilter)) return true;
+  
+  const aliases = CHAIN_ALIASES[normalizedFilter];
+  if (aliases) {
+    return aliases.some(alias => poolLower.includes(alias));
+  }
+  
+  return false;
+}
+
 function poolMatchesUserQuery(pool: PoolWithScore, query: string): boolean {
   if (!query) return true;
   
@@ -764,9 +805,9 @@ export async function registerRoutes(
       let filteredPools = [...cachedData.pools];
 
       if (chains !== "all") {
-        const chainList = chains.split(",").map(c => c.trim().toLowerCase());
+        const chainList = chains.split(",").map(c => c.trim());
         filteredPools = filteredPools.filter(p => 
-          chainList.some(c => p.chain.toLowerCase().includes(c))
+          chainList.some(c => chainMatchesFilter(p.chain, c))
         );
       }
 
@@ -830,6 +871,44 @@ export async function registerRoutes(
     res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type, x-api-key");
     res.sendStatus(200);
+  });
+
+  app.get("/api/chains", async (_req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    
+    try {
+      await fetchPoolsData();
+
+      if (!cachedData) {
+        return res.status(503).json({ 
+          success: false, 
+          error: "Data not available" 
+        });
+      }
+
+      const chainCounts: Record<string, number> = {};
+      for (const pool of cachedData.pools) {
+        chainCounts[pool.chain] = (chainCounts[pool.chain] || 0) + 1;
+      }
+
+      const chains = Object.entries(chainCounts)
+        .map(([name, count]) => ({ name, poolCount: count }))
+        .sort((a, b) => b.poolCount - a.poolCount);
+
+      res.json({
+        success: true,
+        total: chains.length,
+        chains,
+        aliases: CHAIN_ALIASES,
+        timestamp: new Date().toISOString(),
+      });
+    } catch (error) {
+      console.error("Error in /api/chains:", error);
+      res.status(500).json({ 
+        success: false, 
+        error: "Failed to fetch chains" 
+      });
+    }
   });
 
   return httpServer;
