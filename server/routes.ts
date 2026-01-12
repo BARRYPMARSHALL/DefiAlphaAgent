@@ -38,7 +38,7 @@ const recommendQuerySchema = z.object({
   chains: z.string().optional().default("all"),
   minApy: z.string().optional().transform((val) => {
     const num = Number(val);
-    return isNaN(num) ? 5 : Math.max(0, num);
+    return isNaN(num) ? 0 : Math.max(0, num);
   }),
   riskTolerance: z.enum(["low", "medium", "high"]).optional().default("medium"),
   userQuery: z.string().optional().default(""),
@@ -58,6 +58,7 @@ interface RecommendedPool {
   zapLink: string;
   apyWarning?: string;
   cefiComparison?: string;
+  boostedTemporary?: string;
 }
 
 interface RecommendResponse {
@@ -159,6 +160,34 @@ function getApyWarning(pool: PoolWithScore): string | undefined {
   if (pool.apy >= 1000) {
     return "Very high APY - verify sustainability and check for reward token liquidity";
   }
+  return undefined;
+}
+
+function getBoostedTemporaryFlag(pool: PoolWithScore): string | undefined {
+  const apyBase = pool.apyBase || 0;
+  const apyReward = pool.apyReward || 0;
+  const totalApy = pool.apy;
+  
+  if (totalApy < 5) return undefined;
+  
+  const rewardRatio = totalApy > 0 ? apyReward / totalApy : 0;
+  
+  if (rewardRatio > 0.8) {
+    return "Mostly reward-based APY - may be temporary incentives";
+  }
+  
+  if (rewardRatio > 0.5 && totalApy > 50) {
+    return "High reward component - verify token sustainability";
+  }
+  
+  if (pool.apyPct7D && pool.apyPct7D < -30) {
+    return "APY declining rapidly - recent incentive reduction likely";
+  }
+  
+  if (pool.apyPct7D && pool.apyPct7D > 100) {
+    return "APY spiked recently - may be temporary boost";
+  }
+  
   return undefined;
 }
 
@@ -283,6 +312,11 @@ function formatPoolForResponse(pool: PoolWithScore, includeCefiComparison: boole
     if (cefiComp) {
       result.cefiComparison = cefiComp;
     }
+  }
+  
+  const boostedFlag = getBoostedTemporaryFlag(pool);
+  if (boostedFlag) {
+    result.boostedTemporary = boostedFlag;
   }
   
   return result;
