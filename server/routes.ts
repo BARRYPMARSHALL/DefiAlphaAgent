@@ -1080,5 +1080,98 @@ export async function registerRoutes(
     }
   });
 
+  app.get("/health", (_req, res) => {
+    res.json({ status: "DeFi Alpha Agent is live", timestamp: new Date().toISOString() });
+  });
+
+  app.post("/webhook", async (req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, x-api-key");
+
+    try {
+      await fetchPoolsData();
+
+      if (!cachedData) {
+        return res.status(503).json({ 
+          success: false, 
+          error: "Data not available. Please try again in a moment." 
+        });
+      }
+
+      const { chains = "all", minApy = 0, riskTolerance = "medium", userQuery = "" } = req.body || {};
+
+      const parseResult = recommendQuerySchema.safeParse({ 
+        chains: String(chains), 
+        minApy: String(minApy), 
+        riskTolerance, 
+        userQuery 
+      });
+
+      if (!parseResult.success) {
+        return res.status(400).json({ 
+          success: false,
+          error: "Invalid parameters",
+          details: parseResult.error.errors 
+        });
+      }
+
+      let filteredPools = [...cachedData.pools];
+      const parsedData = parseResult.data;
+
+      if (parsedData.chains !== "all") {
+        const chainList = parsedData.chains.split(",").map(c => c.trim());
+        filteredPools = filteredPools.filter(p => 
+          chainList.some(c => chainMatchesFilter(p.chain, c))
+        );
+      }
+
+      filteredPools = filteredPools.filter(p => p.apy >= parsedData.minApy);
+      filteredPools = filteredPools.filter(p => p.apy < APY_ANOMALY_THRESHOLD);
+
+      if (parsedData.riskTolerance === "low") {
+        filteredPools = filteredPools.filter(p => 
+          (p.ilRisk === "none" || p.ilRisk === "low") && p.tvlUsd >= 5000000
+        );
+      } else if (parsedData.riskTolerance === "medium") {
+        filteredPools = filteredPools.filter(p => 
+          p.ilRisk !== "high" && p.tvlUsd >= 1000000
+        );
+      }
+
+      if (parsedData.userQuery) {
+        filteredPools = filteredPools.filter(p => poolMatchesUserQuery(p, parsedData.userQuery));
+      }
+
+      filteredPools.sort((a, b) => b.riskAdjustedScore - a.riskAdjustedScore);
+      const topPools = filteredPools.slice(0, 3);
+
+      const response = {
+        success: true,
+        query: parsedData.userQuery || `${parsedData.riskTolerance} risk pools`,
+        riskProfile: parsedData.riskTolerance,
+        topPick: topPools[0] ? formatPoolForResponse(topPools[0]) : null,
+        alternatives: topPools.slice(1).map(p => formatPoolForResponse(p)),
+        timestamp: new Date().toISOString(),
+      };
+
+      console.log(`[Webhook] Request processed: ${topPools.length} pools returned`);
+      res.json(response);
+    } catch (error) {
+      console.error("Error in /webhook:", error);
+      res.status(500).json({ 
+        success: false, 
+        error: "Agent temporarily unavailable" 
+      });
+    }
+  });
+
+  app.options("/webhook", (_req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, x-api-key");
+    res.sendStatus(200);
+  });
+
   return httpServer;
 }
