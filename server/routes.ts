@@ -34,6 +34,172 @@ const queryParamsSchema = z.object({
   }),
 });
 
+const recommendQuerySchema = z.object({
+  chains: z.string().optional().default("all"),
+  minApy: z.string().optional().transform((val) => {
+    const num = Number(val);
+    return isNaN(num) ? 5 : Math.max(0, num);
+  }),
+  riskTolerance: z.enum(["low", "medium", "high"]).optional().default("medium"),
+  userQuery: z.string().optional().default(""),
+});
+
+interface RecommendedPool {
+  pool: string;
+  apy: string;
+  apyBase: string;
+  apyReward: string;
+  risk: string;
+  tvl: string;
+  chain: string;
+  project: string;
+  autoCompound: string;
+  proTip: string;
+  zapLink: string;
+}
+
+interface RecommendResponse {
+  success: boolean;
+  query: string;
+  riskProfile: string;
+  topPick: RecommendedPool | null;
+  alternatives: RecommendedPool[];
+  summary: string;
+  timestamp: string;
+}
+
+function formatTvl(tvl: number): string {
+  if (tvl >= 1e9) return `$${(tvl / 1e9).toFixed(2)}B`;
+  if (tvl >= 1e6) return `$${(tvl / 1e6).toFixed(2)}M`;
+  if (tvl >= 1e3) return `$${(tvl / 1e3).toFixed(0)}K`;
+  return `$${tvl.toFixed(0)}`;
+}
+
+function getRiskDescription(pool: PoolWithScore): string {
+  const ilDescriptions: Record<string, string> = {
+    none: "No impermanent loss risk (single-sided or lending)",
+    low: "Low IL risk (stablecoin pairs)",
+    medium: "Moderate IL risk (correlated assets)",
+    high: "Higher IL risk (volatile pair)",
+  };
+  
+  let description = ilDescriptions[pool.ilRisk] || "Unknown IL risk";
+  
+  if (pool.stablecoin) {
+    description += " - Stablecoin pool";
+  }
+  
+  if (pool.tvlUsd > 50000000) {
+    description += " - High TVL adds security";
+  } else if (pool.tvlUsd < 1000000) {
+    description += " - Lower TVL, check liquidity";
+  }
+  
+  return description;
+}
+
+function generateProTip(pool: PoolWithScore): string {
+  const tips: string[] = [];
+  
+  if (pool.apy > 10) {
+    const beatsCeFi = pool.apy - 10;
+    tips.push(`Beats centralized 10% rates by ${beatsCeFi.toFixed(1)}% while keeping full on-chain control`);
+  }
+  
+  if (pool.isBeefy) {
+    tips.push("Auto-compounds via Beefy - set it and forget it");
+  } else if (pool.autoCompound) {
+    tips.push(`Auto-compounds via ${pool.autoCompoundProject} - no manual harvesting needed`);
+  } else if (pool.beefyAvailable) {
+    tips.push("Beefy vault available for auto-compounding");
+  }
+  
+  if (pool.stablecoin && pool.ilRisk === "low") {
+    tips.push("Stablecoin pool with minimal IL - great for capital preservation");
+  }
+  
+  if (pool.apyPct7D && pool.apyPct7D > 10) {
+    tips.push(`APY trending up ${pool.apyPct7D.toFixed(1)}% this week`);
+  }
+  
+  if (pool.isHot) {
+    tips.push("Hot pool - high volume and rising APY");
+  }
+  
+  return tips.length > 0 ? tips[0] : "Solid risk-adjusted opportunity based on TVL and APY";
+}
+
+function generateZapLink(pool: PoolWithScore): string {
+  const chain = pool.chain.toLowerCase();
+  const project = pool.project.toLowerCase();
+  
+  if (pool.isBeefy || pool.beefyAvailable) {
+    return `https://app.beefy.com/${chain}?search=${encodeURIComponent(pool.symbol)}`;
+  }
+  
+  if (project.includes("aerodrome")) {
+    return `https://aerodrome.finance/liquidity?token0=${pool.symbol.split("-")[0]}&token1=${pool.symbol.split("-")[1] || ""}`;
+  }
+  
+  if (project.includes("velodrome")) {
+    return `https://velodrome.finance/liquidity`;
+  }
+  
+  if (project.includes("uniswap")) {
+    return `https://app.uniswap.org/#/pools`;
+  }
+  
+  if (project.includes("curve")) {
+    return `https://curve.fi/#/${chain}/pools`;
+  }
+  
+  return `https://defillama.com/yields?project=${encodeURIComponent(pool.project)}`;
+}
+
+function poolMatchesUserQuery(pool: PoolWithScore, query: string): boolean {
+  if (!query) return true;
+  
+  const q = query.toLowerCase();
+  const poolText = `${pool.symbol} ${pool.project} ${pool.chain} ${pool.ilRisk}`.toLowerCase();
+  
+  if (q.includes("stable") && pool.stablecoin) return true;
+  if (q.includes("low il") && (pool.ilRisk === "none" || pool.ilRisk === "low")) return true;
+  if (q.includes("auto") && pool.autoCompound) return true;
+  if (q.includes("beefy") && (pool.isBeefy || pool.beefyAvailable)) return true;
+  if (q.includes("high apy") && pool.apy > 50) return true;
+  
+  const words = q.split(/\s+/).filter(w => w.length > 2);
+  return words.some(word => poolText.includes(word));
+}
+
+function formatPoolForResponse(pool: PoolWithScore): RecommendedPool {
+  const apyBase = pool.apyBase || 0;
+  const apyReward = pool.apyReward || 0;
+  
+  let autoCompoundText = "No";
+  if (pool.isBeefy) {
+    autoCompoundText = "Yes via Beefy (auto-compound active)";
+  } else if (pool.autoCompound && pool.autoCompoundProject) {
+    autoCompoundText = `Yes via ${pool.autoCompoundProject}`;
+  } else if (pool.beefyAvailable) {
+    autoCompoundText = "Beefy vault available";
+  }
+  
+  return {
+    pool: `${pool.symbol} on ${pool.project} (${pool.chain})`,
+    apy: `${pool.apy.toFixed(2)}%`,
+    apyBase: `${apyBase.toFixed(2)}%`,
+    apyReward: `${apyReward.toFixed(2)}%`,
+    risk: getRiskDescription(pool),
+    tvl: formatTvl(pool.tvlUsd),
+    chain: pool.chain,
+    project: pool.project,
+    autoCompound: autoCompoundText,
+    proTip: generateProTip(pool),
+    zapLink: generateZapLink(pool),
+  };
+}
+
 let cachedData: {
   pools: PoolWithScore[];
   stats: PoolsResponse["stats"];
@@ -561,6 +727,109 @@ export async function registerRoutes(
       console.error("Error refreshing data:", error);
       res.status(500).json({ error: "Failed to refresh data" });
     }
+  });
+
+  app.get("/api/recommend", async (req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, x-api-key");
+
+    const apiKey = req.headers["x-api-key"];
+    if (apiKey) {
+      console.log(`[API] /api/recommend called with API key: ${apiKey}`);
+    }
+
+    try {
+      await fetchPoolsData();
+
+      if (!cachedData) {
+        return res.status(503).json({ 
+          success: false, 
+          error: "Data not available. Please try again in a moment." 
+        });
+      }
+
+      const parseResult = recommendQuerySchema.safeParse(req.query);
+      
+      if (!parseResult.success) {
+        return res.status(400).json({ 
+          success: false,
+          error: "Invalid query parameters",
+          details: parseResult.error.errors 
+        });
+      }
+
+      const { chains, minApy, riskTolerance, userQuery } = parseResult.data;
+
+      let filteredPools = [...cachedData.pools];
+
+      if (chains !== "all") {
+        const chainList = chains.split(",").map(c => c.trim().toLowerCase());
+        filteredPools = filteredPools.filter(p => 
+          chainList.some(c => p.chain.toLowerCase().includes(c))
+        );
+      }
+
+      filteredPools = filteredPools.filter(p => p.apy >= minApy);
+
+      if (riskTolerance === "low") {
+        filteredPools = filteredPools.filter(p => 
+          p.ilRisk === "none" || p.ilRisk === "low"
+        );
+        filteredPools = filteredPools.filter(p => p.tvlUsd >= 5000000);
+      } else if (riskTolerance === "medium") {
+        filteredPools = filteredPools.filter(p => 
+          p.ilRisk !== "high" || p.tvlUsd >= 10000000
+        );
+        filteredPools = filteredPools.filter(p => p.tvlUsd >= 1000000);
+      }
+
+      if (userQuery) {
+        filteredPools = filteredPools.filter(p => poolMatchesUserQuery(p, userQuery));
+      }
+
+      filteredPools.sort((a, b) => b.riskAdjustedScore - a.riskAdjustedScore);
+
+      const topPools = filteredPools.slice(0, 3);
+
+      const querySummary = userQuery 
+        ? userQuery 
+        : `Top pools with ${minApy}%+ APY, ${riskTolerance} risk${chains !== "all" ? ` on ${chains}` : ""}`;
+
+      let summary = "";
+      if (topPools.length === 0) {
+        summary = `No pools found matching your criteria. Try lowering minApy or adjusting riskTolerance.`;
+      } else if (topPools.length === 1) {
+        summary = `Found 1 opportunity matching your criteria.`;
+      } else {
+        summary = `Found ${topPools.length} top opportunities for you. The top pick offers ${topPools[0].apy.toFixed(2)}% APY with ${topPools[0].ilRisk} IL risk.`;
+      }
+
+      const response: RecommendResponse = {
+        success: true,
+        query: querySummary,
+        riskProfile: riskTolerance,
+        topPick: topPools[0] ? formatPoolForResponse(topPools[0]) : null,
+        alternatives: topPools.slice(1).map(formatPoolForResponse),
+        summary,
+        timestamp: new Date().toISOString(),
+      };
+
+      res.json(response);
+    } catch (error) {
+      console.error("Error in /api/recommend:", error);
+      res.status(500).json({ 
+        success: false, 
+        error: "Failed to fetch recommendations" 
+      });
+    }
+  });
+
+  app.options("/api/recommend", (_req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, x-api-key");
+    res.sendStatus(200);
   });
 
   return httpServer;
