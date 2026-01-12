@@ -6,7 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
 import { MomentumBadge } from "@/components/Sparkline";
 import { ShareCallToAction } from "@/components/ShareBar";
-import { BlockchainsBanner } from "@/components/BlockchainsSidebar";
+import { NexoBanner } from "@/components/NexoBanner";
 import type { PoolWithScore } from "@shared/schema";
 
 interface RecommendationsProps {
@@ -156,7 +156,7 @@ export function Recommendations({ pools, isLoading }: RecommendationsProps) {
           <div key={pool.pool}>
             {index === 5 && (
               <div className="mb-4">
-                <BlockchainsBanner />
+                <NexoBanner />
               </div>
             )}
             <div className="flex items-start gap-3">

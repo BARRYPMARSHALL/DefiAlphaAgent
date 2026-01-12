@@ -14,7 +14,6 @@ import { ShareBar, ShareCallToAction } from "@/components/ShareBar";
 import { ShareMyFind } from "@/components/ShareMyFind";
 import { NexoBanner } from "@/components/NexoBanner";
 import { KoinlyBanner } from "@/components/KoinlyBanner";
-import { BlockchainsBanner } from "@/components/BlockchainsSidebar";
 import type { FilterState, SortState, PoolsResponse } from "@shared/schema";
 
 const DEFAULT_FILTERS: FilterState = {
@@ -199,7 +198,7 @@ export default function Dashboard() {
           isLoading={isLoading}
         />
 
-        <BlockchainsBanner variant="featured" storageKey="blockchains-featured-dismissed" />
+        <NexoBanner variant="featured" storageKey="nexo-featured-dismissed" />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
@@ -312,7 +311,7 @@ export default function Dashboard() {
 
             <div className="mt-6 pt-4 border-t">
               <p className="text-xs text-muted-foreground mb-3">Want to level up your DeFi knowledge?</p>
-              <BlockchainsBanner variant="featured" storageKey="blockchains-inline-dismissed" />
+              <NexoBanner variant="featured" storageKey="nexo-inline-dismissed" />
             </div>
           </CardContent>
         </Card>
