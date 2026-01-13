@@ -227,23 +227,38 @@ export function TrialGate({ children }: TrialGateProps) {
         </DialogContent>
       </Dialog>
 
-      {!trialExpired && remainingMinutes <= 5 && (
-        <div className="fixed bottom-4 right-4 z-50 animate-in slide-in-from-bottom-2">
-          <Card className="border-primary/30 shadow-lg">
-            <CardContent className="p-3 flex items-center gap-3">
-              <Clock className="h-4 w-4 text-primary shrink-0" />
-              <span className="text-sm font-medium">
-                {remainingMinutes} min{remainingMinutes !== 1 ? "s" : ""} left in trial
-              </span>
-              <Button 
-                size="sm" 
-                onClick={handlePayWithCrypto}
-                data-testid="button-upgrade-now"
-              >
-                Upgrade
-              </Button>
-            </CardContent>
-          </Card>
+      {!trialExpired && (
+        <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 animate-in slide-in-from-bottom-2">
+          {remainingMinutes <= 5 && (
+            <Card className="border-primary/30 shadow-lg">
+              <CardContent className="p-3 flex items-center gap-3">
+                <Clock className="h-4 w-4 text-primary shrink-0" />
+                <span className="text-sm font-medium">
+                  {remainingMinutes} min{remainingMinutes !== 1 ? "s" : ""} left in trial
+                </span>
+                <Button 
+                  size="sm" 
+                  onClick={handlePayWithCrypto}
+                  data-testid="button-upgrade-now"
+                >
+                  Upgrade
+                </Button>
+              </CardContent>
+            </Card>
+          )}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              const updated = { ...trialData, totalSecondsUsed: 900 };
+              saveTrialData(updated);
+              setTrialData(updated);
+            }}
+            className="text-xs"
+            data-testid="button-test-trial-end"
+          >
+            Test: End Trial Now
+          </Button>
         </div>
       )}
     </>
