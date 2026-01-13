@@ -12,7 +12,7 @@ interface ShareMyFindProps {
   pools: PoolWithScore[];
 }
 
-const SHARE_URL = typeof window !== "undefined" ? window.location.origin : "https://defi-alpha-agent.replit.app";
+const SHARE_URL = "https://defialphaagent.com";
 
 function formatApy(apy: number | null | undefined): string {
   if (apy == null) return "high";

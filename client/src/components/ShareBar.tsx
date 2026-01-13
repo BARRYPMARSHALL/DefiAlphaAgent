@@ -11,7 +11,7 @@ interface ShareBarProps {
 }
 
 const SHARE_TEXT = "I just discovered amazing DeFi yield opportunities on DeFi Alpha Agent - the smartest yield optimizer dashboard!";
-const SHARE_URL = typeof window !== "undefined" ? window.location.origin : "https://defi-alpha-agent.replit.app";
+const SHARE_URL = "https://defialphaagent.com";
 
 export function ShareBar({ className = "", compact = false }: ShareBarProps) {
   const [copied, setCopied] = useState(false);
