@@ -1,4 +1,5 @@
-import { RefreshCw, TrendingUp } from "lucide-react";
+import { Link } from "wouter";
+import { RefreshCw, TrendingUp, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "./ThemeToggle";
 import { ShareBar } from "./ShareBar";
@@ -30,6 +31,14 @@ export function Header({ onRefresh, isRefreshing, lastUpdated }: HeaderProps) {
         </div>
 
         <div className="flex items-center gap-2 flex-wrap">
+          <Link href="/learn">
+            <Button variant="outline" size="sm" data-testid="button-learn-defi">
+              <GraduationCap className="h-4 w-4 mr-2" />
+              <span className="hidden sm:inline">Learn DeFi</span>
+              <span className="sm:hidden">Learn</span>
+            </Button>
+          </Link>
+          
           <ShareBar compact />
           
           <Button
