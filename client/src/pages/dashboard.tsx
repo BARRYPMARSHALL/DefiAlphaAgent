@@ -347,18 +347,34 @@ export default function Dashboard() {
             </p>
             <p>Auto-refreshes every 5 minutes</p>
           </div>
-          <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-            <span>Business Inquiries & Advertising:</span>
-            <a
-              href="https://x.com/defialphaagent"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 font-medium text-foreground hover:text-primary transition-colors"
-              data-testid="link-contact-twitter"
-            >
-              <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-              @defialphaagent
-            </a>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <span>Follow</span>
+              <a
+                href="https://x.com/defialphaagent"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 font-medium text-foreground hover:text-primary transition-colors"
+                data-testid="link-follow-twitter"
+              >
+                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                @DefiAlphaAgent
+              </a>
+              <span>for daily alerts</span>
+            </div>
+            <span className="hidden sm:inline text-muted-foreground/50">|</span>
+            <div className="flex items-center gap-2">
+              <span>Business Inquiries & Advertising:</span>
+              <a
+                href="https://x.com/defialphaagent"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 font-medium text-foreground hover:text-primary transition-colors"
+                data-testid="link-contact-twitter"
+              >
+                DM @DefiAlphaAgent
+              </a>
+            </div>
           </div>
           <p className="text-xs text-muted-foreground/70 text-center" data-testid="text-affiliate-disclaimer">
             Affiliate links – we may earn commission at no extra cost to you.
