@@ -157,7 +157,7 @@ export default function Learn() {
                 On DeFi Alpha Agent, we calculate risk-adjusted scores based on APY, TVL, and impermanent loss risk. Higher scores = better risk/reward balance.
               </p>
               <div className="mt-6">
-                <TrezorBanner variant="inline" storageKey="learn-trezor-3" />
+                <LedgerImageBanner variant="inline" storageKey="learn-ledger-module-3" />
               </div>
             </CourseModule>
 
