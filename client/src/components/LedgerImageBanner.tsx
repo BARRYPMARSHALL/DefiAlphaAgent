@@ -41,9 +41,9 @@ export function LedgerImageBanner({ variant, storageKey = "ledger-image-dismisse
           data-testid="link-ledger-sidebar"
         >
           <img 
-            width={160} 
-            height={600} 
-            src="https://affiliate.ledger.com/image/160/600/Default" 
+            width={300} 
+            height={250} 
+            src="https://affiliate.ledger.com/image/300/250/Default" 
             alt="Ledger Nano S Plus - Secure your crypto"
             className="rounded-lg w-full"
           />
