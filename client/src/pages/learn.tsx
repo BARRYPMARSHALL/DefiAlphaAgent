@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { CourseModule, CourseProgress } from "@/components/CourseModule";
-import { LedgerBanner, TrezorBanner, KoinlyBanner } from "@/components/AffiliateBanners";
+import { TrezorBanner, KoinlyBanner } from "@/components/AffiliateBanners";
 import { NexoBanner } from "@/components/NexoBanner";
 import { EmailCaptureButton } from "@/components/EmailCapture";
+import { LedgerImageBanner } from "@/components/LedgerImageBanner";
 
 export default function Learn() {
   return (
@@ -84,7 +85,7 @@ export default function Learn() {
                 <li>Start with small amounts when trying new protocols</li>
               </ul>
               <div className="mt-6">
-                <LedgerBanner variant="card" storageKey="learn-ledger-1" />
+                <LedgerImageBanner variant="inline" storageKey="learn-ledger-module-1" />
               </div>
             </CourseModule>
 
@@ -294,7 +295,7 @@ export default function Learn() {
                 <EmailCaptureButton />
               </div>
               
-              <LedgerBanner variant="sidebar" storageKey="learn-sidebar-ledger" />
+              <LedgerImageBanner variant="sidebar" storageKey="learn-sidebar-ledger" />
               <KoinlyBanner variant="sidebar" storageKey="learn-sidebar-koinly" />
             </div>
           </div>
