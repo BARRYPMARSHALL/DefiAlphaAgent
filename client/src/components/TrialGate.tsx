@@ -212,7 +212,7 @@ export function TrialGate({ children }: TrialGateProps) {
                   Crypto payments via NOWPayments - USDC/USDT supported
                 </p>
 
-                <div className="pt-4 border-t">
+                <div className="pt-4 border-t space-y-2">
                   <Button
                     variant="ghost"
                     size="sm"
@@ -222,6 +222,19 @@ export function TrialGate({ children }: TrialGateProps) {
                   >
                     (Dev: Simulate Payment Success)
                   </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      const reset = { ...trialData, totalSecondsUsed: 0, premium: false };
+                      saveTrialData(reset);
+                      setTrialData(reset);
+                    }}
+                    className="w-full text-xs text-muted-foreground hover:text-foreground"
+                    data-testid="button-reset-trial"
+                  >
+                    (Dev: Reset Trial)
+                  </Button>
                 </div>
               </div>
             </CardContent>
@@ -229,39 +242,40 @@ export function TrialGate({ children }: TrialGateProps) {
         </DialogContent>
       </Dialog>
 
-      {!trialExpired && (
-        <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2 animate-in slide-in-from-bottom-2">
-          {remainingMinutes <= 5 && (
-            <Card className="border-primary/30 shadow-lg">
-              <CardContent className="p-3 flex items-center gap-3">
-                <Clock className="h-4 w-4 text-primary shrink-0" />
-                <span className="text-sm font-medium">
-                  {remainingMinutes} min{remainingMinutes !== 1 ? "s" : ""} left in trial
-                </span>
-                <Button 
-                  size="sm" 
-                  onClick={handlePayWithCrypto}
-                  data-testid="button-upgrade-now"
-                >
-                  Upgrade
-                </Button>
-              </CardContent>
-            </Card>
-          )}
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              const updated = { ...trialData, totalSecondsUsed: 900 };
-              saveTrialData(updated);
-              setTrialData(updated);
-            }}
-            className="text-xs"
-            data-testid="button-test-trial-end"
-          >
-            Test: End Trial Now
-          </Button>
+      {!trialExpired && remainingMinutes <= 5 && (
+        <div className="fixed bottom-4 right-4 z-40 animate-in slide-in-from-bottom-2">
+          <Card className="border-primary/30 shadow-lg">
+            <CardContent className="p-3 flex items-center gap-3">
+              <Clock className="h-4 w-4 text-primary shrink-0" />
+              <span className="text-sm font-medium">
+                {remainingMinutes} min{remainingMinutes !== 1 ? "s" : ""} left in trial
+              </span>
+              <Button 
+                size="sm" 
+                onClick={handlePayWithCrypto}
+                data-testid="button-upgrade-now"
+              >
+                Upgrade
+              </Button>
+            </CardContent>
+          </Card>
         </div>
+      )}
+      
+      {!trialExpired && (
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => {
+            const updated = { ...trialData, totalSecondsUsed: 900 };
+            saveTrialData(updated);
+            setTrialData(updated);
+          }}
+          className="fixed bottom-4 left-4 z-40 text-xs opacity-50 hover:opacity-100"
+          data-testid="button-test-trial-end"
+        >
+          Test: End Trial
+        </Button>
       )}
     </>
   );
