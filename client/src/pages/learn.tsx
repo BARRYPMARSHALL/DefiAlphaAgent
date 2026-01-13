@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { ArrowLeft, GraduationCap, TrendingUp, Shield, Zap, Calculator, BookOpen, Trophy, Share2 } from "lucide-react";
+import { ArrowLeft, TrendingUp, Shield, Zap, Calculator, BookOpen, Trophy, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -9,6 +9,7 @@ import { NexoBanner } from "@/components/NexoBanner";
 import { EmailCaptureButton } from "@/components/EmailCapture";
 import { LedgerImageBanner } from "@/components/LedgerImageBanner";
 import { SiX, SiFacebook, SiLinkedin, SiReddit, SiTelegram } from "react-icons/si";
+import logoImage from "@assets/ai_1768343849255.png";
 
 export default function Learn() {
   return (
@@ -24,9 +25,12 @@ export default function Learn() {
             </Link>
           </div>
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-10 h-10 rounded-md bg-primary text-primary-foreground">
-              <GraduationCap className="h-5 w-5" />
-            </div>
+            <img 
+              src={logoImage} 
+              alt="DeFi Alpha Agent" 
+              className="w-10 h-10 rounded-md object-cover"
+              data-testid="img-logo-learn"
+            />
             <div className="flex flex-col">
               <h1 className="text-xl font-bold tracking-tight" data-testid="text-learn-title">
                 Free DeFi Course

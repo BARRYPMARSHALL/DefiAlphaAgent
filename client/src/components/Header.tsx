@@ -1,8 +1,9 @@
 import { Link } from "wouter";
-import { RefreshCw, TrendingUp, GraduationCap } from "lucide-react";
+import { RefreshCw, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "./ThemeToggle";
 import { ShareBar } from "./ShareBar";
+import logoImage from "@assets/ai_1768343849255.png";
 
 interface HeaderProps {
   onRefresh: () => void;
@@ -15,9 +16,12 @@ export function Header({ onRefresh, isRefreshing, lastUpdated }: HeaderProps) {
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b mt-6 sm:mt-0">
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-10 h-10 rounded-md bg-primary text-primary-foreground">
-            <TrendingUp className="h-5 w-5" />
-          </div>
+          <img 
+            src={logoImage} 
+            alt="DeFi Alpha Agent" 
+            className="w-10 h-10 rounded-md object-cover"
+            data-testid="img-logo"
+          />
           <div className="flex flex-col">
             <h1 className="text-xl font-bold tracking-tight" data-testid="text-app-title">
               DeFi Alpha Agent
