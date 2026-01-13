@@ -1,4 +1,4 @@
-import { ExternalLink, X, Shield, Calculator, HardDrive } from "lucide-react";
+import { ExternalLink, X, Shield, Calculator, HardDrive, Sparkles, Clock, CheckCircle, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useState, useEffect } from "react";
@@ -8,9 +8,9 @@ interface AffiliateBannerProps {
   storageKey?: string;
 }
 
-const LEDGER_URL = "https://shop.ledger.com/?r=YOUR_LEDGER_REFERRAL";
+const LEDGER_URL = "https://shop.ledger.com/pages/ledger-nano-s-plus/?r=04d0426a5b16";
 const TREZOR_URL = "https://trezor.io/?offer_id=YOUR_TREZOR_REFERRAL";
-const KOINLY_URL = "https://koinly.io/?via=YOUR_KOINLY_REFERRAL";
+const KOINLY_URL = "https://koinly.io/?via=24B89297&utm_source=affiliate";
 
 export function LedgerBanner({ variant = "inline", storageKey = "ledger-banner-dismissed" }: AffiliateBannerProps) {
   const [dismissed, setDismissed] = useState<boolean | null>(null);
@@ -254,9 +254,9 @@ export function KoinlyBanner({ variant = "inline", storageKey = "koinly-banner-d
   if (variant === "sidebar") {
     return (
       <div 
-        className="relative overflow-hidden rounded-lg border border-blue-400/30 p-4"
+        className="relative overflow-hidden rounded-lg border-2 border-blue-400/50 p-4"
         style={{
-          background: "linear-gradient(135deg, rgba(59,130,246,0.15) 0%, rgba(37,99,235,0.15) 100%)",
+          background: "linear-gradient(135deg, rgba(59,130,246,0.2) 0%, rgba(99,102,241,0.2) 50%, rgba(139,92,246,0.15) 100%)",
         }}
         data-testid="banner-koinly-sidebar"
       >
@@ -264,34 +264,51 @@ export function KoinlyBanner({ variant = "inline", storageKey = "koinly-banner-d
           onClick={handleDismiss}
           className="absolute top-2 right-2 p-1 rounded-full hover:bg-muted transition-colors z-10"
           aria-label="Dismiss"
+          data-testid="button-dismiss-koinly-sidebar"
         >
           <X className="h-3 w-3 text-muted-foreground" />
         </button>
 
         <div className="flex flex-col items-center text-center gap-3">
-          <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 text-white shrink-0 shadow-md">
-            <Calculator className="h-6 w-6" />
+          <div className="relative">
+            <div className="flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500 text-white shrink-0 shadow-lg">
+              <Calculator className="h-7 w-7" />
+            </div>
+            <div className="absolute -top-1 -right-1 bg-amber-400 rounded-full p-1">
+              <Sparkles className="h-3 w-3 text-amber-900" />
+            </div>
           </div>
           <div>
-            <Badge className="bg-blue-500 text-white border-0 text-[10px] mb-2">
-              Tax Season
+            <Badge className="bg-gradient-to-r from-amber-400 to-orange-400 text-amber-900 border-0 text-[10px] font-bold mb-2 animate-pulse">
+              <Clock className="h-2.5 w-2.5 mr-0.5" />
+              Tax Season 2026
             </Badge>
-            <p className="text-sm font-bold leading-tight text-foreground">
-              Crypto Tax Made Easy
+            <p className="text-base font-bold leading-tight text-foreground">
+              Don't Get Caught Off Guard
             </p>
-            <p className="text-xs text-muted-foreground mt-1">
-              Track DeFi yields and generate tax reports automatically
+            <p className="text-xs text-muted-foreground mt-1 mb-2">
+              Auto-import all your DeFi transactions in minutes
             </p>
+            <div className="flex flex-col gap-1 text-[11px] text-left">
+              <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
+                <CheckCircle className="h-3 w-3" />
+                <span>Tracks 100+ chains</span>
+              </div>
+              <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
+                <CheckCircle className="h-3 w-3" />
+                <span>DeFi & LP support</span>
+              </div>
+            </div>
           </div>
           <Button
             asChild
             size="sm"
-            className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-bold"
+            className="w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white font-bold shadow-lg"
             data-testid="button-koinly-sidebar"
           >
             <a href={KOINLY_URL} target="_blank" rel="noopener noreferrer">
-              Try Koinly Free
-              <ExternalLink className="h-3 w-3 ml-1" />
+              Start Free - No Card Needed
+              <ArrowRight className="h-3.5 w-3.5 ml-1" />
             </a>
           </Button>
         </div>
@@ -302,9 +319,9 @@ export function KoinlyBanner({ variant = "inline", storageKey = "koinly-banner-d
   if (variant === "card") {
     return (
       <div 
-        className="relative overflow-hidden rounded-lg border border-blue-400/30 p-4"
+        className="relative overflow-hidden rounded-lg border-2 border-blue-400/50 p-5"
         style={{
-          background: "linear-gradient(135deg, rgba(59,130,246,0.1) 0%, rgba(37,99,235,0.1) 100%)",
+          background: "linear-gradient(135deg, rgba(59,130,246,0.15) 0%, rgba(99,102,241,0.15) 50%, rgba(139,92,246,0.1) 100%)",
         }}
         data-testid="banner-koinly-card"
       >
@@ -312,31 +329,55 @@ export function KoinlyBanner({ variant = "inline", storageKey = "koinly-banner-d
           onClick={handleDismiss}
           className="absolute top-2 right-2 p-1 rounded-full hover:bg-muted transition-colors z-10"
           aria-label="Dismiss"
+          data-testid="button-dismiss-koinly-card"
         >
           <X className="h-3 w-3 text-muted-foreground" />
         </button>
 
-        <div className="flex items-center gap-4">
-          <div className="flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-blue-500 to-indigo-500 text-white shrink-0 shadow-md">
-            <Calculator className="h-7 w-7" />
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <div className="relative shrink-0">
+            <div className="flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 via-indigo-500 to-purple-500 text-white shadow-lg">
+              <Calculator className="h-8 w-8" />
+            </div>
+            <div className="absolute -top-1 -right-1 bg-amber-400 rounded-full p-1.5">
+              <Sparkles className="h-3.5 w-3.5 text-amber-900" />
+            </div>
           </div>
           <div className="flex-1">
-            <div className="flex items-center gap-2 mb-1">
-              <p className="text-base font-bold text-foreground">Track Your DeFi Taxes</p>
-              <Badge className="bg-blue-500 text-white border-0 text-[10px]">Essential</Badge>
+            <div className="flex items-center gap-2 mb-1 flex-wrap">
+              <p className="text-lg font-bold text-foreground">Stop Stressing About Crypto Taxes</p>
+              <Badge className="bg-gradient-to-r from-amber-400 to-orange-400 text-amber-900 border-0 text-[10px] font-bold animate-pulse">
+                <Clock className="h-2.5 w-2.5 mr-0.5" />
+                Tax Season
+              </Badge>
             </div>
-            <p className="text-sm text-muted-foreground">
-              Automatically calculate taxes on all your yield farming, LP rewards, and DeFi transactions.
+            <p className="text-sm text-muted-foreground mb-3">
+              Koinly auto-imports your DeFi transactions from 100+ chains. Get accurate tax reports in minutes, not hours.
             </p>
+            <div className="flex flex-wrap gap-3 text-xs">
+              <div className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
+                <CheckCircle className="h-3.5 w-3.5" />
+                <span>LP & Yield Tracking</span>
+              </div>
+              <div className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
+                <CheckCircle className="h-3.5 w-3.5" />
+                <span>IRS/HMRC Reports</span>
+              </div>
+              <div className="flex items-center gap-1 text-emerald-600 dark:text-emerald-400">
+                <CheckCircle className="h-3.5 w-3.5" />
+                <span>Free to Try</span>
+              </div>
+            </div>
           </div>
           <Button
             asChild
-            className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-bold shrink-0"
+            size="lg"
+            className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white font-bold shrink-0 shadow-lg"
             data-testid="button-koinly-card"
           >
             <a href={KOINLY_URL} target="_blank" rel="noopener noreferrer">
-              Try Free
-              <ExternalLink className="h-4 w-4 ml-2" />
+              Get Started Free
+              <ArrowRight className="h-4 w-4 ml-2" />
             </a>
           </Button>
         </div>
