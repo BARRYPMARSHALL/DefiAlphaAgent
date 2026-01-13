@@ -208,8 +208,17 @@ export function TrialGate({ children }: TrialGateProps) {
                   Pay with Crypto (NOWPayments)
                 </Button>
 
+                <Button 
+                  variant="outline"
+                  onClick={() => window.open("https://stripe.com", "_blank", "noopener,noreferrer")}
+                  className="w-full h-10"
+                  data-testid="button-pay-card"
+                >
+                  Pay with Card
+                </Button>
+
                 <p className="text-xs text-center text-muted-foreground">
-                  Crypto payments via NOWPayments - USDC/USDT supported
+                  Crypto payments via NOWPayments - USDC/ETH/Base supported
                 </p>
 
                 <div className="pt-4 border-t space-y-2">
@@ -242,7 +251,7 @@ export function TrialGate({ children }: TrialGateProps) {
         </DialogContent>
       </Dialog>
 
-      {!trialExpired && remainingMinutes <= 5 && (
+      {!trialExpired && remainingMinutes <= 15 && (
         <div className="fixed bottom-4 right-4 z-40 animate-in slide-in-from-bottom-2">
           <Card className="border-primary/30 shadow-lg">
             <CardContent className="p-3 flex items-center gap-3">
