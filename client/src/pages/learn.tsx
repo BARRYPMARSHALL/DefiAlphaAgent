@@ -116,34 +116,59 @@ export default function Learn() {
               id="defi-basics"
               title="Module 1: DeFi Basics"
               description="What is DeFi, wallets, and how to stay safe"
-              duration="5 min"
+              duration="6 min"
               defaultOpen={true}
             >
-              <h4 className="font-semibold text-lg mb-3 flex items-center gap-2">
+              <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
                 <BookOpen className="h-5 w-5 text-primary" />
                 What is DeFi?
               </h4>
-              <p className="mb-4">
-                <strong>Decentralized Finance (DeFi)</strong> refers to financial applications built on blockchain networks that operate without traditional intermediaries like banks. Instead of trusting a company, you trust code (smart contracts) that runs exactly as programmed.
+              <p className="mb-6 text-base leading-relaxed">
+                <strong>Decentralized Finance (DeFi)</strong> refers to financial applications built on blockchain networks that operate without traditional intermediaries like banks. Instead of trusting a company, you trust code (smart contracts) that runs exactly as programmed. This opens up incredible opportunities to earn yields that traditional finance simply cannot offer.
               </p>
-              <h5 className="font-medium mb-2">Key DeFi Concepts:</h5>
-              <ul className="list-disc pl-6 space-y-2 mb-4">
-                <li><strong>Smart Contracts</strong> - Self-executing code on the blockchain that handles your funds automatically</li>
-                <li><strong>Liquidity Pools</strong> - Pools of tokens locked in smart contracts that enable trading</li>
-                <li><strong>Yield Farming</strong> - Earning rewards by providing liquidity or staking tokens</li>
-                <li><strong>TVL (Total Value Locked)</strong> - The total amount of assets deposited in a protocol</li>
+              
+              <h5 className="font-medium mb-3 text-base">Key DeFi Concepts:</h5>
+              <ul className="list-disc pl-6 space-y-3 mb-6">
+                <li><strong>Smart Contracts</strong> - Self-executing code on the blockchain that handles your funds automatically. Once deployed, these contracts run 24/7 without any human intervention.</li>
+                <li><strong>Liquidity Pools</strong> - Pools of tokens locked in smart contracts that enable trading. When you add liquidity, you become a market maker and earn fees.</li>
+                <li><strong>Yield Farming</strong> - Earning rewards by providing liquidity or staking tokens. Returns can range from 5% to over 100% APY depending on risk.</li>
+                <li><strong>TVL (Total Value Locked)</strong> - The total amount of assets deposited in a protocol. Higher TVL generally indicates more trust and stability.</li>
+                <li><strong>APY vs APR</strong> - APY includes compound interest while APR doesn't. A 10% APY with daily compounding yields more than 10% APR.</li>
               </ul>
-              <h5 className="font-medium mb-2">Wallet Security Basics:</h5>
-              <p className="mb-4">
-                Your wallet is your gateway to DeFi. Protecting it is critical:
+
+              <h5 className="font-medium mb-3 text-base">The Challenge: Finding Good Opportunities</h5>
+              <p className="mb-6 text-base leading-relaxed">
+                There are thousands of yield farming opportunities across dozens of blockchains. Manually checking each protocol, comparing APYs, evaluating risks, and monitoring changes is incredibly time-consuming. Most farmers spend hours each day just trying to find where to put their money.
               </p>
-              <ul className="list-disc pl-6 space-y-2 mb-4">
-                <li>Never share your seed phrase with anyone</li>
-                <li>Use a hardware wallet for large amounts</li>
-                <li>Verify contract addresses before interacting</li>
-                <li>Start with small amounts when trying new protocols</li>
+
+              <div className="bg-primary/10 border border-primary/30 rounded-lg p-5 mb-6">
+                <h6 className="font-semibold mb-2 flex items-center gap-2">
+                  <Zap className="h-4 w-4 text-primary" />
+                  How DeFi Alpha Agent Saves You Time
+                </h6>
+                <p className="text-sm mb-3">
+                  Instead of manually checking 50+ protocols across 20+ chains, DeFi Alpha Agent aggregates everything into one dashboard. We pull real-time data from DeFiLlama covering thousands of pools and present only the best opportunities.
+                </p>
+                <ul className="text-sm space-y-1">
+                  <li>• <strong>One dashboard</strong> instead of 50 browser tabs</li>
+                  <li>• <strong>Real-time APY data</strong> updated every 5 minutes</li>
+                  <li>• <strong>Risk-adjusted scores</strong> so you see quality, not just high numbers</li>
+                  <li>• <strong>Filter by chain, TVL, and pool type</strong> instantly</li>
+                </ul>
+              </div>
+              
+              <h5 className="font-medium mb-3 text-base">Wallet Security Basics:</h5>
+              <p className="mb-4 text-base leading-relaxed">
+                Your wallet is your gateway to DeFi. Protecting it is critical - there's no customer support to recover lost funds:
+              </p>
+              <ul className="list-disc pl-6 space-y-3 mb-6">
+                <li><strong>Never share your seed phrase</strong> - Anyone with your 12/24 words owns your funds</li>
+                <li><strong>Use a hardware wallet for large amounts</strong> - Physical devices keep keys offline and safe from hackers</li>
+                <li><strong>Verify contract addresses</strong> - Always double-check you're interacting with the real protocol</li>
+                <li><strong>Start with small amounts</strong> - Test new protocols with money you can afford to lose</li>
+                <li><strong>Revoke unused approvals</strong> - Old token approvals can be exploited if a protocol is compromised</li>
               </ul>
-              <div className="mt-6">
+              <div className="mt-8">
                 <LedgerImageBanner variant="inline" storageKey="learn-ledger-module-1" />
               </div>
             </CourseModule>
@@ -154,34 +179,63 @@ export default function Learn() {
               description="APY vs APR, liquidity pools, and how yields work"
               duration="7 min"
             >
-              <h4 className="font-semibold text-lg mb-3 flex items-center gap-2">
+              <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
                 <TrendingUp className="h-5 w-5 text-primary" />
                 Understanding Yields
               </h4>
-              <h5 className="font-medium mb-2">APY vs APR:</h5>
-              <ul className="list-disc pl-6 space-y-2 mb-4">
-                <li><strong>APR (Annual Percentage Rate)</strong> - Simple interest without compounding. 10% APR means you earn 10% per year on your principal.</li>
-                <li><strong>APY (Annual Percentage Yield)</strong> - Includes compound interest. 10% APY with daily compounding is actually higher than 10% APR.</li>
+              
+              <h5 className="font-medium mb-3 text-base">APY vs APR - The Critical Difference:</h5>
+              <ul className="list-disc pl-6 space-y-3 mb-6">
+                <li><strong>APR (Annual Percentage Rate)</strong> - Simple interest without compounding. 10% APR means you earn exactly 10% per year on your principal, paid out in regular intervals.</li>
+                <li><strong>APY (Annual Percentage Yield)</strong> - Includes compound interest. The more frequently rewards compound, the higher the effective return. Daily compounding beats monthly which beats annual.</li>
               </ul>
-              <div className="bg-muted rounded-lg p-4 mb-4">
-                <p className="text-sm font-mono">
-                  Example: $1,000 at 10% APR = $1,100 after 1 year<br/>
-                  Example: $1,000 at 10% APY (daily compound) = $1,105.16 after 1 year
+              <div className="bg-muted rounded-lg p-5 mb-6">
+                <p className="text-sm font-mono leading-relaxed">
+                  <strong>Real Example:</strong><br/>
+                  $10,000 at 10% APR = $11,000 after 1 year<br/>
+                  $10,000 at 10% APY (daily compound) = $11,051.56 after 1 year<br/>
+                  <br/>
+                  <strong>At 50% rates, the difference is huge:</strong><br/>
+                  $10,000 at 50% APR = $15,000 after 1 year<br/>
+                  $10,000 at 50% APY (daily compound) = $16,487.21 after 1 year
                 </p>
               </div>
-              <h5 className="font-medium mb-2">How Liquidity Pools Work:</h5>
-              <p className="mb-4">
-                When you provide liquidity to a pool (e.g., ETH-USDC), you deposit both tokens in equal value. Traders swap between these tokens and pay fees, which go to liquidity providers (LPs).
+
+              <h5 className="font-medium mb-3 text-base">How Liquidity Pools Work:</h5>
+              <p className="mb-4 text-base leading-relaxed">
+                When you provide liquidity to a pool (e.g., ETH-USDC), you deposit both tokens in equal value. Traders swap between these tokens and pay fees, which go to liquidity providers (LPs). The more trading volume a pool has, the more fees you earn.
               </p>
-              <h5 className="font-medium mb-2">Where Yields Come From:</h5>
-              <ul className="list-disc pl-6 space-y-2 mb-4">
-                <li><strong>Trading Fees</strong> - Your share of swap fees (usually 0.3%)</li>
-                <li><strong>Token Rewards</strong> - Protocols distribute their native tokens to attract liquidity</li>
-                <li><strong>Lending Interest</strong> - Borrowers pay interest on loans</li>
+              <p className="mb-6 text-base leading-relaxed">
+                Different pool types exist: traditional 50/50 pools, concentrated liquidity pools (like Uniswap V3), and single-sided staking. Each has different risk/reward profiles.
+              </p>
+
+              <h5 className="font-medium mb-3 text-base">Where Yields Come From:</h5>
+              <ul className="list-disc pl-6 space-y-3 mb-6">
+                <li><strong>Trading Fees</strong> - Your share of swap fees (usually 0.05% to 1% per trade depending on pool)</li>
+                <li><strong>Token Rewards</strong> - Protocols distribute their native tokens to attract liquidity (often the biggest source of APY)</li>
+                <li><strong>Lending Interest</strong> - On lending platforms, borrowers pay interest on loans you provide</li>
+                <li><strong>Protocol Revenue Sharing</strong> - Some protocols share actual revenue with stakers</li>
               </ul>
-              <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4 mb-4">
-                <p className="text-sm">
-                  <strong>Pro Tip:</strong> High APYs often come from token rewards that can lose value. Always check what the rewards are and their sustainability.
+
+              <div className="bg-primary/10 border border-primary/30 rounded-lg p-5 mb-6">
+                <h6 className="font-semibold mb-2 flex items-center gap-2">
+                  <Zap className="h-4 w-4 text-primary" />
+                  How DeFi Alpha Agent Helps You Compare Yields
+                </h6>
+                <p className="text-sm mb-3">
+                  Comparing yields across protocols is confusing - some show APR, others show APY, and reward tokens fluctuate in value. DeFi Alpha Agent normalizes everything:
+                </p>
+                <ul className="text-sm space-y-1">
+                  <li>• <strong>Standardized APY display</strong> across all pools for fair comparison</li>
+                  <li>• <strong>Base APY vs Reward APY</strong> breakdown so you know what's sustainable</li>
+                  <li>• <strong>7-day and 30-day trend indicators</strong> show if yields are rising or falling</li>
+                  <li>• <strong>Sort by APY, TVL, or our risk-adjusted score</strong> to find your ideal opportunities</li>
+                </ul>
+              </div>
+
+              <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-5 mb-6">
+                <p className="text-sm leading-relaxed">
+                  <strong>Pro Tip:</strong> High APYs often come from token rewards that can lose value. A 500% APY means nothing if the reward token drops 90%. DeFi Alpha Agent shows you sustainability warnings when APY is declining rapidly.
                 </p>
               </div>
             </CourseModule>
@@ -190,32 +244,71 @@ export default function Learn() {
               id="risk-management"
               title="Module 3: Risk Management"
               description="Rug pulls, smart contract risk, and how to protect yourself"
-              duration="6 min"
+              duration="8 min"
             >
-              <h4 className="font-semibold text-lg mb-3 flex items-center gap-2">
+              <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
                 <Shield className="h-5 w-5 text-primary" />
                 Understanding DeFi Risks
               </h4>
-              <h5 className="font-medium mb-2">Common DeFi Risks:</h5>
-              <ul className="list-disc pl-6 space-y-2 mb-4">
-                <li><strong>Smart Contract Risk</strong> - Bugs in code can be exploited, leading to loss of funds</li>
-                <li><strong>Impermanent Loss (IL)</strong> - When token prices diverge, LPs can lose value compared to just holding</li>
-                <li><strong>Rug Pulls</strong> - Malicious projects where developers drain liquidity</li>
-                <li><strong>Oracle Manipulation</strong> - Price feed attacks that drain protocols</li>
-              </ul>
-              <h5 className="font-medium mb-2">How to Minimize Risk:</h5>
-              <ul className="list-disc pl-6 space-y-2 mb-4">
-                <li>Stick to audited protocols with a track record</li>
-                <li>Check TVL - higher TVL usually means more trust</li>
-                <li>Diversify across multiple protocols and chains</li>
-                <li>Use DeFi insurance for large positions</li>
-                <li>Avoid anonymous teams and unverified contracts</li>
-              </ul>
-              <h5 className="font-medium mb-2">Reading Risk Scores:</h5>
-              <p className="mb-4">
-                On DeFi Alpha Agent, we calculate risk-adjusted scores based on APY, TVL, and impermanent loss risk. Higher scores = better risk/reward balance.
+              <p className="mb-6 text-base leading-relaxed">
+                DeFi offers incredible opportunities, but also significant risks. Understanding these risks is essential for protecting your capital. Many investors have lost everything by ignoring risk management.
               </p>
-              <div className="mt-6">
+
+              <h5 className="font-medium mb-3 text-base">Common DeFi Risks:</h5>
+              <ul className="list-disc pl-6 space-y-3 mb-6">
+                <li><strong>Smart Contract Risk</strong> - Bugs in code can be exploited, leading to loss of funds. Even audited protocols have been hacked. In 2022-2023, billions were lost to exploits.</li>
+                <li><strong>Impermanent Loss (IL)</strong> - When token prices diverge significantly, LPs can lose value compared to just holding. Volatile pairs like ETH-SHIB can see 50%+ IL in extreme moves.</li>
+                <li><strong>Rug Pulls</strong> - Malicious projects where developers drain liquidity. Usually happens with new, unverified tokens promising unrealistic returns.</li>
+                <li><strong>Oracle Manipulation</strong> - Price feed attacks that drain protocols by manipulating the price oracles that DeFi relies on.</li>
+                <li><strong>Regulatory Risk</strong> - Governments may restrict access to certain protocols or tokens, affecting your positions.</li>
+                <li><strong>Liquidity Risk</strong> - Low liquidity pools can trap your funds or cause massive slippage when exiting.</li>
+              </ul>
+
+              <h5 className="font-medium mb-3 text-base">Understanding Impermanent Loss:</h5>
+              <div className="bg-muted rounded-lg p-5 mb-6">
+                <p className="text-sm font-mono leading-relaxed">
+                  <strong>Example: ETH-USDC Pool</strong><br/><br/>
+                  You deposit: $5,000 ETH + $5,000 USDC = $10,000 total<br/>
+                  ETH price doubles: Your pool is now ~$7,071 ETH + ~$7,071 USDC<br/>
+                  Pool value: $14,142<br/>
+                  If you just held: $10,000 + $5,000 = $15,000<br/>
+                  <strong>Impermanent Loss: ~5.7% ($858)</strong><br/><br/>
+                  This loss is "impermanent" because it reverses if prices return to your entry point.
+                </p>
+              </div>
+
+              <h5 className="font-medium mb-3 text-base">How to Minimize Risk:</h5>
+              <ul className="list-disc pl-6 space-y-3 mb-6">
+                <li><strong>Stick to audited protocols</strong> - Multiple audits from reputable firms like Trail of Bits, OpenZeppelin, or Certik</li>
+                <li><strong>Check TVL</strong> - Higher TVL usually means more trust and battle-testing. $100M+ TVL protocols are generally safer.</li>
+                <li><strong>Diversify</strong> - Spread across multiple protocols, chains, and pool types. Never put everything in one pool.</li>
+                <li><strong>Use DeFi insurance</strong> - Platforms like Nexus Mutual offer cover for smart contract failures</li>
+                <li><strong>Avoid anonymous teams</strong> - Doxxed teams with reputations to protect are less likely to rug</li>
+                <li><strong>Start small</strong> - Test with 5-10% of what you plan to invest before going all in</li>
+              </ul>
+
+              <div className="bg-primary/10 border border-primary/30 rounded-lg p-5 mb-6">
+                <h6 className="font-semibold mb-2 flex items-center gap-2">
+                  <Zap className="h-4 w-4 text-primary" />
+                  How DeFi Alpha Agent Helps You Manage Risk
+                </h6>
+                <p className="text-sm mb-3">
+                  Evaluating risk across thousands of pools manually is impossible. DeFi Alpha Agent does the heavy lifting:
+                </p>
+                <ul className="text-sm space-y-2">
+                  <li>• <strong>Risk-Adjusted Scores</strong> - We calculate scores using APY, TVL, and IL risk factors. Higher scores = better risk/reward.</li>
+                  <li>• <strong>TVL Filters</strong> - Instantly filter out low-liquidity pools (under $100K or $1M)</li>
+                  <li>• <strong>IL Risk Indicators</strong> - We flag high IL risk pools (volatile pairs) so you know what you're getting into</li>
+                  <li>• <strong>APY Trend Warnings</strong> - Red indicators show when APY is declining rapidly</li>
+                  <li>• <strong>Stablecoin Pool Filters</strong> - Find low-risk stable pairs with minimal IL exposure</li>
+                </ul>
+              </div>
+
+              <h5 className="font-medium mb-3 text-base">Reading Our Risk Scores:</h5>
+              <p className="mb-6 text-base leading-relaxed">
+                On DeFi Alpha Agent, we calculate risk-adjusted scores using this formula: <strong>APY × (TVL Factor) × (1 - IL Risk)</strong>. This means a pool needs good APY, sufficient TVL, AND low impermanent loss risk to score well. A 1000% APY pool with $50K TVL and volatile assets will score lower than a 20% APY pool with $50M TVL in stablecoins.
+              </p>
+              <div className="mt-8">
                 <LedgerImageBanner variant="inline" storageKey="learn-ledger-module-3" />
               </div>
             </CourseModule>
@@ -224,31 +317,73 @@ export default function Learn() {
               id="auto-compounding"
               title="Module 4: Auto-Compounding Vaults"
               description="Why Beefy and Yearn vaults can boost your returns"
-              duration="5 min"
+              duration="6 min"
             >
-              <h4 className="font-semibold text-lg mb-3 flex items-center gap-2">
+              <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
                 <Zap className="h-5 w-5 text-primary" />
                 The Power of Auto-Compounding
               </h4>
-              <p className="mb-4">
-                Manual compounding requires you to claim rewards and re-deposit them regularly. Auto-compounding vaults like <strong>Beefy</strong> and <strong>Yearn</strong> do this automatically, often multiple times per day.
+              <p className="mb-6 text-base leading-relaxed">
+                Manual compounding requires you to claim rewards and re-deposit them regularly - often daily or weekly. This is time-consuming and expensive in gas fees. Auto-compounding vaults like <strong>Beefy</strong>, <strong>Yearn</strong>, <strong>Convex</strong>, and <strong>Gamma</strong> do this automatically, often multiple times per day, dramatically increasing your effective APY.
               </p>
-              <h5 className="font-medium mb-2">How Auto-Compound Vaults Work:</h5>
-              <ol className="list-decimal pl-6 space-y-2 mb-4">
-                <li>You deposit LP tokens or single assets into the vault</li>
-                <li>The vault harvests rewards automatically</li>
-                <li>Rewards are sold and re-invested into your position</li>
-                <li>Your share of the vault grows over time</li>
+
+              <h5 className="font-medium mb-3 text-base">The Math Behind Compounding:</h5>
+              <div className="bg-muted rounded-lg p-5 mb-6">
+                <p className="text-sm font-mono leading-relaxed">
+                  <strong>$10,000 at 50% APR with different compounding:</strong><br/><br/>
+                  No compounding (claim at year end): $15,000<br/>
+                  Monthly compounding: $16,386<br/>
+                  Daily compounding: $16,487<br/>
+                  Hourly compounding (auto-vault): $16,494<br/><br/>
+                  <strong>Auto-compounding = $1,494 more per year!</strong>
+                </p>
+              </div>
+
+              <h5 className="font-medium mb-3 text-base">How Auto-Compound Vaults Work:</h5>
+              <ol className="list-decimal pl-6 space-y-3 mb-6">
+                <li><strong>Deposit</strong> - You deposit LP tokens or single assets into the vault</li>
+                <li><strong>Harvest</strong> - The vault automatically claims rewards (often every few hours)</li>
+                <li><strong>Swap</strong> - Rewards are sold for the underlying assets</li>
+                <li><strong>Reinvest</strong> - Assets are re-deposited to increase your position</li>
+                <li><strong>Repeat</strong> - This happens automatically, 24/7, without any action from you</li>
               </ol>
-              <h5 className="font-medium mb-2">Benefits:</h5>
-              <ul className="list-disc pl-6 space-y-2 mb-4">
-                <li><strong>Higher Effective APY</strong> - Frequent compounding maximizes returns</li>
-                <li><strong>Gas Savings</strong> - Costs are shared across all vault users</li>
-                <li><strong>Set and Forget</strong> - No need to manually claim and reinvest</li>
+
+              <h5 className="font-medium mb-3 text-base">Benefits of Auto-Compounding:</h5>
+              <ul className="list-disc pl-6 space-y-3 mb-6">
+                <li><strong>Higher Effective APY</strong> - Frequent compounding can add 10-30% to your returns vs manual claiming</li>
+                <li><strong>Massive Gas Savings</strong> - Instead of paying $5-50 per claim, costs are shared across thousands of vault users</li>
+                <li><strong>Set and Forget</strong> - No need to manually claim and reinvest. Your money works while you sleep.</li>
+                <li><strong>Professional Management</strong> - Vault strategies are optimized by experienced DeFi developers</li>
+                <li><strong>Reduced Tax Complexity</strong> - Fewer manual transactions to track (consult your tax advisor)</li>
               </ul>
-              <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-4 mb-4">
-                <p className="text-sm">
-                  <strong>DeFi Alpha Agent Tip:</strong> Look for the green checkmark badge on pools - it means a Beefy vault is available for that LP position!
+
+              <h5 className="font-medium mb-3 text-base">Popular Auto-Compound Platforms:</h5>
+              <ul className="list-disc pl-6 space-y-3 mb-6">
+                <li><strong>Beefy Finance</strong> - Multi-chain yield optimizer with 1000+ vaults. The largest and most trusted.</li>
+                <li><strong>Yearn Finance</strong> - The original yield aggregator on Ethereum, known for sophisticated strategies.</li>
+                <li><strong>Convex Finance</strong> - Specializes in boosting Curve LP yields.</li>
+                <li><strong>Gamma Strategies</strong> - Automated concentrated liquidity management.</li>
+              </ul>
+
+              <div className="bg-primary/10 border border-primary/30 rounded-lg p-5 mb-6">
+                <h6 className="font-semibold mb-2 flex items-center gap-2">
+                  <Zap className="h-4 w-4 text-primary" />
+                  How DeFi Alpha Agent Identifies Auto-Compound Opportunities
+                </h6>
+                <p className="text-sm mb-3">
+                  Finding auto-compound vaults for your favorite pools used to require checking multiple sites. DeFi Alpha Agent does this automatically:
+                </p>
+                <ul className="text-sm space-y-2">
+                  <li>• <strong>Green Checkmark Badge</strong> - Pools with available Beefy vaults show a checkmark so you know you can auto-compound</li>
+                  <li>• <strong>10% Score Boost</strong> - Auto-compound pools get a risk score boost because of their efficiency</li>
+                  <li>• <strong>"Zap In" Links</strong> - Click directly to the protocol's vault page to deposit</li>
+                  <li>• <strong>Filter by Auto-Compound</strong> - See only pools where auto-compounding is available</li>
+                </ul>
+              </div>
+
+              <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-5 mb-6">
+                <p className="text-sm leading-relaxed">
+                  <strong>DeFi Alpha Agent Pro Tip:</strong> When comparing two similar pools, always prefer the one with auto-compounding available. The gas savings and higher effective APY compound over time to make a significant difference!
                 </p>
               </div>
             </CourseModule>
@@ -259,33 +394,76 @@ export default function Learn() {
               description="Leveraged farming, delta-neutral, and CeFi alternatives"
               duration="8 min"
             >
-              <h4 className="font-semibold text-lg mb-3 flex items-center gap-2">
+              <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
                 <TrendingUp className="h-5 w-5 text-primary" />
                 Going Beyond Basic Farming
               </h4>
-              <h5 className="font-medium mb-2">Leveraged Farming:</h5>
-              <p className="mb-4">
-                Platforms like Alpaca Finance let you borrow funds to amplify your farming position. A 2x leverage means double the exposure - and double the risk.
+              <p className="mb-6 text-base leading-relaxed">
+                Once you've mastered the basics, advanced strategies can significantly boost your returns - but they also come with increased complexity and risk. Only use these after you're comfortable with standard yield farming.
               </p>
-              <ul className="list-disc pl-6 space-y-2 mb-4">
-                <li>Higher potential returns</li>
-                <li>Risk of liquidation if prices move against you</li>
-                <li>Borrowing costs eat into profits</li>
+
+              <h5 className="font-medium mb-3 text-base">Leveraged Farming:</h5>
+              <p className="mb-4 text-base leading-relaxed">
+                Platforms like Alpaca Finance, Francium, and Gearbox let you borrow funds to amplify your farming position. A 2x leverage means double the exposure - and double the risk.
+              </p>
+              <div className="bg-muted rounded-lg p-5 mb-6">
+                <p className="text-sm font-mono leading-relaxed">
+                  <strong>Example: 2x Leveraged ETH-USDC Farming</strong><br/><br/>
+                  Your deposit: $5,000<br/>
+                  Borrowed: $5,000 (2x leverage)<br/>
+                  Total farming position: $10,000<br/>
+                  Pool APY: 30%<br/>
+                  Annual yield (before costs): $3,000<br/>
+                  Borrow interest: -$500<br/>
+                  Net yield: $2,500 = 50% on your $5,000<br/><br/>
+                  <strong>But if ETH drops 25%: You may get liquidated and lose most of your deposit!</strong>
+                </p>
+              </div>
+              <ul className="list-disc pl-6 space-y-3 mb-6">
+                <li><strong>Higher potential returns</strong> - Multiply your yield by your leverage factor</li>
+                <li><strong>Liquidation risk</strong> - If prices move against you, you can lose everything</li>
+                <li><strong>Borrowing costs</strong> - Interest rates eat into your profits</li>
+                <li><strong>Amplified IL</strong> - Impermanent loss is also multiplied by leverage</li>
               </ul>
-              <h5 className="font-medium mb-2">Delta-Neutral Strategies:</h5>
-              <p className="mb-4">
-                These strategies aim to earn yield while minimizing price exposure. Common approaches:
+
+              <h5 className="font-medium mb-3 text-base">Delta-Neutral Strategies:</h5>
+              <p className="mb-4 text-base leading-relaxed">
+                These strategies aim to earn yield while minimizing price exposure. You capture the APY without caring whether tokens go up or down.
               </p>
-              <ul className="list-disc pl-6 space-y-2 mb-4">
-                <li>Provide liquidity in stablecoin pairs (USDC-USDT)</li>
-                <li>Hedge LP positions with perpetual shorts</li>
-                <li>Use funding rate arbitrage</li>
+              <ul className="list-disc pl-6 space-y-3 mb-6">
+                <li><strong>Stablecoin pairs</strong> - Provide liquidity in USDC-USDT, DAI-USDC, or similar pairs. Minimal IL since prices stay pegged.</li>
+                <li><strong>Hedged LP positions</strong> - Farm ETH-USDC while shorting ETH on a perp DEX to neutralize price exposure</li>
+                <li><strong>Funding rate arbitrage</strong> - Earn funding payments by holding spot and shorting perps when funding is positive</li>
+                <li><strong>Basis trading</strong> - Exploit price differences between spot and futures markets</li>
               </ul>
-              <h5 className="font-medium mb-2">CeFi Alternative: When Simpler is Better</h5>
-              <p className="mb-4">
-                Sometimes the best strategy is the simplest. CeFi platforms like Nexo offer predictable yields without smart contract risk or impermanent loss.
+
+              <div className="bg-primary/10 border border-primary/30 rounded-lg p-5 mb-6">
+                <h6 className="font-semibold mb-2 flex items-center gap-2">
+                  <Zap className="h-4 w-4 text-primary" />
+                  How DeFi Alpha Agent Helps With Advanced Strategies
+                </h6>
+                <p className="text-sm mb-3">
+                  Finding safe delta-neutral opportunities requires filtering through thousands of pools. DeFi Alpha Agent makes it easy:
+                </p>
+                <ul className="text-sm space-y-2">
+                  <li>• <strong>Stablecoin Filter</strong> - One click to see only stable-stable pairs with near-zero IL</li>
+                  <li>• <strong>IL Risk Indicators</strong> - Quickly identify low-risk vs high-risk pairs</li>
+                  <li>• <strong>APY Sustainability</strong> - See if yields are stable or declining (important for hedged positions)</li>
+                  <li>• <strong>Multi-Chain View</strong> - Compare stable yields across Ethereum, Arbitrum, Polygon, and more</li>
+                </ul>
+              </div>
+
+              <h5 className="font-medium mb-3 text-base">CeFi Alternative: When Simpler is Better</h5>
+              <p className="mb-6 text-base leading-relaxed">
+                Sometimes the best strategy is the simplest. CeFi (Centralized Finance) platforms offer predictable yields without smart contract risk, impermanent loss, or complex strategies. You give up some upside for peace of mind and simplicity.
               </p>
-              <div className="mt-6">
+              <ul className="list-disc pl-6 space-y-3 mb-6">
+                <li><strong>No smart contract risk</strong> - Your funds are custodied by regulated companies</li>
+                <li><strong>Fixed, predictable rates</strong> - Know exactly what you'll earn</li>
+                <li><strong>No impermanent loss</strong> - Just deposit and earn</li>
+                <li><strong>Fiat on/off ramps</strong> - Easy to move money in and out</li>
+              </ul>
+              <div className="mt-8">
                 <NexoBanner variant="featured" storageKey="learn-nexo-5" />
               </div>
             </CourseModule>
@@ -294,34 +472,73 @@ export default function Learn() {
               id="tax-tracking"
               title="Module 6: Tax & Portfolio Tracking"
               description="Track your yields and stay compliant"
-              duration="4 min"
+              duration="6 min"
             >
-              <h4 className="font-semibold text-lg mb-3 flex items-center gap-2">
+              <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
                 <Calculator className="h-5 w-5 text-primary" />
                 Managing Your DeFi Taxes
               </h4>
-              <p className="mb-4">
-                DeFi transactions can create taxable events. In most jurisdictions, you may owe taxes on:
+              <p className="mb-6 text-base leading-relaxed">
+                DeFi makes earning yield easy, but tracking taxes can be a nightmare. Unlike traditional finance where brokers send you tax forms, in DeFi you're responsible for tracking everything yourself. The complexity scales with every swap, claim, and deposit.
               </p>
-              <ul className="list-disc pl-6 space-y-2 mb-4">
-                <li>Claiming and selling reward tokens</li>
-                <li>Swapping tokens (even within DeFi)</li>
-                <li>Withdrawing from liquidity pools</li>
-                <li>Realized gains from any token sales</li>
+
+              <h5 className="font-medium mb-3 text-base">Taxable Events in DeFi:</h5>
+              <p className="mb-4 text-base leading-relaxed">
+                In most jurisdictions (US, UK, EU, Australia, etc.), you may owe taxes on:
+              </p>
+              <ul className="list-disc pl-6 space-y-3 mb-6">
+                <li><strong>Claiming reward tokens</strong> - Often taxed as income at the value when claimed</li>
+                <li><strong>Selling or swapping tokens</strong> - Capital gains/losses on the difference from your cost basis</li>
+                <li><strong>Withdrawing from LPs</strong> - Complex calculation based on the tokens you receive vs deposited</li>
+                <li><strong>Token airdrops</strong> - Usually taxed as income when received</li>
+                <li><strong>Bridging tokens</strong> - May trigger taxable events in some jurisdictions</li>
               </ul>
-              <h5 className="font-medium mb-2">Why Use a Crypto Tax Tool:</h5>
-              <ul className="list-disc pl-6 space-y-2 mb-4">
-                <li>Automatically imports transactions from 100+ exchanges and chains</li>
-                <li>Calculates cost basis using various methods (FIFO, LIFO, etc.)</li>
-                <li>Generates tax reports for your accountant</li>
-                <li>Tracks DeFi-specific events like LP deposits/withdrawals</li>
-              </ul>
-              <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 mb-4">
-                <p className="text-sm">
-                  <strong>Tip:</strong> Start tracking from day one. Trying to reconstruct your DeFi history at tax time is painful!
+
+              <h5 className="font-medium mb-3 text-base">The DeFi Tax Nightmare:</h5>
+              <div className="bg-muted rounded-lg p-5 mb-6">
+                <p className="text-sm leading-relaxed">
+                  <strong>A typical DeFi farmer's year might include:</strong><br/><br/>
+                  • 500+ token swaps across DEXs<br/>
+                  • 50+ reward claims from various protocols<br/>
+                  • 20+ LP deposits and withdrawals<br/>
+                  • Transactions across 5+ different blockchains<br/>
+                  • Airdrops, rebases, and auto-compounds<br/><br/>
+                  <strong>Manually tracking all this? Impossible.</strong>
                 </p>
               </div>
-              <div className="mt-6">
+
+              <h5 className="font-medium mb-3 text-base">Why Use a Crypto Tax Tool:</h5>
+              <ul className="list-disc pl-6 space-y-3 mb-6">
+                <li><strong>Automatic import</strong> - Connect wallets and exchanges to pull all transactions automatically</li>
+                <li><strong>Multi-chain support</strong> - Track Ethereum, BSC, Polygon, Arbitrum, Solana, and 100+ more</li>
+                <li><strong>Cost basis calculation</strong> - FIFO, LIFO, HIFO, and other methods calculated automatically</li>
+                <li><strong>DeFi-specific support</strong> - LP deposits, farming rewards, and complex DeFi events handled correctly</li>
+                <li><strong>Tax reports</strong> - Generate reports for TurboTax, your accountant, or direct to tax authorities</li>
+                <li><strong>Year-round tracking</strong> - Not just at tax time - monitor your unrealized gains throughout the year</li>
+              </ul>
+
+              <div className="bg-primary/10 border border-primary/30 rounded-lg p-5 mb-6">
+                <h6 className="font-semibold mb-2 flex items-center gap-2">
+                  <Zap className="h-4 w-4 text-primary" />
+                  How DeFi Alpha Agent Complements Tax Tracking
+                </h6>
+                <p className="text-sm mb-3">
+                  While DeFi Alpha Agent helps you find opportunities, you'll want to track everything you do for tax purposes:
+                </p>
+                <ul className="text-sm space-y-2">
+                  <li>• <strong>Find pools on DeFi Alpha Agent</strong> → Track deposits in your tax tool</li>
+                  <li>• <strong>Use our APY data</strong> → Estimate your taxable income from farming</li>
+                  <li>• <strong>Multi-chain visibility</strong> → Know which chains you've used (and need to import)</li>
+                  <li>• <strong>Protocol links</strong> → Easy access to protocols for transaction history</li>
+                </ul>
+              </div>
+
+              <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-5 mb-6">
+                <p className="text-sm leading-relaxed">
+                  <strong>Pro Tip:</strong> Start tracking from day one! Trying to reconstruct your DeFi history at tax time is painful and expensive. Connect your wallets to a tax tool before you start farming, not after.
+                </p>
+              </div>
+              <div className="mt-8">
                 <KoinlyBanner variant="card" storageKey="learn-koinly-6" />
               </div>
             </CourseModule>

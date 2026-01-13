@@ -95,11 +95,11 @@ export function CourseModule({ id, title, description, duration, children, defau
           </CardHeader>
         </CollapsibleTrigger>
         <CollapsibleContent>
-          <CardContent className="pt-0 pb-6">
-            <div className="prose prose-sm dark:prose-invert max-w-none">
+          <CardContent className="pt-2 pb-8 px-6 sm:px-8">
+            <div className="prose prose-sm dark:prose-invert max-w-none leading-relaxed">
               {children}
             </div>
-            <div className="flex items-center justify-between mt-6 pt-4 border-t">
+            <div className="flex items-center justify-between mt-8 pt-6 border-t">
               {completed ? (
                 <Button variant="outline" size="sm" onClick={handleUncomplete} data-testid={`button-uncomplete-${id}`}>
                   Mark as Incomplete
