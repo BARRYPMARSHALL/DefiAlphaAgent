@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { ArrowLeft, GraduationCap, TrendingUp, Shield, Zap, Calculator, BookOpen, Trophy } from "lucide-react";
+import { ArrowLeft, GraduationCap, TrendingUp, Shield, Zap, Calculator, BookOpen, Trophy, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -8,6 +8,7 @@ import { TrezorBanner, KoinlyBanner } from "@/components/AffiliateBanners";
 import { NexoBanner } from "@/components/NexoBanner";
 import { EmailCaptureButton } from "@/components/EmailCapture";
 import { LedgerImageBanner } from "@/components/LedgerImageBanner";
+import { SiX, SiFacebook, SiLinkedin, SiReddit, SiTelegram } from "react-icons/si";
 
 export default function Learn() {
   return (
@@ -48,9 +49,67 @@ export default function Learn() {
               <h2 className="text-3xl font-bold tracking-tight mb-2">
                 DeFi Yield Farming Masterclass
               </h2>
-              <p className="text-muted-foreground text-lg">
+              <p className="text-muted-foreground text-lg mb-4">
                 Learn how to find, evaluate, and safely earn yields in DeFi. From basics to advanced strategies.
               </p>
+              <div className="flex items-center gap-3 flex-wrap">
+                <span className="text-sm text-muted-foreground flex items-center gap-1.5">
+                  <Share2 className="h-4 w-4" />
+                  Share this course:
+                </span>
+                <div className="flex items-center gap-2">
+                  <a
+                    href="https://twitter.com/intent/tweet?text=Check%20out%20this%20free%20DeFi%20yield%20farming%20course!%20Learn%20how%20to%20find%20the%20best%20yields%20safely.&url=https://defialphaagent.com/learn"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-testid="link-share-twitter"
+                  >
+                    <Button size="icon" variant="outline" className="h-8 w-8">
+                      <SiX className="h-3.5 w-3.5" />
+                    </Button>
+                  </a>
+                  <a
+                    href="https://www.facebook.com/sharer/sharer.php?u=https://defialphaagent.com/learn"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-testid="link-share-facebook"
+                  >
+                    <Button size="icon" variant="outline" className="h-8 w-8">
+                      <SiFacebook className="h-3.5 w-3.5" />
+                    </Button>
+                  </a>
+                  <a
+                    href="https://www.linkedin.com/shareArticle?mini=true&url=https://defialphaagent.com/learn&title=Free%20DeFi%20Yield%20Farming%20Course&summary=Learn%20how%20to%20find%20the%20best%20yields%20in%20DeFi%20safely"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-testid="link-share-linkedin"
+                  >
+                    <Button size="icon" variant="outline" className="h-8 w-8">
+                      <SiLinkedin className="h-3.5 w-3.5" />
+                    </Button>
+                  </a>
+                  <a
+                    href="https://reddit.com/submit?url=https://defialphaagent.com/learn&title=Free%20DeFi%20Yield%20Farming%20Course"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-testid="link-share-reddit"
+                  >
+                    <Button size="icon" variant="outline" className="h-8 w-8">
+                      <SiReddit className="h-3.5 w-3.5" />
+                    </Button>
+                  </a>
+                  <a
+                    href="https://t.me/share/url?url=https://defialphaagent.com/learn&text=Check%20out%20this%20free%20DeFi%20yield%20farming%20course!"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    data-testid="link-share-telegram"
+                  >
+                    <Button size="icon" variant="outline" className="h-8 w-8">
+                      <SiTelegram className="h-3.5 w-3.5" />
+                    </Button>
+                  </a>
+                </div>
+              </div>
             </div>
 
             <CourseModule
