@@ -10,6 +10,7 @@ import { EmailCaptureButton } from "@/components/EmailCapture";
 import { LedgerImageBanner } from "@/components/LedgerImageBanner";
 import { SiX, SiFacebook, SiLinkedin, SiReddit, SiTelegram } from "react-icons/si";
 import logoImage from "@assets/ai_1768343849255.png";
+import heroBanner from "@assets/x1_1768343977535.png";
 
 export default function Learn() {
   return (
@@ -43,6 +44,14 @@ export default function Learn() {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 py-8">
+        <div className="relative overflow-hidden rounded-xl mb-8" data-testid="hero-banner-learn">
+          <img 
+            src={heroBanner} 
+            alt="DeFi Alpha Agent - Real-time risk-adjusted DeFi Alpha across 100+ chains" 
+            className="w-full h-auto object-cover rounded-xl"
+          />
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           <div className="lg:col-span-3 space-y-6">
             <div className="mb-8">

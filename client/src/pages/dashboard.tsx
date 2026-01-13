@@ -14,7 +14,9 @@ import { ShareBar, ShareCallToAction } from "@/components/ShareBar";
 import { ShareMyFind } from "@/components/ShareMyFind";
 import { NexoBanner } from "@/components/NexoBanner";
 import { KoinlyBanner } from "@/components/KoinlyBanner";
+import { LoadingSplash } from "@/components/LoadingSplash";
 import type { FilterState, SortState, PoolsResponse } from "@shared/schema";
+import heroBanner from "@assets/x1_1768343977535.png";
 
 const DEFAULT_FILTERS: FilterState = {
   minTvl: 5000000,
@@ -157,8 +159,12 @@ export default function Dashboard() {
   const chainDistribution = data?.chainDistribution || [];
   const lastUpdated = data?.lastUpdated ? formatRelativeTime(data.lastUpdated) : null;
 
+  const showSplash = isLoading && pools.length === 0;
+
   return (
     <div className="min-h-screen bg-background">
+      <LoadingSplash isLoading={showSplash} />
+      
       <Header
         onRefresh={handleRefresh}
         isRefreshing={isFetching}
@@ -166,6 +172,14 @@ export default function Dashboard() {
       />
 
       <main className="max-w-7xl mx-auto px-4 py-6 space-y-6">
+        <div className="relative overflow-hidden rounded-xl mb-6" data-testid="hero-banner">
+          <img 
+            src={heroBanner} 
+            alt="DeFi Alpha Agent - Real-time risk-adjusted DeFi Alpha across 100+ chains" 
+            className="w-full h-auto object-cover rounded-xl"
+          />
+        </div>
+
         <div className="text-center space-y-3 pb-2">
           <p className="text-muted-foreground max-w-2xl mx-auto" data-testid="text-description">
             Find the best DeFi yield opportunities across 100+ chains. We analyze thousands of liquidity pools and lending protocols in real-time, scoring them by risk-adjusted returns so you can maximize your earnings while managing risk.
