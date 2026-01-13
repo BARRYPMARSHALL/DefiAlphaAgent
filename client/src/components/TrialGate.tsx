@@ -149,7 +149,7 @@ export function TrialGate({ children }: TrialGateProps) {
       {children}
 
       {trialExpired && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm" aria-hidden="true" />
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-md" aria-hidden="true" />
       )}
       
       <Dialog open={trialExpired} modal>
