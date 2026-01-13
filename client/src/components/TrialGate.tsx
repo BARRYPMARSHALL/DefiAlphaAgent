@@ -148,16 +148,18 @@ export function TrialGate({ children }: TrialGateProps) {
     <>
       {children}
 
+      {trialExpired && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm" aria-hidden="true" />
+      )}
+      
       <Dialog open={trialExpired} modal>
         <DialogContent 
-          className="sm:max-w-md border-0 bg-transparent p-0 shadow-none [&>button]:hidden"
+          className="sm:max-w-md border-0 bg-transparent p-0 shadow-none [&>button]:hidden z-50"
           onPointerDownOutside={(e) => e.preventDefault()}
           onEscapeKeyDown={(e) => e.preventDefault()}
           onInteractOutside={(e) => e.preventDefault()}
         >
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-md z-[-1]" />
-          
-          <Card className="border-2 border-primary/20 shadow-2xl">
+          <Card className="border-2 border-primary/20 shadow-2xl bg-card">
             <CardContent className="p-6 sm:p-8">
               <DialogHeader className="space-y-3 mb-6">
                 <div className="flex items-center justify-center mb-2">
