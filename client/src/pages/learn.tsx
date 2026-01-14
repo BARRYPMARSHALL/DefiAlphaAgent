@@ -9,6 +9,7 @@ import { NexoBanner } from "@/components/NexoBanner";
 import { EmailCaptureButton } from "@/components/EmailCapture";
 import { LedgerImageBanner } from "@/components/LedgerImageBanner";
 import { DonationButton, DonationBanner } from "@/components/DonationButton";
+import { FloatingDonateButton } from "@/components/FloatingDonateButton";
 import { SiX, SiFacebook, SiLinkedin, SiReddit, SiTelegram } from "react-icons/si";
 import logoImage from "@assets/ai_1768343849255.png";
 import heroBanner from "@assets/x1_1768343977535.png";
@@ -572,6 +573,25 @@ export default function Learn() {
                 </Link>
               </div>
             </div>
+
+            <div className="mt-6 p-5 rounded-lg bg-gradient-to-r from-pink-500/10 via-rose-500/10 to-orange-500/10 border border-pink-500/20">
+              <div className="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
+                <div className="flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 shrink-0">
+                  <Trophy className="h-7 w-7 text-white" />
+                </div>
+                <div className="flex-1">
+                  <h4 className="font-bold text-lg mb-1">
+                    <span className="bg-gradient-to-r from-pink-400 to-orange-400 bg-clip-text text-transparent">
+                      Congrats on Completing the Course!
+                    </span>
+                  </h4>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    You now have the knowledge to navigate DeFi safely. If this free course helped you, consider supporting its creator!
+                  </p>
+                  <DonationButton variant="floating" />
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className="space-y-6">
@@ -636,6 +656,8 @@ export default function Learn() {
           </p>
         </div>
       </footer>
+
+      <FloatingDonateButton />
     </div>
   );
 }

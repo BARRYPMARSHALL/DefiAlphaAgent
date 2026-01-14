@@ -4,8 +4,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Share2, Trophy, TrendingUp, Shield, Copy, Check, Sparkles } from "lucide-react";
+import { Share2, Trophy, TrendingUp, Shield, Copy, Check, Sparkles, Heart } from "lucide-react";
 import { SiX, SiTelegram } from "react-icons/si";
+import { DonationButton } from "@/components/DonationButton";
 import type { PoolWithScore } from "@shared/schema";
 
 interface ShareMyFindProps {
@@ -183,6 +184,12 @@ export function ShareMyFind({ pools }: ShareMyFindProps) {
         <p className="text-xs text-center text-muted-foreground pt-2">
           Share this pool with your friends and help them discover high-yield opportunities!
         </p>
+
+        <div className="flex items-center justify-center gap-2 pt-3 mt-3 border-t">
+          <Heart className="h-4 w-4 text-pink-500" />
+          <span className="text-xs text-muted-foreground">Feeling generous?</span>
+          <DonationButton variant="compact" />
+        </div>
       </DialogContent>
     </Dialog>
   );

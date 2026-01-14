@@ -53,7 +53,7 @@ const WALLETS = [
 ];
 
 interface DonationButtonProps {
-  variant?: "default" | "floating" | "inline" | "compact";
+  variant?: "default" | "floating" | "inline" | "compact" | "floating-icon";
   className?: string;
 }
 
@@ -103,6 +103,16 @@ export function DonationButton({ variant = "default", className = "" }: Donation
             data-testid="button-donate-compact"
           >
             <Heart className="h-4 w-4 group-hover:scale-110 transition-transform" />
+          </Button>
+        );
+      case "floating-icon":
+        return (
+          <Button
+            size="lg"
+            className="relative group w-14 h-14 rounded-full bg-gradient-to-r from-pink-500 via-rose-500 to-orange-500 hover:from-pink-600 hover:via-rose-600 hover:to-orange-600 text-white shadow-lg shadow-pink-500/25 border-0"
+            data-testid="button-donate-floating-icon"
+          >
+            <Heart className="h-6 w-6 group-hover:scale-110 transition-transform" />
           </Button>
         );
       case "inline":

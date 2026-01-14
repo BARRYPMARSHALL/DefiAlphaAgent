@@ -1,4 +1,4 @@
-import { Sparkles, TrendingUp, ArrowRight, ExternalLink, Zap, Shield, Flame, AlertTriangle, ArrowDown, RefreshCw, Check, Leaf, Share2 } from "lucide-react";
+import { Sparkles, TrendingUp, ArrowRight, ExternalLink, Zap, Shield, Flame, AlertTriangle, ArrowDown, RefreshCw, Check, Leaf, Share2, Heart, Coffee } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,7 @@ import { Separator } from "@/components/ui/separator";
 import { MomentumBadge } from "@/components/Sparkline";
 import { ShareCallToAction } from "@/components/ShareBar";
 import { NexoBanner } from "@/components/NexoBanner";
+import { DonationButton } from "@/components/DonationButton";
 import type { PoolWithScore } from "@shared/schema";
 
 interface RecommendationsProps {
@@ -363,6 +364,22 @@ export function Recommendations({ pools, isLoading }: RecommendationsProps) {
             Found something good?
           </p>
           <ShareCallToAction />
+        </div>
+
+        <Separator className="my-4" />
+
+        <div className="p-3 rounded-lg bg-gradient-to-r from-pink-500/10 to-orange-500/10 border border-pink-500/20">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 shrink-0">
+              <Coffee className="h-4 w-4 text-white" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs text-muted-foreground">
+                Making gains? Buy me a coffee!
+              </p>
+            </div>
+            <DonationButton variant="compact" />
+          </div>
         </div>
       </CardContent>
     </Card>
