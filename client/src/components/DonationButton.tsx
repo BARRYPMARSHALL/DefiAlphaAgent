@@ -97,13 +97,12 @@ export function DonationButton({ variant = "default", className = "" }: Donation
       case "compact":
         return (
           <Button
-            size="sm"
+            size="icon"
             variant="outline"
             className="group border-pink-500/50 text-pink-400 hover:bg-pink-500/10 hover:text-pink-300"
             data-testid="button-donate-compact"
           >
-            <Heart className="h-4 w-4 mr-1.5 group-hover:scale-110 transition-transform" />
-            <span>Donate</span>
+            <Heart className="h-4 w-4 group-hover:scale-110 transition-transform" />
           </Button>
         );
       case "inline":
@@ -135,7 +134,7 @@ export function DonationButton({ variant = "default", className = "" }: Donation
       <DialogTrigger asChild className={className}>
         {buttonContent()}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="max-w-[calc(100vw-2rem)] sm:max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader className="text-center pb-2">
           <div className="flex justify-center mb-3">
             <div className="relative">
@@ -168,32 +167,34 @@ export function DonationButton({ variant = "default", className = "" }: Donation
               className={`${wallet.bgColor} ${wallet.borderColor} border overflow-hidden transition-all hover:scale-[1.02]`}
             >
               <CardContent className="p-3">
-                <div className="flex items-center gap-3">
-                  <div className={`flex items-center justify-center w-10 h-10 rounded-full ${wallet.bgColor}`}>
-                    <wallet.icon className={`h-5 w-5 ${wallet.color}`} />
-                  </div>
-                  <div className="flex-1 min-w-0">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                  <div className="flex items-center gap-3">
+                    <div className={`flex items-center justify-center w-10 h-10 rounded-full ${wallet.bgColor} shrink-0`}>
+                      <wallet.icon className={`h-5 w-5 ${wallet.color}`} />
+                    </div>
                     <div className="flex items-center gap-2">
                       <span className="font-semibold text-sm">{wallet.name}</span>
                       <span className={`text-xs ${wallet.color} font-medium`}>{wallet.symbol}</span>
                     </div>
-                    <p className="text-xs text-muted-foreground font-mono truncate">
+                  </div>
+                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                    <p className="text-xs text-muted-foreground font-mono truncate flex-1">
                       {wallet.address}
                     </p>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => copyToClipboard(wallet.address, wallet.symbol)}
+                      className={`shrink-0 ${copiedAddress === wallet.address ? 'text-emerald-400' : wallet.color}`}
+                      data-testid={`button-copy-${wallet.symbol.toLowerCase()}`}
+                    >
+                      {copiedAddress === wallet.address ? (
+                        <Check className="h-4 w-4" />
+                      ) : (
+                        <Copy className="h-4 w-4" />
+                      )}
+                    </Button>
                   </div>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => copyToClipboard(wallet.address, wallet.symbol)}
-                    className={`shrink-0 ${copiedAddress === wallet.address ? 'text-emerald-400' : wallet.color}`}
-                    data-testid={`button-copy-${wallet.symbol.toLowerCase()}`}
-                  >
-                    {copiedAddress === wallet.address ? (
-                      <Check className="h-4 w-4" />
-                    ) : (
-                      <Copy className="h-4 w-4" />
-                    )}
-                  </Button>
                 </div>
               </CardContent>
             </Card>
