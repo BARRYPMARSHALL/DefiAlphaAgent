@@ -215,7 +215,7 @@ export default function Dashboard() {
         <NexoBanner variant="featured" storageKey="nexo-featured-dismissed" />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-6 order-2 lg:order-1">
             <FiltersBar
               filters={filters}
               sort={sort}
@@ -234,7 +234,7 @@ export default function Dashboard() {
             />
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-6 order-1 lg:order-2">
             <Recommendations
               pools={pools.filter(p => p.riskAdjustedScore > 0).slice(0, 10)}
               isLoading={isLoading}
