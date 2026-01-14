@@ -274,15 +274,18 @@ export function PoolsTable({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {pools.map((pool, index) => (
-            <>
-              {index > 0 && index % 20 === 0 && (
+          {pools.flatMap((pool, index) => {
+            const rows = [];
+            if (index > 0 && index % 20 === 0) {
+              rows.push(
                 <TableRow key={`trezor-banner-${index}`} className="hover:bg-transparent">
                   <TableCell colSpan={9} className="p-0">
-                    <TrezorImageBanner storageKey={`trezor-table-${index}`} />
+                    <TrezorImageBanner storageKey="trezor-table-banner" />
                   </TableCell>
                 </TableRow>
-              )}
+              );
+            }
+            rows.push(
               <TableRow
                 key={pool.pool}
                 className="hover-elevate group"
@@ -571,8 +574,9 @@ export function PoolsTable({
                 </div>
               </TableCell>
             </TableRow>
-            </>
-          ))}
+            );
+            return rows;
+          })}
         </TableBody>
       </Table>
     </div>
