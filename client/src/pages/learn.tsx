@@ -8,6 +8,7 @@ import { TrezorBanner, KoinlyBanner } from "@/components/AffiliateBanners";
 import { NexoBanner } from "@/components/NexoBanner";
 import { EmailCaptureButton } from "@/components/EmailCapture";
 import { LedgerImageBanner } from "@/components/LedgerImageBanner";
+import { DonationButton, DonationBanner } from "@/components/DonationButton";
 import { SiX, SiFacebook, SiLinkedin, SiReddit, SiTelegram } from "react-icons/si";
 import logoImage from "@assets/ai_1768343849255.png";
 import heroBanner from "@assets/x1_1768343977535.png";
@@ -39,6 +40,7 @@ export default function Learn() {
               <span className="text-xs text-muted-foreground">Master yield farming in 30 minutes</span>
             </div>
           </div>
+          <DonationButton variant="compact" />
           <ThemeToggle />
         </div>
       </header>
@@ -591,6 +593,10 @@ export default function Learn() {
         </div>
       </main>
 
+      <section className="max-w-7xl mx-auto px-4 py-6">
+        <DonationBanner />
+      </section>
+
       <footer className="border-t mt-8">
         <div className="max-w-7xl mx-auto px-4 py-6 space-y-4">
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-sm text-muted-foreground">
@@ -621,6 +627,9 @@ export default function Learn() {
                 DM @DefiAlphaAgent
               </a>
             </div>
+          </div>
+          <div className="flex items-center justify-center">
+            <DonationButton variant="inline" />
           </div>
           <p className="text-xs text-muted-foreground/70 text-center" data-testid="text-affiliate-disclaimer-learn">
             Affiliate links – we may earn commission at no extra cost to you.

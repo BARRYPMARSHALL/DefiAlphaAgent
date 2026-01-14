@@ -3,6 +3,7 @@ import { RefreshCw, GraduationCap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "./ThemeToggle";
 import { ShareBar } from "./ShareBar";
+import { DonationButton } from "./DonationButton";
 import logoImage from "@assets/ai_1768343849255.png";
 
 interface HeaderProps {
@@ -44,6 +45,8 @@ export function Header({ onRefresh, isRefreshing, lastUpdated }: HeaderProps) {
           </Link>
           
           <ShareBar compact />
+          
+          <DonationButton variant="compact" />
           
           <Button
             variant="outline"

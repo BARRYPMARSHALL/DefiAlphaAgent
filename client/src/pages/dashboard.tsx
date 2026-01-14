@@ -15,6 +15,7 @@ import { ShareMyFind } from "@/components/ShareMyFind";
 import { NexoBanner } from "@/components/NexoBanner";
 import { KoinlyBanner } from "@/components/KoinlyBanner";
 import { LoadingSplash } from "@/components/LoadingSplash";
+import { DonationButton, DonationBanner } from "@/components/DonationButton";
 import type { FilterState, SortState, PoolsResponse } from "@shared/schema";
 import heroBanner from "@assets/x1_1768343977535.png";
 
@@ -257,7 +258,9 @@ export default function Dashboard() {
         </div>
       </main>
 
-      <section className="max-w-7xl mx-auto px-4 py-6">
+      <section className="max-w-7xl mx-auto px-4 py-6 space-y-6">
+        <DonationBanner />
+        
         <Card className="bg-gradient-to-br from-chart-1/5 via-chart-2/5 to-chart-3/5">
           <CardContent className="py-6">
             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
@@ -384,6 +387,9 @@ export default function Dashboard() {
                 DM @DefiAlphaAgent
               </a>
             </div>
+          </div>
+          <div className="flex items-center justify-center">
+            <DonationButton variant="inline" />
           </div>
           <p className="text-xs text-muted-foreground/70 text-center" data-testid="text-affiliate-disclaimer">
             Affiliate links – we may earn commission at no extra cost to you.
