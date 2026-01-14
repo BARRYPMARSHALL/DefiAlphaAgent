@@ -266,7 +266,7 @@ export function DonationBanner() {
           </div>
         </div>
         
-        <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0">
+        <div className="flex flex-row items-center justify-center gap-3 shrink-0 w-full sm:w-auto">
           <DonationButton variant="floating" />
           <Button
             variant="ghost"
