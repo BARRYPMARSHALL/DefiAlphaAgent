@@ -38,42 +38,41 @@ export function TrezorImageBanner({ storageKey = "trezor-image-dismissed" }: Tre
         <X className="h-4 w-4 text-white" />
       </button>
       
-      <div 
-        className="relative w-full h-32 sm:h-40 bg-cover bg-center"
-        style={{ backgroundImage: `url(${trezorBg})` }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-transparent" />
+      <div className="flex flex-col sm:flex-row overflow-hidden rounded-lg border border-emerald-500/30">
+        <div 
+          className="w-full sm:w-48 h-24 sm:h-auto bg-cover bg-center shrink-0"
+          style={{ backgroundImage: `url(${trezorBg})`, backgroundPosition: 'right center' }}
+        />
         
-        <div className="relative z-10 h-full flex items-center px-4 sm:px-6">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full gap-4">
-            <div className="flex items-center gap-4">
-              <div className="hidden sm:flex items-center justify-center w-14 h-14 rounded-full bg-emerald-500/20 border-2 border-emerald-400 shrink-0">
-                <Shield className="h-7 w-7 text-emerald-400" />
+        <div className="flex-1 bg-gradient-to-r from-emerald-950 to-emerald-900 p-4 sm:p-5">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 h-full">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-500/20 border-2 border-emerald-400 shrink-0">
+                <Shield className="h-5 w-5 text-emerald-400" />
               </div>
               <div className="text-white">
-                <p className="text-xs font-medium text-emerald-400 uppercase tracking-wide mb-1">
+                <p className="text-xs font-medium text-emerald-400 uppercase tracking-wide mb-0.5">
                   Protect Your DeFi Gains
                 </p>
-                <h3 className="text-lg sm:text-xl font-bold leading-tight mb-1">
+                <h3 className="text-base sm:text-lg font-bold leading-tight">
                   Your Keys. Your Crypto.
                 </h3>
-                <p className="text-sm text-white/80 hidden sm:block">
-                  Trezor hardware wallets keep your yields safe from hacks & exploits
+                <p className="text-xs text-white/70 mt-0.5">
+                  Trezor keeps your yields safe from hacks
                 </p>
               </div>
             </div>
             
-            <Button
-              asChild
-              size="lg"
-              className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold shadow-lg shrink-0"
+            <a 
+              href={TREZOR_URL} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-white font-bold rounded-lg shadow-lg transition-colors shrink-0"
               data-testid="button-trezor-cta"
             >
-              <a href={TREZOR_URL} target="_blank" rel="noopener noreferrer">
-                Shop Trezor Now
-                <ArrowRight className="h-4 w-4 ml-2" />
-              </a>
-            </Button>
+              Shop Trezor Now
+              <ArrowRight className="h-4 w-4" />
+            </a>
           </div>
         </div>
       </div>
