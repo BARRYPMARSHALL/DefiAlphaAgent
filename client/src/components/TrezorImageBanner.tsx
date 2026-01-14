@@ -38,43 +38,38 @@ export function TrezorImageBanner({ storageKey = "trezor-image-dismissed" }: Tre
         <X className="h-4 w-4 text-white" />
       </button>
       
-      <div className="flex flex-col sm:flex-row overflow-hidden rounded-lg border border-emerald-500/30">
-        <div 
-          className="w-full sm:w-48 h-24 sm:h-auto bg-cover bg-center shrink-0"
-          style={{ backgroundImage: `url(${trezorBg})`, backgroundPosition: 'right center' }}
-        />
-        
-        <div className="flex-1 bg-gradient-to-r from-emerald-950 to-emerald-900 p-4 sm:p-5">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 h-full">
-            <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-emerald-500/20 border-2 border-emerald-400 shrink-0">
-                <Shield className="h-5 w-5 text-emerald-400" />
-              </div>
-              <div className="text-white">
-                <p className="text-xs font-medium text-emerald-400 uppercase tracking-wide mb-0.5">
-                  Protect Your DeFi Gains
-                </p>
-                <h3 className="text-base sm:text-lg font-bold leading-tight">
-                  Your Keys. Your Crypto.
-                </h3>
-                <p className="text-xs text-white/70 mt-0.5">
-                  Trezor keeps your yields safe from hacks
-                </p>
-              </div>
+      <div className="flex overflow-hidden rounded-lg border border-emerald-500/30">
+        <div className="flex-1 bg-gradient-to-r from-emerald-950 to-emerald-900 p-4">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-400 shrink-0">
+              <Shield className="h-4 w-4 text-emerald-400" />
             </div>
-            
-            <a 
-              href={TREZOR_URL} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-white font-bold rounded-lg shadow-lg transition-colors shrink-0"
-              data-testid="button-trezor-cta"
-            >
-              Shop Trezor Now
-              <ArrowRight className="h-4 w-4" />
-            </a>
+            <div className="text-white">
+              <p className="text-[10px] font-medium text-emerald-400 uppercase tracking-wide">
+                Protect Your DeFi Gains
+              </p>
+              <h3 className="text-sm font-bold leading-tight">
+                Your Keys. Your Crypto.
+              </h3>
+            </div>
           </div>
+          
+          <a 
+            href={TREZOR_URL} 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-white text-sm font-bold rounded-lg shadow-lg transition-colors"
+            data-testid="button-trezor-cta"
+          >
+            Shop Trezor Now
+            <ArrowRight className="h-3.5 w-3.5" />
+          </a>
         </div>
+        
+        <div 
+          className="w-32 bg-cover bg-center shrink-0"
+          style={{ backgroundImage: `url(${trezorBg})`, backgroundPosition: 'center center' }}
+        />
       </div>
     </div>
   );
