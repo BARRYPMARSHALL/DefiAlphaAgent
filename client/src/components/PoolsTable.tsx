@@ -17,7 +17,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Sparkline } from "@/components/Sparkline";
-import { TrezorImageBanner } from "@/components/TrezorImageBanner";
 import type { PoolWithScore, SortState } from "@shared/schema";
 
 interface PoolsTableProps {
@@ -274,19 +273,7 @@ export function PoolsTable({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {pools.flatMap((pool, index) => {
-            const rows = [];
-            if (index > 0 && index % 20 === 0) {
-              rows.push(
-                <TableRow key={`trezor-banner-${index}`} className="hover:bg-transparent">
-                  <TableCell colSpan={5} className="p-2">
-                    <TrezorImageBanner storageKey="trezor-table-banner" />
-                  </TableCell>
-                  <TableCell colSpan={4} className="p-0" />
-                </TableRow>
-              );
-            }
-            rows.push(
+          {pools.map((pool) => (
               <TableRow
                 key={pool.pool}
                 className="hover-elevate group"
@@ -575,9 +562,7 @@ export function PoolsTable({
                 </div>
               </TableCell>
             </TableRow>
-            );
-            return rows;
-          })}
+          ))}
         </TableBody>
       </Table>
     </div>
