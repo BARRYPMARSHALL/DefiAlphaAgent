@@ -279,9 +279,10 @@ export function PoolsTable({
             if (index > 0 && index % 20 === 0) {
               rows.push(
                 <TableRow key={`trezor-banner-${index}`} className="hover:bg-transparent">
-                  <TableCell colSpan={9} className="p-0">
+                  <TableCell colSpan={5} className="p-2">
                     <TrezorImageBanner storageKey="trezor-table-banner" />
                   </TableCell>
+                  <TableCell colSpan={4} className="p-0" />
                 </TableRow>
               );
             }
