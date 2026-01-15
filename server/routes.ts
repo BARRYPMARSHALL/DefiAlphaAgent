@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { z } from "zod";
 import type { Pool, PoolWithScore, FilterState, SortState, PoolsResponse } from "@shared/schema";
+import { postDailyTweet, previewTweet, startDailySchedule } from "./twitterBot";
 
 const sortStateSchema = z.object({
   field: z.enum(["riskAdjustedScore", "tvlUsd", "apy", "apyPct7D"]),
@@ -1078,6 +1079,76 @@ export async function registerRoutes(
         error: "Failed to fetch chains" 
       });
     }
+  });
+
+  // Twitter Bot API endpoints
+  app.get("/api/twitter/preview", async (_req, res) => {
+    try {
+      await fetchPoolsData();
+      
+      if (!cachedData) {
+        return res.status(503).json({ 
+          success: false, 
+          error: "Data not available" 
+        });
+      }
+      
+      const tweetText = previewTweet(cachedData.pools);
+      res.json({ 
+        success: true, 
+        preview: tweetText,
+        characterCount: tweetText.length,
+        timestamp: new Date().toISOString()
+      });
+    } catch (error) {
+      console.error("Error in /api/twitter/preview:", error);
+      res.status(500).json({ 
+        success: false, 
+        error: "Failed to generate preview" 
+      });
+    }
+  });
+
+  app.post("/api/twitter/post", async (_req, res) => {
+    try {
+      await fetchPoolsData();
+      
+      if (!cachedData) {
+        return res.status(503).json({ 
+          success: false, 
+          error: "Data not available" 
+        });
+      }
+      
+      const result = await postDailyTweet(cachedData.pools);
+      
+      if (result.success) {
+        console.log(`[Twitter] Tweet posted successfully: ${result.tweetId}`);
+        res.json({ 
+          success: true, 
+          tweetId: result.tweetId,
+          message: "Tweet posted successfully!",
+          timestamp: new Date().toISOString()
+        });
+      } else {
+        res.status(400).json({ 
+          success: false, 
+          error: result.error 
+        });
+      }
+    } catch (error) {
+      console.error("Error in /api/twitter/post:", error);
+      res.status(500).json({ 
+        success: false, 
+        error: "Failed to post tweet" 
+      });
+    }
+  });
+
+  // Start daily Twitter schedule
+  startDailySchedule(async () => {
+    await fetchPoolsData();
+    return cachedData?.pools || [];
   });
 
   app.get("/health", (_req, res) => {

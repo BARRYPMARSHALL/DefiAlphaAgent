@@ -75,3 +75,30 @@ The application includes a basic Drizzle ORM schema with PostgreSQL for user man
 - `@radix-ui/*`: Accessible UI primitives
 - `wouter`: Lightweight React router
 - `zod`: Runtime type validation
+- `twitter-api-v2`: Twitter/X API integration for auto-posting
+
+### Twitter Bot Integration
+
+The app includes an automated Twitter bot that posts daily "Top 3 Alpha Finds" to @DefiAlphaAgent.
+
+**Features:**
+- Auto-posts every 24 hours with top risk-adjusted yield opportunities
+- Filters out anomalous APYs (>1000%) for credible tweets
+- Requires minimum $1M TVL for featured pools
+- Shows auto-compound status with 🔄 emoji
+
+**API Endpoints:**
+- `GET /api/twitter/preview` - Preview what would be tweeted
+- `POST /api/twitter/post` - Manually trigger a tweet
+
+**Required Environment Variables:**
+- `TWITTER_API_KEY` - Twitter API Key (from developer.twitter.com)
+- `TWITTER_API_SECRET` - Twitter API Secret
+- `TWITTER_ACCESS_TOKEN` - Access Token for @DefiAlphaAgent
+- `TWITTER_ACCESS_SECRET` - Access Token Secret
+
+**Setup:**
+1. Go to https://developer.twitter.com/
+2. Create a project and app with Read and Write permissions
+3. Generate API keys and access tokens
+4. Add secrets to Replit environment
