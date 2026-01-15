@@ -125,6 +125,16 @@ export default function Dashboard() {
   const handleFiltersChange = useCallback((newFilters: FilterState) => {
     setFilters(newFilters);
     saveFiltersToStorage(newFilters);
+    
+    // On mobile, scroll to Top 10 Alpha section after filter change
+    if (window.innerWidth < 1024) {
+      setTimeout(() => {
+        const el = document.getElementById('top-alpha-mobile');
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    }
   }, []);
 
   const handleSortChange = useCallback((newSort: SortState) => {
@@ -216,7 +226,7 @@ export default function Dashboard() {
 
         <NexoBanner variant="featured" storageKey="nexo-featured-dismissed" />
 
-        <div className="lg:hidden space-y-6">
+        <div id="top-alpha-mobile" className="lg:hidden space-y-6">
           <Recommendations
             pools={pools.filter(p => p.riskAdjustedScore > 0).slice(0, 10)}
             isLoading={isLoading}
