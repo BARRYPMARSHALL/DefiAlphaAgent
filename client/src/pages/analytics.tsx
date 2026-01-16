@@ -590,13 +590,13 @@ export default function Analytics() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex items-center justify-center gap-8 py-6">
+                  <div className="flex items-center justify-center gap-4 sm:gap-8 py-6 flex-wrap">
                     {yieldTrends.map((item) => (
-                      <div key={item.period} className="text-center">
-                        <div className={`text-2xl font-bold ${item.change >= 0 ? "text-green-500" : "text-red-500"}`}>
+                      <div key={item.period} className="text-center min-w-[80px]">
+                        <div className={`text-xl sm:text-2xl font-bold ${item.change >= 0 ? "text-green-500" : "text-red-500"}`}>
                           {item.change >= 0 ? "+" : ""}{formatPercent(item.change)}
                         </div>
-                        <div className="text-sm text-muted-foreground">{item.period}</div>
+                        <div className="text-xs sm:text-sm text-muted-foreground">{item.period}</div>
                       </div>
                     ))}
                   </div>
