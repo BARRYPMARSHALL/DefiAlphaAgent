@@ -15,11 +15,17 @@ export function FloatingDonateButton() {
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      setIsVisible(scrollY > 500);
+      setIsVisible(scrollY > 200);
     };
 
+    // Show after a short delay even without scroll
+    const timer = setTimeout(() => setIsVisible(true), 3000);
+
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      clearTimeout(timer);
+    };
   }, []);
 
   if (isDismissed || !isVisible) return null;
