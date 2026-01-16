@@ -102,3 +102,32 @@ The app includes an automated Twitter bot that posts daily "Top 3 Alpha Finds" t
 2. Create a project and app with Read and Write permissions
 3. Generate API keys and access tokens
 4. Add secrets to Replit environment
+
+**Note:** Twitter auto-posting is currently disabled due to OAuth 1.0a credential issues. To re-enable:
+1. Configure OAuth 1.0a in Twitter Developer Portal with Read/Write permissions
+2. Regenerate all 4 credentials in same session
+3. Update Replit secrets
+4. Uncomment `startDailySchedule` in `server/routes.ts`
+
+### Analytics Dashboard
+
+The app includes a comprehensive Analytics page (`/analytics`) with market insights:
+
+**Charts & Metrics:**
+- APY Distribution histogram (pool count by APY range)
+- TVL by Chain (top 10 chains)
+- Risk Distribution pie chart (low/medium/high)
+- Top Protocols by TVL ranking
+- Top 5 Gainers/Losers (7D APY change)
+- Stablecoin vs Volatile pool comparison
+- Auto-Compound vs Manual pool comparison
+- Average APY by Chain bar chart
+- Market-Wide APY Trend (1D/7D/30D averages)
+
+**Summary Cards:**
+- Total TVL across all pools
+- Average APY
+- Auto-compound pool count
+- Number of chains
+
+**Navigation:** Accessible via "Analytics" button in the header.

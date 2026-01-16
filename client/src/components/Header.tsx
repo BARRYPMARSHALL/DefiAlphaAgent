@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { RefreshCw, GraduationCap } from "lucide-react";
+import { RefreshCw, GraduationCap, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "./ThemeToggle";
 import { ShareBar } from "./ShareBar";
@@ -7,12 +7,12 @@ import { DonationButton } from "./DonationButton";
 import logoImage from "@assets/ai_1768343849255.png";
 
 interface HeaderProps {
-  onRefresh: () => void;
-  isRefreshing: boolean;
-  lastUpdated: string | null;
+  onRefresh?: () => void;
+  isRefreshing?: boolean;
+  lastUpdated?: string | null;
 }
 
-export function Header({ onRefresh, isRefreshing, lastUpdated }: HeaderProps) {
+export function Header({ onRefresh, isRefreshing = false, lastUpdated }: HeaderProps) {
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
       <div className="max-w-7xl mx-auto px-4 py-6 sm:py-0 sm:h-16 flex items-center justify-between gap-4">
@@ -36,6 +36,14 @@ export function Header({ onRefresh, isRefreshing, lastUpdated }: HeaderProps) {
         </div>
 
         <div className="flex items-center gap-2 flex-wrap">
+          <Link href="/analytics">
+            <Button variant="outline" size="sm" data-testid="button-analytics">
+              <BarChart3 className="h-4 w-4 mr-2" />
+              <span className="hidden sm:inline">Analytics</span>
+              <span className="sm:hidden">Stats</span>
+            </Button>
+          </Link>
+          
           <Link href="/learn">
             <Button variant="outline" size="sm" data-testid="button-learn-defi">
               <GraduationCap className="h-4 w-4 mr-2" />
@@ -48,16 +56,18 @@ export function Header({ onRefresh, isRefreshing, lastUpdated }: HeaderProps) {
           
           <DonationButton variant="compact" />
           
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onRefresh}
-            disabled={isRefreshing}
-            data-testid="button-refresh"
-          >
-            <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? "animate-spin" : ""}`} />
-            Refresh
-          </Button>
+          {onRefresh && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onRefresh}
+              disabled={isRefreshing}
+              data-testid="button-refresh"
+            >
+              <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? "animate-spin" : ""}`} />
+              Refresh
+            </Button>
+          )}
 
           <ThemeToggle />
         </div>
