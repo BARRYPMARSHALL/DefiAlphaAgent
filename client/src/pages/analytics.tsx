@@ -6,6 +6,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "wouter";
 import { ArrowLeft, TrendingUp, TrendingDown, BarChart3, PieChart, Activity, Shield, Zap, Layers } from "lucide-react";
 import { DonationButton, DonationBanner } from "@/components/DonationButton";
+import { FloatingDonateButton } from "@/components/FloatingDonateButton";
 import {
   BarChart,
   Bar,
@@ -673,6 +674,8 @@ export default function Analytics() {
           </div>
         </div>
       </footer>
+
+      <FloatingDonateButton />
     </div>
   );
 }
