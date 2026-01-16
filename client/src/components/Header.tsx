@@ -16,24 +16,26 @@ export function Header({ onRefresh, isRefreshing = false, lastUpdated }: HeaderP
   return (
     <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
       <div className="max-w-7xl mx-auto px-4 py-6 sm:py-0 sm:h-16 flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <img 
-            src={logoImage} 
-            alt="DeFi Alpha Agent" 
-            className="w-10 h-10 rounded-md object-cover"
-            data-testid="img-logo"
-          />
-          <div className="flex flex-col">
-            <h1 className="text-xl font-bold tracking-tight" data-testid="text-app-title">
-              DeFi Alpha Agent
-            </h1>
-            {lastUpdated && (
-              <span className="text-xs text-muted-foreground" data-testid="text-last-updated">
-                Updated {lastUpdated}
-              </span>
-            )}
+        <Link href="/">
+          <div className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity" data-testid="link-home">
+            <img 
+              src={logoImage} 
+              alt="DeFi Alpha Agent" 
+              className="w-10 h-10 rounded-md object-cover"
+              data-testid="img-logo"
+            />
+            <div className="flex flex-col">
+              <h1 className="text-xl font-bold tracking-tight" data-testid="text-app-title">
+                DeFi Alpha Agent
+              </h1>
+              {lastUpdated && (
+                <span className="text-xs text-muted-foreground" data-testid="text-last-updated">
+                  Updated {lastUpdated}
+                </span>
+              )}
+            </div>
           </div>
-        </div>
+        </Link>
 
         <div className="flex items-center gap-2 flex-wrap">
           <Link href="/analytics">
