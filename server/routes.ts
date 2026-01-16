@@ -1145,11 +1145,12 @@ export async function registerRoutes(
     }
   });
 
-  // Start daily Twitter schedule
-  startDailySchedule(async () => {
-    await fetchPoolsData();
-    return cachedData?.pools || [];
-  });
+  // Twitter auto-posting disabled - enable once credentials are configured
+  // To enable, uncomment below and ensure TWITTER_* secrets are set correctly
+  // startDailySchedule(async () => {
+  //   await fetchPoolsData();
+  //   return cachedData?.pools || [];
+  // });
 
   app.get("/health", (_req, res) => {
     res.json({ status: "DeFi Alpha Agent is live", timestamp: new Date().toISOString() });
