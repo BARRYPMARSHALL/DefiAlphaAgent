@@ -245,26 +245,23 @@ export function DonationBanner() {
   };
 
   return (
-    <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-pink-500/10 via-rose-500/10 to-orange-500/10 border border-pink-500/20 p-4 sm:p-6 w-full">
-      <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-pink-500/20 to-transparent rounded-full blur-2xl" />
-      <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-to-tr from-orange-500/20 to-transparent rounded-full blur-2xl" />
-      
-      <div className="relative flex flex-col items-center gap-4 text-center">
-        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 shrink-0">
-          <Heart className="h-6 w-6 text-white" />
-        </div>
-        <div>
-          <h3 className="font-semibold text-lg">
-            <span className="bg-gradient-to-r from-pink-400 to-orange-400 bg-clip-text text-transparent">
+    <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-pink-500/10 via-rose-500/10 to-orange-500/10 border border-pink-500/20 px-4 py-3 w-full">
+      <div className="relative flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 shrink-0">
+            <Heart className="h-4 w-4 text-white" />
+          </div>
+          <div className="text-center sm:text-left">
+            <span className="font-semibold bg-gradient-to-r from-pink-400 to-orange-400 bg-clip-text text-transparent">
               Love the Alpha?
             </span>
-          </h3>
-          <p className="text-sm text-muted-foreground">
-            If these insights helped your portfolio, consider supporting the project!
-          </p>
+            <span className="text-sm text-muted-foreground ml-2 hidden sm:inline">
+              Support the project!
+            </span>
+          </div>
         </div>
         
-        <div className="flex flex-row items-center justify-center gap-3 flex-wrap">
+        <div className="flex items-center gap-2">
           <DonationButton variant="floating" />
           <Button
             variant="ghost"
