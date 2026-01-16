@@ -112,14 +112,18 @@ export async function postDailyTweet(pools: Pool[]): Promise<{ success: boolean;
   const tweetText = generateDailyTweet(pools);
   
   try {
-    const tweet = await client.v2.tweet(tweetText);
-    console.log(`Tweet posted successfully: ${tweet.data.id}`);
-    return { success: true, tweetId: tweet.data.id };
+    // Try v1.1 API first (more reliable with OAuth 1.0a)
+    const tweet = await client.v1.tweet(tweetText);
+    console.log(`Tweet posted successfully: ${tweet.id_str}`);
+    return { success: true, tweetId: tweet.id_str };
   } catch (error: any) {
     console.error('Failed to post tweet:', error);
     // Log more details about the error
     if (error.data) {
       console.error('Twitter API error data:', JSON.stringify(error.data));
+    }
+    if (error.errors) {
+      console.error('Twitter API errors:', JSON.stringify(error.errors));
     }
     return { 
       success: false, 
