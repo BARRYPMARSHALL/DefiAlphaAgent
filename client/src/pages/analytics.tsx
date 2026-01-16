@@ -282,7 +282,9 @@ export default function Analytics() {
           </Card>
         </div>
 
-        <DonationBanner />
+        <div className="mb-6">
+          <DonationBanner />
+        </div>
 
         {isLoading ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
