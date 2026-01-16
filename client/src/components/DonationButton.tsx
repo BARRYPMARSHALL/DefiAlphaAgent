@@ -245,14 +245,14 @@ export function DonationBanner() {
   };
 
   return (
-    <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-pink-500/10 via-rose-500/10 to-orange-500/10 border border-pink-500/20 px-4 py-3 w-full">
+    <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-pink-500/10 via-rose-500/10 to-orange-500/10 border border-pink-500/20 px-3 sm:px-4 py-3 w-full">
       <div className="relative flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-pink-500 to-rose-500 shrink-0">
             <Heart className="h-4 w-4 text-white" />
           </div>
           <div className="text-center sm:text-left">
-            <span className="font-semibold bg-gradient-to-r from-pink-400 to-orange-400 bg-clip-text text-transparent">
+            <span className="font-semibold bg-gradient-to-r from-pink-400 to-orange-400 bg-clip-text text-transparent text-sm sm:text-base">
               Love the Alpha?
             </span>
             <span className="text-sm text-muted-foreground ml-2 hidden sm:inline">
@@ -261,13 +261,18 @@ export function DonationBanner() {
           </div>
         </div>
         
-        <div className="flex items-center gap-2">
-          <DonationButton variant="floating" />
+        <div className="flex items-center gap-2 flex-wrap justify-center">
+          <div className="hidden sm:block">
+            <DonationButton variant="floating" />
+          </div>
+          <div className="sm:hidden">
+            <DonationButton variant="default" />
+          </div>
           <Button
             variant="ghost"
             size="sm"
             onClick={handleDismiss}
-            className="text-muted-foreground hover:text-foreground"
+            className="text-muted-foreground hover:text-foreground text-xs sm:text-sm"
             data-testid="button-dismiss-donation-banner"
           >
             Maybe later
