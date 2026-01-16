@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "wouter";
 import { ArrowLeft, TrendingUp, TrendingDown, BarChart3, PieChart, Activity, Shield, Zap, Layers } from "lucide-react";
+import { DonationButton, DonationBanner } from "@/components/DonationButton";
 import {
   BarChart,
   Bar,
@@ -280,6 +281,8 @@ export default function Analytics() {
             </CardContent>
           </Card>
         </div>
+
+        <DonationBanner />
 
         {isLoading ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -600,6 +603,20 @@ export default function Analytics() {
                 </CardContent>
               </Card>
             )}
+
+            <Card className="lg:col-span-2 bg-gradient-to-r from-pink-500/5 via-rose-500/5 to-orange-500/5 border-pink-500/20" data-testid="card-support-cta">
+              <CardContent className="py-6">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-center sm:text-left">
+                  <div className="flex-1">
+                    <h3 className="font-semibold text-lg mb-1">Enjoying these insights?</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Help us keep the analytics free and updated. Every contribution helps!
+                    </p>
+                  </div>
+                  <DonationButton variant="floating" />
+                </div>
+              </CardContent>
+            </Card>
           </div>
         )}
       </main>
