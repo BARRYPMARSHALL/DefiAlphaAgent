@@ -18,7 +18,8 @@ export default function Learn() {
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b">
-        <div className="max-w-7xl mx-auto px-4 py-6 sm:py-0 sm:h-16 flex items-center justify-between gap-4">
+        {/* Desktop Layout */}
+        <div className="hidden sm:flex max-w-7xl mx-auto px-4 h-16 items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <Link href="/">
               <Button variant="ghost" size="sm" data-testid="button-back-dashboard">
@@ -27,22 +28,61 @@ export default function Learn() {
               </Button>
             </Link>
           </div>
-          <div className="flex items-center gap-3">
-            <img 
-              src={logoImage} 
-              alt="DeFi Alpha Agent" 
-              className="w-10 h-10 rounded-md object-cover"
-              data-testid="img-logo-learn"
-            />
-            <div className="flex flex-col">
-              <h1 className="text-xl font-bold tracking-tight" data-testid="text-learn-title">
-                Free DeFi Course
-              </h1>
-              <span className="text-xs text-muted-foreground">Master yield farming in 30 minutes</span>
+          <Link href="/">
+            <div className="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity">
+              <img 
+                src={logoImage} 
+                alt="DeFi Alpha Agent" 
+                className="w-10 h-10 rounded-md object-cover"
+                data-testid="img-logo-learn"
+              />
+              <div className="flex flex-col">
+                <h1 className="text-xl font-bold tracking-tight" data-testid="text-learn-title">
+                  Free DeFi Course
+                </h1>
+                <span className="text-xs text-muted-foreground">Master yield farming in 30 minutes</span>
+              </div>
             </div>
+          </Link>
+          <div className="flex items-center gap-2">
+            <DonationButton variant="compact" />
+            <ThemeToggle />
           </div>
-          <DonationButton variant="compact" />
-          <ThemeToggle />
+        </div>
+
+        {/* Mobile Layout - Two Rows */}
+        <div className="sm:hidden max-w-7xl mx-auto px-3">
+          {/* Row 1: Logo + Title + Theme Toggle */}
+          <div className="flex items-center justify-between py-2 border-b border-border/50">
+            <Link href="/">
+              <div className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity">
+                <img 
+                  src={logoImage} 
+                  alt="DeFi Alpha Agent" 
+                  className="w-8 h-8 rounded-md object-cover"
+                  data-testid="img-logo-learn-mobile"
+                />
+                <div className="flex flex-col">
+                  <h1 className="text-base font-bold tracking-tight" data-testid="text-learn-title-mobile">
+                    Free DeFi Course
+                  </h1>
+                  <span className="text-[10px] text-muted-foreground">Master yield farming</span>
+                </div>
+              </div>
+            </Link>
+            <ThemeToggle />
+          </div>
+
+          {/* Row 2: Back + Donate */}
+          <div className="flex items-center justify-between py-2">
+            <Link href="/">
+              <Button variant="ghost" size="sm" className="h-8 px-2 text-xs" data-testid="button-back-dashboard-mobile">
+                <ArrowLeft className="h-3.5 w-3.5 mr-1" />
+                Back to Dashboard
+              </Button>
+            </Link>
+            <DonationButton variant="compact" />
+          </div>
         </div>
       </header>
 
