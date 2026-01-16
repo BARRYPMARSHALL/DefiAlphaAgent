@@ -622,6 +622,57 @@ export default function Analytics() {
           </div>
         )}
       </main>
+
+      <footer className="border-t mt-6">
+        <div className="max-w-7xl mx-auto px-4 py-6 space-y-4">
+          <div className="flex items-center justify-between gap-4 flex-wrap text-sm text-muted-foreground">
+            <p>
+              Data from{" "}
+              <a
+                href="https://defillama.com/yields"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline hover:text-foreground"
+              >
+                DeFiLlama
+              </a>
+            </p>
+            <p>Auto-refreshes every 5 minutes</p>
+          </div>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2">
+              <span>Follow</span>
+              <a
+                href="https://x.com/defialphaagent"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 font-medium text-foreground hover:text-primary transition-colors"
+                data-testid="link-follow-twitter-analytics"
+              >
+                <svg className="h-4 w-4" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                @DefiAlphaAgent
+              </a>
+              <span>for daily alerts</span>
+            </div>
+            <span className="hidden sm:inline text-muted-foreground/50">|</span>
+            <div className="flex items-center gap-2">
+              <span>Business Inquiries:</span>
+              <a
+                href="https://x.com/defialphaagent"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 font-medium text-foreground hover:text-primary transition-colors"
+                data-testid="link-contact-twitter-analytics"
+              >
+                DM @DefiAlphaAgent
+              </a>
+            </div>
+          </div>
+          <div className="flex items-center justify-center">
+            <DonationButton variant="inline" />
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
