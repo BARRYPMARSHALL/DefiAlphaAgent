@@ -76,14 +76,38 @@ export function generateDailyTweet(pools: Pool[]): string {
 }
 
 export async function postDailyTweet(pools: Pool[]): Promise<{ success: boolean; tweetId?: string; error?: string }> {
-  const client = getTwitterClient();
+  // Create fresh client each time to pick up any credential changes
+  const apiKey = process.env.TWITTER_API_KEY;
+  const apiSecret = process.env.TWITTER_API_SECRET;
+  const accessToken = process.env.TWITTER_ACCESS_TOKEN;
+  const accessSecret = process.env.TWITTER_ACCESS_SECRET;
   
-  if (!client) {
+  if (!apiKey || !apiSecret || !accessToken || !accessSecret) {
+    console.log('Missing Twitter credentials:', {
+      hasApiKey: !!apiKey,
+      hasApiSecret: !!apiSecret,
+      hasAccessToken: !!accessToken,
+      hasAccessSecret: !!accessSecret
+    });
     return { 
       success: false, 
       error: 'Twitter API credentials not configured. Please add TWITTER_API_KEY, TWITTER_API_SECRET, TWITTER_ACCESS_TOKEN, and TWITTER_ACCESS_SECRET.' 
     };
   }
+  
+  console.log('Creating Twitter client with credential lengths:', {
+    apiKeyLen: apiKey.length,
+    apiSecretLen: apiSecret.length,
+    accessTokenLen: accessToken.length,
+    accessSecretLen: accessSecret.length
+  });
+  
+  const client = new TwitterApi({
+    appKey: apiKey,
+    appSecret: apiSecret,
+    accessToken: accessToken,
+    accessSecret: accessSecret,
+  });
   
   const tweetText = generateDailyTweet(pools);
   
@@ -93,6 +117,10 @@ export async function postDailyTweet(pools: Pool[]): Promise<{ success: boolean;
     return { success: true, tweetId: tweet.data.id };
   } catch (error: any) {
     console.error('Failed to post tweet:', error);
+    // Log more details about the error
+    if (error.data) {
+      console.error('Twitter API error data:', JSON.stringify(error.data));
+    }
     return { 
       success: false, 
       error: error.message || 'Failed to post tweet' 
