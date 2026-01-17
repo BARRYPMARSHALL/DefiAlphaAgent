@@ -293,7 +293,7 @@ export default function Dashboard() {
         </Card>
       </section>
 
-      <section className="max-w-7xl mx-auto px-4 py-8">
+      <section id="faq" className="max-w-7xl mx-auto px-4 py-8 scroll-mt-20">
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">

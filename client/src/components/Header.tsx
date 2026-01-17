@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "wouter";
-import { RefreshCw, GraduationCap, BarChart3, Share2, Link2, Check } from "lucide-react";
+import { RefreshCw, GraduationCap, BarChart3, Share2, Link2, Check, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "./ThemeToggle";
 import { ShareBar } from "./ShareBar";
@@ -126,6 +126,13 @@ export function Header({ onRefresh, isRefreshing = false, lastUpdated }: HeaderP
             </Button>
           </Link>
           
+          <a href="/#faq">
+            <Button variant="outline" size="sm" data-testid="button-faq">
+              <HelpCircle className="h-4 w-4 mr-2" />
+              FAQ
+            </Button>
+          </a>
+          
           <ShareBar compact />
           
           <DonationButton variant="compact" />
@@ -190,6 +197,13 @@ export function Header({ onRefresh, isRefreshing = false, lastUpdated }: HeaderP
                 Learn
               </Button>
             </Link>
+            
+            <a href="/#faq">
+              <Button variant="outline" size="sm" className="h-8 px-2 text-xs" data-testid="button-faq-mobile">
+                <HelpCircle className="h-3.5 w-3.5 mr-1" />
+                FAQ
+              </Button>
+            </a>
           </div>
 
           <div className="flex items-center gap-0.5">
