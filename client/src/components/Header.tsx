@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "wouter";
-import { RefreshCw, GraduationCap, BarChart3, Share2, Link2, Check, HelpCircle, Gift } from "lucide-react";
+import { RefreshCw, GraduationCap, BarChart3, Share2, Link2, Check, HelpCircle, Gift, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "./ThemeToggle";
 import { ShareBar } from "./ShareBar";
@@ -75,6 +75,63 @@ function MobileShareDropdown() {
         </DropdownMenuItem>
         <DropdownMenuItem onClick={shareToReddit} className="gap-2 cursor-pointer">
           <SiReddit className="h-4 w-4" /> Share on Reddit
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={handleCopyLink} className="gap-2 cursor-pointer">
+          {copied ? <Check className="h-4 w-4 text-emerald-500" /> : <Link2 className="h-4 w-4" />}
+          {copied ? "Copied!" : "Copy Link"}
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
+function MobileMoreDropdown() {
+  const [copied, setCopied] = useState(false);
+  const { toast } = useToast();
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(SHARE_URL);
+      setCopied(true);
+      toast({ title: "Link copied!", description: "Share it with your friends." });
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast({ title: "Failed to copy", variant: "destructive" });
+    }
+  };
+
+  const shareToTwitter = () => {
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(SHARE_TEXT)}&url=${encodeURIComponent(SHARE_URL)}`, "_blank");
+  };
+
+  const shareToTelegram = () => {
+    window.open(`https://t.me/share/url?url=${encodeURIComponent(SHARE_URL)}&text=${encodeURIComponent(SHARE_TEXT)}`, "_blank");
+  };
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" size="sm" className="h-8 px-2 text-xs" data-testid="button-more-dropdown">
+          <MoreHorizontal className="h-3.5 w-3.5 mr-1" />
+          More
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" className="w-48">
+        <DropdownMenuItem asChild className="gap-2 cursor-pointer">
+          <a href="/#faq">
+            <HelpCircle className="h-4 w-4" /> FAQ
+          </a>
+        </DropdownMenuItem>
+        <DropdownMenuItem asChild className="gap-2 cursor-pointer">
+          <a href="https://defillama.com/airdrops" target="_blank" rel="noopener noreferrer" className="text-purple-400">
+            <Gift className="h-4 w-4" /> Airdrops
+          </a>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={shareToTwitter} className="gap-2 cursor-pointer">
+          <SiX className="h-4 w-4" /> Share on X
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={shareToTelegram} className="gap-2 cursor-pointer">
+          <SiTelegram className="h-4 w-4" /> Share on Telegram
         </DropdownMenuItem>
         <DropdownMenuItem onClick={handleCopyLink} className="gap-2 cursor-pointer">
           {copied ? <Check className="h-4 w-4 text-emerald-500" /> : <Link2 className="h-4 w-4" />}
@@ -205,24 +262,10 @@ export function Header({ onRefresh, isRefreshing = false, lastUpdated }: HeaderP
               </Button>
             </Link>
             
-            <a href="/#faq">
-              <Button variant="outline" size="sm" className="h-8 px-2 text-xs" data-testid="button-faq-mobile">
-                <HelpCircle className="h-3.5 w-3.5 mr-1" />
-                FAQ
-              </Button>
-            </a>
-            
-            <a href="https://defillama.com/airdrops" target="_blank" rel="noopener noreferrer">
-              <Button variant="outline" size="sm" className="h-8 px-2 text-xs border-purple-500/50 text-purple-400 hover:bg-purple-500/10" data-testid="button-airdrops-mobile">
-                <Gift className="h-3.5 w-3.5 mr-1" />
-                Drops
-              </Button>
-            </a>
+            <MobileMoreDropdown />
           </div>
 
           <div className="flex items-center gap-0.5">
-            <MobileShareDropdown />
-            
             <DonationButton variant="compact" />
             
             {onRefresh && (
