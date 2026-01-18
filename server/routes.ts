@@ -335,6 +335,22 @@ let cachedData: {
 let lastFetchTime = 0;
 const CACHE_DURATION = 2 * 60 * 1000;
 
+interface StablecoinChainData {
+  chain: string;
+  totalCirculating: number;
+  totalCirculatingUSD: number;
+  tokens: { name: string; circulating: number }[];
+}
+
+interface StablecoinsCache {
+  data: StablecoinChainData[];
+  lastUpdated: string;
+}
+
+let cachedStablecoins: StablecoinsCache | null = null;
+let lastStablecoinFetchTime = 0;
+const STABLECOIN_CACHE_DURATION = 10 * 60 * 1000;
+
 const LOW_LIQUIDITY_TOKENS = new Set([
   "unknown", "undefined", "test", "mock"
 ]);
@@ -1077,6 +1093,70 @@ export async function registerRoutes(
       res.status(500).json({ 
         success: false, 
         error: "Failed to fetch chains" 
+      });
+    }
+  });
+
+  // Stablecoins by Chain API endpoint
+  app.get("/api/stablecoins", async (_req, res) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    
+    try {
+      const now = Date.now();
+      
+      if (cachedStablecoins && now - lastStablecoinFetchTime < STABLECOIN_CACHE_DURATION) {
+        return res.json({
+          success: true,
+          ...cachedStablecoins,
+        });
+      }
+      
+      console.log("[Stablecoins] Fetching from DeFiLlama...");
+      const response = await fetch("https://stablecoins.llama.fi/stablecoinchains");
+      
+      if (!response.ok) {
+        throw new Error(`DeFiLlama API error: ${response.status}`);
+      }
+      
+      const rawData = await response.json();
+      
+      const chainData: StablecoinChainData[] = rawData
+        .filter((chain: any) => chain.totalCirculatingUSD && chain.totalCirculatingUSD.peggedUSD > 0)
+        .map((chain: any) => ({
+          chain: chain.name || chain.gecko_id || "Unknown",
+          totalCirculating: chain.totalCirculatingUSD?.peggedUSD || 0,
+          totalCirculatingUSD: chain.totalCirculatingUSD?.peggedUSD || 0,
+          tokens: [],
+        }))
+        .sort((a: StablecoinChainData, b: StablecoinChainData) => b.totalCirculatingUSD - a.totalCirculatingUSD)
+        .slice(0, 20);
+      
+      cachedStablecoins = {
+        data: chainData,
+        lastUpdated: new Date().toISOString(),
+      };
+      lastStablecoinFetchTime = now;
+      
+      console.log(`[Stablecoins] Cached ${chainData.length} chains`);
+      
+      res.json({
+        success: true,
+        ...cachedStablecoins,
+      });
+    } catch (error) {
+      console.error("Error in /api/stablecoins:", error);
+      
+      if (cachedStablecoins) {
+        return res.json({
+          success: true,
+          ...cachedStablecoins,
+          stale: true,
+        });
+      }
+      
+      res.status(500).json({ 
+        success: false, 
+        error: "Failed to fetch stablecoins data" 
       });
     }
   });
