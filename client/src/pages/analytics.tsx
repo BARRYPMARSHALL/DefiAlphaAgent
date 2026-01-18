@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "wouter";
-import { ArrowLeft, TrendingUp, TrendingDown, BarChart3, PieChart, Activity, Shield, Zap, Layers } from "lucide-react";
+import { ArrowLeft, TrendingUp, TrendingDown, BarChart3, PieChart, Activity, Shield, Zap, Layers, DollarSign, Info } from "lucide-react";
 import { DonationButton, DonationBanner } from "@/components/DonationButton";
 import { FloatingDonateButton } from "@/components/FloatingDonateButton";
 import {
@@ -189,6 +189,17 @@ function LoadingCard({ title }: { title: string }) {
   );
 }
 
+interface StablecoinChainData {
+  chain: string;
+  totalCirculatingUSD: number;
+}
+
+interface StablecoinsResponse {
+  success: boolean;
+  data: StablecoinChainData[];
+  lastUpdated: string;
+}
+
 export default function Analytics() {
   const { data, isLoading } = useQuery<PoolsResponse>({
     queryKey: ["/api/pools", "analytics"],
@@ -198,6 +209,16 @@ export default function Analytics() {
       return res.json();
     },
     staleTime: 2 * 60 * 1000,
+  });
+
+  const { data: stablecoinsData, isLoading: stablecoinsLoading } = useQuery<StablecoinsResponse>({
+    queryKey: ["/api/stablecoins"],
+    queryFn: async () => {
+      const res = await fetch("/api/stablecoins", { credentials: "include" });
+      if (!res.ok) throw new Error("Failed to fetch stablecoins");
+      return res.json();
+    },
+    staleTime: 10 * 60 * 1000,
   });
 
   const pools = data?.pools || [];
@@ -578,6 +599,66 @@ export default function Analytics() {
                     <Bar dataKey="avgApy" fill="hsl(var(--chart-1))" radius={[4, 4, 0, 0]} name="Avg APY" />
                   </BarChart>
                 </ResponsiveContainer>
+              </CardContent>
+            </Card>
+
+            <Card className="lg:col-span-2" data-testid="card-stablecoins-by-chain">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-base flex items-center gap-2">
+                  <DollarSign className="h-4 w-4" />
+                  Stablecoins by Chain
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                {stablecoinsLoading ? (
+                  <Skeleton className="h-[320px] w-full" />
+                ) : stablecoinsData?.data && stablecoinsData.data.length > 0 ? (
+                  <>
+                    <ResponsiveContainer width="100%" height={280}>
+                      <BarChart data={stablecoinsData.data.slice(0, 12)} layout="vertical">
+                        <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
+                        <XAxis type="number" tickFormatter={(v) => formatTvl(v)} tick={{ fontSize: 10 }} className="fill-muted-foreground" />
+                        <YAxis dataKey="chain" type="category" width={85} tick={{ fontSize: 11 }} className="fill-muted-foreground" />
+                        <Tooltip 
+                          formatter={(value: number) => formatTvl(value)}
+                          contentStyle={{ 
+                            backgroundColor: "hsl(var(--card))", 
+                            border: "1px solid hsl(var(--border))",
+                            borderRadius: "8px"
+                          }}
+                        />
+                        <Bar dataKey="totalCirculatingUSD" fill="hsl(var(--chart-2))" radius={[0, 4, 4, 0]} name="Stablecoin Supply" />
+                      </BarChart>
+                    </ResponsiveContainer>
+                    <p className="text-xs text-center text-muted-foreground mt-2">
+                      Total stablecoin supply on each blockchain (USDT, USDC, DAI, etc.)
+                    </p>
+                  </>
+                ) : (
+                  <div className="h-[280px] flex items-center justify-center text-muted-foreground">
+                    Unable to load stablecoin data
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            <Card className="lg:col-span-2 bg-gradient-to-r from-blue-500/5 via-cyan-500/5 to-teal-500/5 border-blue-500/20" data-testid="card-stablecoin-explainer">
+              <CardContent className="py-5">
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-500/10 flex items-center justify-center">
+                    <Info className="h-4 w-4 text-blue-500" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-sm mb-1">Why Stablecoin Supply Matters for Yield Farming</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      Chains with more stablecoins typically offer <strong>deeper liquidity and more sustainable yields</strong>. 
+                      High stablecoin supply means larger pools, lower slippage, and more lending/borrowing activity. 
+                      When you see a chain with high stablecoin supply, it's a sign that capital is flowing there, 
+                      which often means better opportunities for consistent returns. Top chains like Ethereum and Tron 
+                      tend to have more established protocols and liquidity.
+                    </p>
+                  </div>
+                </div>
               </CardContent>
             </Card>
 

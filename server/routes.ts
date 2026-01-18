@@ -1121,13 +1121,18 @@ export async function registerRoutes(
       const rawData = await response.json();
       
       const chainData: StablecoinChainData[] = rawData
-        .filter((chain: any) => chain.totalCirculatingUSD && chain.totalCirculatingUSD.peggedUSD > 0)
-        .map((chain: any) => ({
-          chain: chain.name || chain.gecko_id || "Unknown",
-          totalCirculating: chain.totalCirculatingUSD?.peggedUSD || 0,
-          totalCirculatingUSD: chain.totalCirculatingUSD?.peggedUSD || 0,
-          tokens: [],
-        }))
+        .map((chain: any) => {
+          const totalUsd = typeof chain.totalCirculatingUSD === "number" 
+            ? chain.totalCirculatingUSD 
+            : chain.totalCirculatingUSD?.peggedUSD || 0;
+          return {
+            chain: chain.name || chain.gecko_id || "Unknown",
+            totalCirculating: totalUsd,
+            totalCirculatingUSD: totalUsd,
+            tokens: [],
+          };
+        })
+        .filter((chain: StablecoinChainData) => chain.totalCirculatingUSD > 0)
         .sort((a: StablecoinChainData, b: StablecoinChainData) => b.totalCirculatingUSD - a.totalCirculatingUSD)
         .slice(0, 20);
       

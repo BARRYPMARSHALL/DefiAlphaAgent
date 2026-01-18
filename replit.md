@@ -122,7 +122,11 @@ The app includes a comprehensive Analytics page (`/analytics`) with market insig
 - Stablecoin vs Volatile pool comparison
 - Auto-Compound vs Manual pool comparison
 - Average APY by Chain bar chart
+- **Stablecoins by Chain** - Shows where liquidity is concentrated (from DeFiLlama stablecoins API)
 - Market-Wide APY Trend (1D/7D/30D averages)
+
+**API Endpoints:**
+- `GET /api/stablecoins` - Returns stablecoin supply by chain (10-minute cache)
 
 **Summary Cards:**
 - Total TVL across all pools
