@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from "react";
 import { Search, X, SlidersHorizontal, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -62,6 +63,33 @@ export function FiltersBar({
   onReset,
   resultCount,
 }: FiltersBarProps) {
+  const [localSearch, setLocalSearch] = useState(filters.searchQuery);
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    setLocalSearch(filters.searchQuery);
+  }, [filters.searchQuery]);
+
+  const handleSearchChange = (value: string) => {
+    setLocalSearch(value);
+    
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+    
+    debounceRef.current = setTimeout(() => {
+      onFiltersChange({ ...filters, searchQuery: value });
+    }, 400);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+    };
+  }, []);
+
   const activeFilterCount = [
     filters.minTvl > 0,
     filters.chains.length > 0,
@@ -92,10 +120,8 @@ export function FiltersBar({
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search pools, projects..."
-            value={filters.searchQuery}
-            onChange={(e) =>
-              onFiltersChange({ ...filters, searchQuery: e.target.value })
-            }
+            value={localSearch}
+            onChange={(e) => handleSearchChange(e.target.value)}
             className="pl-10"
             data-testid="input-search"
           />
