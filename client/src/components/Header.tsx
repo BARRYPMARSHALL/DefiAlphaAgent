@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "wouter";
-import { RefreshCw, GraduationCap, BarChart3, Share2, Link2, Check, HelpCircle } from "lucide-react";
+import { RefreshCw, GraduationCap, BarChart3, Share2, Link2, Check, HelpCircle, Gift } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "./ThemeToggle";
 import { ShareBar } from "./ShareBar";
@@ -133,6 +133,13 @@ export function Header({ onRefresh, isRefreshing = false, lastUpdated }: HeaderP
             </Button>
           </a>
           
+          <a href="https://defillama.com/airdrops" target="_blank" rel="noopener noreferrer">
+            <Button variant="outline" size="sm" className="border-purple-500/50 text-purple-400 hover:bg-purple-500/10" data-testid="button-airdrops">
+              <Gift className="h-4 w-4 mr-2" />
+              Airdrops
+            </Button>
+          </a>
+          
           <ShareBar compact />
           
           <DonationButton variant="compact" />
@@ -202,6 +209,13 @@ export function Header({ onRefresh, isRefreshing = false, lastUpdated }: HeaderP
               <Button variant="outline" size="sm" className="h-8 px-2 text-xs" data-testid="button-faq-mobile">
                 <HelpCircle className="h-3.5 w-3.5 mr-1" />
                 FAQ
+              </Button>
+            </a>
+            
+            <a href="https://defillama.com/airdrops" target="_blank" rel="noopener noreferrer">
+              <Button variant="outline" size="sm" className="h-8 px-2 text-xs border-purple-500/50 text-purple-400 hover:bg-purple-500/10" data-testid="button-airdrops-mobile">
+                <Gift className="h-3.5 w-3.5 mr-1" />
+                Drops
               </Button>
             </a>
           </div>

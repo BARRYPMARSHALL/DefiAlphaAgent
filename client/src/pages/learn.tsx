@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { ArrowLeft, TrendingUp, Shield, Zap, Calculator, BookOpen, Trophy, Share2 } from "lucide-react";
+import { ArrowLeft, TrendingUp, Shield, Zap, Calculator, BookOpen, Trophy, Share2, Gift, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -596,6 +596,94 @@ export default function Learn() {
               </div>
               <div className="mt-8">
                 <KoinlyBanner variant="card" storageKey="learn-koinly-6" />
+              </div>
+            </CourseModule>
+
+            <CourseModule
+              id="airdrop-farming"
+              title="Module 7: Airdrop Farming"
+              description="Earn free tokens with minimal capital"
+              duration="8 min"
+            >
+              <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
+                <Gift className="h-5 w-5 text-purple-500" />
+                What are Crypto Airdrops?
+              </h4>
+              <p className="mb-6 text-base leading-relaxed">
+                <strong>Airdrops</strong> are free token distributions from blockchain projects to early users, community members, or people who complete specific tasks. They're one of the best ways to earn in crypto with minimal upfront capital - making DeFi accessible to everyone, not just "rich people."
+              </p>
+
+              <div className="bg-purple-500/10 border border-purple-500/30 rounded-lg p-5 mb-6">
+                <h6 className="font-semibold mb-2 flex items-center gap-2">
+                  <Gift className="h-4 w-4 text-purple-400" />
+                  Why Airdrops Matter
+                </h6>
+                <p className="text-sm leading-relaxed">
+                  Unlike yield farming where you need capital to earn, airdrops reward you for <strong>using protocols early</strong>. Many crypto success stories started with receiving free tokens that later became worth thousands of dollars. The Uniswap airdrop gave users $1,200+ just for having used the DEX!
+                </p>
+              </div>
+
+              <h5 className="font-medium mb-3 text-base">Types of Airdrops:</h5>
+              <ul className="list-disc pl-6 space-y-3 mb-6">
+                <li><strong>Retroactive Airdrops</strong> - Rewards for past usage of a protocol (e.g., Uniswap, Optimism, Arbitrum). The most valuable but unpredictable.</li>
+                <li><strong>Testnet Airdrops</strong> - Use protocols on test networks before mainnet launch. Low cost, just requires time.</li>
+                <li><strong>Social/Task Airdrops</strong> - Follow accounts, join Discord, complete quests. Easy but usually smaller rewards.</li>
+                <li><strong>Holder Airdrops</strong> - Hold specific tokens to receive new ones. Snapshot-based distributions.</li>
+                <li><strong>Liquidity Provider Airdrops</strong> - Provide liquidity to earn future tokens. Combines yield + airdrop potential.</li>
+              </ul>
+
+              <h5 className="font-medium mb-3 text-base">How to Farm Airdrops Effectively:</h5>
+              <div className="bg-muted rounded-lg p-5 mb-6">
+                <ol className="list-decimal pl-5 space-y-3 text-sm">
+                  <li><strong>Find "Tokenless" Protocols</strong> - Projects without a token yet are prime airdrop candidates. DeFiLlama tracks these!</li>
+                  <li><strong>Use Protocols Regularly</strong> - Don't just make one transaction. Regular activity often earns more rewards.</li>
+                  <li><strong>Bridge & Try New Chains</strong> - Early users of new L2s often receive airdrops (Optimism, Arbitrum, zkSync, etc.)</li>
+                  <li><strong>Participate in Governance</strong> - Vote on proposals, join DAOs, be an active community member.</li>
+                  <li><strong>Use Testnets</strong> - Many projects reward testnet users when they launch mainnet.</li>
+                  <li><strong>Don't Forget Small Chains</strong> - Less competition = higher allocation per user.</li>
+                </ol>
+              </div>
+
+              <h5 className="font-medium mb-3 text-base">Top Airdrop Hunting Resources:</h5>
+              <ul className="list-disc pl-6 space-y-3 mb-6">
+                <li><strong>DeFiLlama Airdrops Page</strong> - Lists tokenless protocols that may airdrop. Check eligibility with their checker tool.</li>
+                <li><strong>Layer3, Galxe, Zealy</strong> - Quest platforms where completing tasks earns you points/tokens.</li>
+                <li><strong>Twitter/X Crypto Communities</strong> - Follow airdrop hunters who share opportunities.</li>
+                <li><strong>Protocol Discords</strong> - Join early, participate in discussions, learn about upcoming snapshots.</li>
+              </ul>
+
+              <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-5 mb-6">
+                <h6 className="font-semibold mb-2 text-red-400">Airdrop Safety Tips</h6>
+                <ul className="text-sm space-y-2">
+                  <li>• <strong>Never share your seed phrase</strong> - Legitimate airdrops will NEVER ask for it</li>
+                  <li>• <strong>Use a dedicated wallet</strong> - Don't airdrop farm with your main holdings wallet</li>
+                  <li>• <strong>Verify official links</strong> - Scammers create fake airdrop sites. Always verify on official Discord/Twitter</li>
+                  <li>• <strong>Be wary of "claim" sites</strong> - Many phishing sites pretend to be airdrop claims</li>
+                  <li>• <strong>Revoke approvals</strong> - Regularly check and revoke unnecessary token approvals</li>
+                </ul>
+              </div>
+
+              <div className="bg-primary/10 border border-primary/30 rounded-lg p-5 mb-6">
+                <h6 className="font-semibold mb-2 flex items-center gap-2">
+                  <Zap className="h-4 w-4 text-primary" />
+                  Check Your Airdrop Eligibility
+                </h6>
+                <p className="text-sm mb-4">
+                  DeFiLlama offers a free tool to check if your wallet is eligible for any claimable airdrops. We've added a quick link in our header!
+                </p>
+                <a href="https://defillama.com/airdrops" target="_blank" rel="noopener noreferrer">
+                  <Button className="bg-purple-600 hover:bg-purple-700" data-testid="button-defillama-airdrops">
+                    <Gift className="h-4 w-4 mr-2" />
+                    Check Airdrops on DeFiLlama
+                    <ExternalLink className="h-4 w-4 ml-2" />
+                  </Button>
+                </a>
+              </div>
+
+              <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-5 mb-6">
+                <p className="text-sm leading-relaxed">
+                  <strong>Pro Tip:</strong> The best airdrop farmers combine strategies - they provide liquidity on new DEXs (earning yield + potential airdrop), use bridges to new chains early, and actively participate in protocol governance. It's not just about clicking around; genuine protocol usage is usually rewarded more.
+                </p>
               </div>
             </CourseModule>
 
