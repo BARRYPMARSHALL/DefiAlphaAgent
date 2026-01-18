@@ -59,6 +59,17 @@ The application includes a basic Drizzle ORM schema with PostgreSQL for user man
 - Development: Vite dev server with HMR, proxying API requests to Express
 - Production: Vite builds static assets, esbuild bundles server code
 
+### User Analytics
+
+Google Analytics (G-CD6MTB739E) is integrated to track:
+- Page views and visitor counts
+- Time spent on site
+- Most popular pages (Dashboard, Analytics, Learn)
+- Traffic sources (Twitter, Google, direct)
+- Device/browser/location data
+
+View analytics at: https://analytics.google.com
+
 ## External Dependencies
 
 ### APIs
