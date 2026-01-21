@@ -13,7 +13,6 @@ import { Search, TrendingUp, Shield, Zap, HelpCircle } from "lucide-react";
 import { ShareBar, ShareCallToAction } from "@/components/ShareBar";
 import { ShareMyFind } from "@/components/ShareMyFind";
 import { NexoBanner } from "@/components/NexoBanner";
-import { KoinlyBanner } from "@/components/KoinlyBanner";
 import { LoadingSplash } from "@/components/LoadingSplash";
 import { DonationButton, DonationBanner } from "@/components/DonationButton";
 import { FloatingDonateButton } from "@/components/FloatingDonateButton";

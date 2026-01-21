@@ -4,10 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { CourseModule, CourseProgress } from "@/components/CourseModule";
-import { TrezorBanner, KoinlyBanner } from "@/components/AffiliateBanners";
 import { NexoBanner } from "@/components/NexoBanner";
 import { EmailCaptureButton } from "@/components/EmailCapture";
-import { LedgerImageBanner } from "@/components/LedgerImageBanner";
 import { DonationButton, DonationBanner } from "@/components/DonationButton";
 import { FloatingDonateButton } from "@/components/FloatingDonateButton";
 import { SiX, SiFacebook, SiLinkedin, SiReddit, SiTelegram } from "react-icons/si";
@@ -224,9 +222,6 @@ export default function Learn() {
                 <li><strong>Start with small amounts</strong> - Test new protocols with money you can afford to lose</li>
                 <li><strong>Revoke unused approvals</strong> - Old token approvals can be exploited if a protocol is compromised</li>
               </ul>
-              <div className="mt-8">
-                <LedgerImageBanner variant="inline" storageKey="learn-ledger-module-1" />
-              </div>
             </CourseModule>
 
             <CourseModule
@@ -364,9 +359,6 @@ export default function Learn() {
               <p className="mb-6 text-base leading-relaxed">
                 On DeFi Alpha Agent, we calculate risk-adjusted scores using this formula: <strong>APY × (TVL Factor) × (1 - IL Risk)</strong>. This means a pool needs good APY, sufficient TVL, AND low impermanent loss risk to score well. A 1000% APY pool with $50K TVL and volatile assets will score lower than a 20% APY pool with $50M TVL in stablecoins.
               </p>
-              <div className="mt-8">
-                <LedgerImageBanner variant="inline" storageKey="learn-ledger-module-3" />
-              </div>
             </CourseModule>
 
             <CourseModule
@@ -594,9 +586,6 @@ export default function Learn() {
                   <strong>Pro Tip:</strong> Start tracking from day one! Trying to reconstruct your DeFi history at tax time is painful and expensive. Connect your wallets to a tax tool before you start farming, not after.
                 </p>
               </div>
-              <div className="mt-8">
-                <KoinlyBanner variant="card" storageKey="learn-koinly-6" />
-              </div>
             </CourseModule>
 
             <CourseModule
@@ -733,9 +722,6 @@ export default function Learn() {
                 </p>
                 <EmailCaptureButton />
               </div>
-              
-              <LedgerImageBanner variant="sidebar" storageKey="learn-sidebar-ledger" />
-              <KoinlyBanner variant="sidebar" storageKey="learn-sidebar-koinly" />
             </div>
           </div>
         </div>
