@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { CourseModule, CourseProgress } from "@/components/CourseModule";
 import { NexoBanner } from "@/components/NexoBanner";
-import { EmailCaptureButton } from "@/components/EmailCapture";
 import { DonationButton, DonationBanner } from "@/components/DonationButton";
 import { FloatingDonateButton } from "@/components/FloatingDonateButton";
 import { SiX, SiFacebook, SiLinkedin, SiReddit, SiTelegram } from "react-icons/si";
@@ -661,10 +660,10 @@ export default function Learn() {
                   DeFiLlama offers a free tool to check if your wallet is eligible for any claimable airdrops. We've added a quick link in our header!
                 </p>
                 <a href="https://defillama.com/airdrops" target="_blank" rel="noopener noreferrer">
-                  <Button className="bg-purple-600 hover:bg-purple-700" data-testid="button-defillama-airdrops">
-                    <Gift className="h-4 w-4 mr-2" />
-                    Check Airdrops on DeFiLlama
-                    <ExternalLink className="h-4 w-4 ml-2" />
+                  <Button className="bg-purple-600 hover:bg-purple-700 w-full sm:w-auto text-sm" size="sm" data-testid="button-defillama-airdrops">
+                    <Gift className="h-4 w-4 mr-2 shrink-0" />
+                    <span className="truncate">Check Airdrops on DeFiLlama</span>
+                    <ExternalLink className="h-4 w-4 ml-2 shrink-0" />
                   </Button>
                 </a>
               </div>
@@ -715,14 +714,7 @@ export default function Learn() {
             <div className="lg:sticky lg:top-24 space-y-6">
               <CourseProgress />
               
-              <div className="p-4 bg-gradient-to-br from-primary/10 to-chart-2/10 rounded-lg border">
-                <h4 className="font-semibold mb-2">Quick Reference</h4>
-                <p className="text-sm text-muted-foreground mb-3">
-                  Get our one-page DeFi cheat sheet with formulas and tips.
-                </p>
-                <EmailCaptureButton />
               </div>
-            </div>
           </div>
         </div>
       </main>
