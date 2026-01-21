@@ -52,6 +52,12 @@ Preferred communication style: Simple, everyday language.
 
 **Auto-refresh pattern**: Data refreshes every 5 minutes using React Query's refetch interval.
 
+**Earnings Calculator**: Interactive component on the Dashboard (above pools table) that helps users estimate potential earnings:
+- Input investment amount with live calculations for daily, weekly, monthly, and yearly returns
+- Toggle between "Top Pool" APY (highest APY from top 50 filtered pools, capped at 100%) and "Average" APY
+- Collapsible state persists to localStorage for user convenience
+- Displays condensed summary badge when collapsed showing monthly earnings at selected APY
+
 ### Database Schema
 The application includes a basic Drizzle ORM schema with PostgreSQL for user management (currently using in-memory storage). The `users` table supports future authentication features.
 
