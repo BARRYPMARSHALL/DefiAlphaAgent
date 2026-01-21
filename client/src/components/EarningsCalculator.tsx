@@ -98,26 +98,26 @@ export function EarningsCalculator({ topPoolApy = 15, avgApy = 8 }: EarningsCalc
 
               <div>
                 <label className="text-sm font-medium mb-2 block">APY Rate</label>
-                <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row gap-2">
                   <Button
                     variant={selectedApy === "top" ? "default" : "outline"}
                     size="sm"
                     onClick={() => setSelectedApy("top")}
-                    className="flex-1"
+                    className="flex-1 text-xs sm:text-sm"
                     data-testid="button-top-apy"
                   >
-                    <Sparkles className="h-3.5 w-3.5 mr-1.5" />
-                    Top Pool ({topPoolApy.toFixed(1)}%)
+                    <Sparkles className="h-3.5 w-3.5 mr-1 shrink-0" />
+                    <span className="truncate">Top Pool ({topPoolApy.toFixed(1)}%)</span>
                   </Button>
                   <Button
                     variant={selectedApy === "avg" ? "default" : "outline"}
                     size="sm"
                     onClick={() => setSelectedApy("avg")}
-                    className="flex-1"
+                    className="flex-1 text-xs sm:text-sm"
                     data-testid="button-avg-apy"
                   >
-                    <TrendingUp className="h-3.5 w-3.5 mr-1.5" />
-                    Average ({avgApy.toFixed(1)}%)
+                    <TrendingUp className="h-3.5 w-3.5 mr-1 shrink-0" />
+                    <span className="truncate">Average ({avgApy.toFixed(1)}%)</span>
                   </Button>
                 </div>
               </div>

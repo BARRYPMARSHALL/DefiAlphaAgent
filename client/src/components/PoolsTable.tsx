@@ -212,7 +212,7 @@ export function PoolsTable({
             )}
           </div>
         </TooltipTrigger>
-        {tooltip && <TooltipContent><p>{tooltip}</p></TooltipContent>}
+        {tooltip && <TooltipContent side="bottom" align="center" className="max-w-[250px]"><p>{tooltip}</p></TooltipContent>}
       </Tooltip>
     </TableHead>
   );
@@ -231,7 +231,7 @@ export function PoolsTable({
         <TooltipTrigger asChild>
           <span className="cursor-help">{children}</span>
         </TooltipTrigger>
-        <TooltipContent><p>{tooltip}</p></TooltipContent>
+        <TooltipContent side="bottom" align="center" className="max-w-[250px]"><p>{tooltip}</p></TooltipContent>
       </Tooltip>
     </TableHead>
   );

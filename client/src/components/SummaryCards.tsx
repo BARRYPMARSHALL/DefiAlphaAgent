@@ -96,7 +96,7 @@ export function SummaryCards({
                     <TooltipTrigger asChild>
                       <HelpCircle className="h-3.5 w-3.5 text-muted-foreground/50 cursor-help" />
                     </TooltipTrigger>
-                    <TooltipContent className="max-w-xs">
+                    <TooltipContent side="bottom" align="start" className="max-w-[280px]">
                       <p>{card.tooltip}</p>
                     </TooltipContent>
                   </Tooltip>

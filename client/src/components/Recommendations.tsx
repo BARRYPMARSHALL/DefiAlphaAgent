@@ -159,7 +159,7 @@ export function Recommendations({ pools, isLoading }: RecommendationsProps) {
             <TooltipTrigger asChild>
               <HelpCircle className="h-4 w-4 text-muted-foreground/50 cursor-help" />
             </TooltipTrigger>
-            <TooltipContent className="max-w-xs">
+            <TooltipContent side="bottom" align="center" className="max-w-[280px]">
               <p>These pools are ranked by risk-adjusted score, which balances APY, TVL (pool size), and impermanent loss risk. Beefy vaults get a bonus for auto-compounding.</p>
             </TooltipContent>
           </Tooltip>
