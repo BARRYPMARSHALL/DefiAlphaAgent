@@ -1,6 +1,11 @@
-import { Activity, BarChart3, Layers } from "lucide-react";
+import { Activity, BarChart3, Layers, HelpCircle } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface SummaryCardsProps {
   totalPools: number;
@@ -55,6 +60,7 @@ export function SummaryCards({
       icon: Layers,
       iconBg: "bg-chart-1/10",
       iconColor: "text-chart-1",
+      tooltip: "The number of yield farming pools matching your current filters. Each pool is a place where you can deposit crypto to earn rewards.",
     },
     {
       label: "Average APY",
@@ -62,6 +68,7 @@ export function SummaryCards({
       icon: Activity,
       iconBg: "bg-chart-2/10",
       iconColor: "text-chart-2",
+      tooltip: "The average Annual Percentage Yield across all filtered pools. This is a rough benchmark - individual pool returns vary significantly.",
     },
     {
       label: `Top Chain: ${topChain}`,
@@ -70,6 +77,7 @@ export function SummaryCards({
       icon: BarChart3,
       iconBg: "bg-chart-3/10",
       iconColor: "text-chart-3",
+      tooltip: "The blockchain with the most Total Value Locked in your filtered pools. Higher TVL often indicates more trusted and liquid pools.",
     },
   ];
 
@@ -80,9 +88,19 @@ export function SummaryCards({
           <CardContent className="p-6">
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1">
-                <p className="text-sm font-medium text-muted-foreground uppercase tracking-wide" data-testid={`label-${card.label.toLowerCase().replace(/\s+/g, "-")}`}>
-                  {card.label}
-                </p>
+                <div className="flex items-center gap-1.5">
+                  <p className="text-sm font-medium text-muted-foreground uppercase tracking-wide" data-testid={`label-${card.label.toLowerCase().replace(/\s+/g, "-")}`}>
+                    {card.label}
+                  </p>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <HelpCircle className="h-3.5 w-3.5 text-muted-foreground/50 cursor-help" />
+                    </TooltipTrigger>
+                    <TooltipContent className="max-w-xs">
+                      <p>{card.tooltip}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </div>
                 <p className="text-4xl font-bold tracking-tight mt-1 font-mono" data-testid={`value-${card.label.toLowerCase().replace(/\s+/g, "-")}`}>
                   {card.value}
                 </p>

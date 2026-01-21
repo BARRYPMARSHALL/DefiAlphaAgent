@@ -190,23 +190,49 @@ export function PoolsTable({
     field,
     children,
     className = "",
+    tooltip,
   }: {
     field: SortState["field"];
     children: React.ReactNode;
     className?: string;
+    tooltip?: string;
   }) => (
     <TableHead
       className={`cursor-pointer select-none hover-elevate ${className}`}
       onClick={() => handleSort(field)}
     >
-      <div className="flex items-center gap-1">
-        {children}
-        {sort.field === field && (
-          <span className="text-primary">
-            {sort.direction === "desc" ? "↓" : "↑"}
-          </span>
-        )}
-      </div>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div className="flex items-center gap-1">
+            {children}
+            {sort.field === field && (
+              <span className="text-primary">
+                {sort.direction === "desc" ? "↓" : "↑"}
+              </span>
+            )}
+          </div>
+        </TooltipTrigger>
+        {tooltip && <TooltipContent><p>{tooltip}</p></TooltipContent>}
+      </Tooltip>
+    </TableHead>
+  );
+  
+  const HeaderWithTooltip = ({
+    children,
+    tooltip,
+    className = "",
+  }: {
+    children: React.ReactNode;
+    tooltip: string;
+    className?: string;
+  }) => (
+    <TableHead className={className}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <span className="cursor-help">{children}</span>
+        </TooltipTrigger>
+        <TooltipContent><p>{tooltip}</p></TooltipContent>
+      </Tooltip>
     </TableHead>
   );
 
@@ -261,14 +287,14 @@ export function PoolsTable({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">Chain</TableHead>
-            <TableHead>Project</TableHead>
-            <TableHead>Symbol</TableHead>
-            <SortableHeader field="tvlUsd" className="text-right">TVL</SortableHeader>
-            <SortableHeader field="apy" className="text-right">APY</SortableHeader>
-            <TableHead className="text-center">Trend</TableHead>
-            <TableHead>IL Risk</TableHead>
-            <TableHead className="text-center">Auto-Compound</TableHead>
+            <HeaderWithTooltip tooltip="The blockchain network where this pool operates" className="w-[100px]">Chain</HeaderWithTooltip>
+            <HeaderWithTooltip tooltip="The DeFi protocol or platform running this pool">Project</HeaderWithTooltip>
+            <HeaderWithTooltip tooltip="The token pair or asset in this pool">Symbol</HeaderWithTooltip>
+            <SortableHeader field="tvlUsd" className="text-right" tooltip="Total Value Locked - the amount of money deposited in this pool. Higher TVL generally means more stability.">TVL</SortableHeader>
+            <SortableHeader field="apy" className="text-right" tooltip="Annual Percentage Yield - your expected yearly return if rates stay constant. Includes base yield plus rewards.">APY</SortableHeader>
+            <HeaderWithTooltip tooltip="APY trend over the past 30 days. Green means rising, red means falling." className="text-center">Trend</HeaderWithTooltip>
+            <HeaderWithTooltip tooltip="Impermanent Loss Risk - potential loss when token prices change. None for single assets, Low for stablecoins, Higher for volatile pairs.">IL Risk</HeaderWithTooltip>
+            <HeaderWithTooltip tooltip="Auto-compound pools automatically reinvest your rewards. Beefy vaults do this multiple times per day." className="text-center">Auto-Compound</HeaderWithTooltip>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>

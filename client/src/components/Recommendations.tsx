@@ -1,9 +1,14 @@
-import { Sparkles, TrendingUp, ArrowRight, ExternalLink, Zap, Shield, Flame, AlertTriangle, ArrowDown, RefreshCw, Check, Leaf, Share2, Heart, Coffee } from "lucide-react";
+import { Sparkles, TrendingUp, ArrowRight, ExternalLink, Zap, Shield, Flame, AlertTriangle, ArrowDown, RefreshCw, Check, Leaf, Share2, Heart, Coffee, HelpCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { MomentumBadge } from "@/components/Sparkline";
 import { ShareCallToAction } from "@/components/ShareBar";
 import { NexoBanner } from "@/components/NexoBanner";
@@ -150,6 +155,14 @@ export function Recommendations({ pools, isLoading }: RecommendationsProps) {
         <CardTitle className="flex items-center gap-2 text-lg">
           <Sparkles className="h-5 w-5 text-chart-4" />
           Top Alpha Opportunities
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <HelpCircle className="h-4 w-4 text-muted-foreground/50 cursor-help" />
+            </TooltipTrigger>
+            <TooltipContent className="max-w-xs">
+              <p>These pools are ranked by risk-adjusted score, which balances APY, TVL (pool size), and impermanent loss risk. Beefy vaults get a bonus for auto-compounding.</p>
+            </TooltipContent>
+          </Tooltip>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
