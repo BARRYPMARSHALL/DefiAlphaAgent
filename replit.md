@@ -58,6 +58,11 @@ Preferred communication style: Simple, everyday language.
 - Collapsible state persists to localStorage for user convenience
 - Displays condensed summary badge when collapsed showing monthly earnings at selected APY
 
+**Educational Tooltips**: User-friendly tooltips across the dashboard explaining DeFi concepts:
+- Summary Cards: Help icons explain Total Opportunities, Average APY, and Top Chain TVL
+- Pools Table Headers: Hover tooltips for Chain, Project, Symbol, TVL, APY, Trend, IL Risk, Auto-Compound
+- Recommendations: Tooltip explains risk-adjusted scoring methodology (APY, TVL, IL risk, Beefy bonus)
+
 ### Database Schema
 The application includes a basic Drizzle ORM schema with PostgreSQL for user management (currently using in-memory storage). The `users` table supports future authentication features.
 
