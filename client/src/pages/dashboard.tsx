@@ -14,6 +14,7 @@ import { ShareBar, ShareCallToAction } from "@/components/ShareBar";
 import { ShareMyFind } from "@/components/ShareMyFind";
 import { NexoBanner } from "@/components/NexoBanner";
 import { LoadingSplash } from "@/components/LoadingSplash";
+import { EarningsCalculator } from "@/components/EarningsCalculator";
 import { DonationButton, DonationBanner } from "@/components/DonationButton";
 import { FloatingDonateButton } from "@/components/FloatingDonateButton";
 import type { FilterState, SortState, PoolsResponse } from "@shared/schema";
@@ -231,6 +232,11 @@ export default function Dashboard() {
             isLoading={isLoading}
           />
         </div>
+
+        <EarningsCalculator 
+          topPoolApy={pools.length > 0 ? Math.min(Math.max(...pools.slice(0, 50).map(p => p.apy || 0)), 100) : 15}
+          avgApy={stats.avgApy > 0 ? Math.min(stats.avgApy, 50) : 8}
+        />
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
